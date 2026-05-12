@@ -1,0 +1,73 @@
+<section class="series">
+	<h2>Shop by Series</h2>
+
+	<div class="series-grid">
+		<a href="#" class="series-card">
+			<img src="/assets/naruto.png" alt="Naruto" />
+		</a>
+
+		<a href="#" class="series-card">
+			<img src="/assets/frieren.png" alt="Frieren" />
+		</a>
+
+		<a href="#" class="series-card">
+			<img src="/assets/jjk.png" alt="Jujutsu Kaisen" />
+		</a>
+
+		<a href="#" class="series-card">
+			<img src="/assets/dressup.png" alt="My Dress-Up Darling" />
+		</a>
+
+		<a href="#" class="series-card">
+			<img src="/assets/miku.png" alt="Hatsune Miku" />
+		</a>
+
+		<a href="#" class="series-card">
+			<img src="/assets/onepiece.png" alt="One Piece" />
+		</a>
+	</div>
+</section>
+
+<style> 
+.series {
+	padding: 5rem;
+	background: #f5f5f5;
+}
+
+.series h2 {
+	font-size: 2rem;
+	color: #4c2366;
+	margin-bottom: 2rem;
+}
+
+.series-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 1.5rem;
+}
+
+.series-card {
+	background: #f1dfea;
+	border-radius: 16px;
+	height: 330px;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	padding: 2rem;
+
+	transition: 0.2s ease;
+	text-decoration: none;
+}
+
+.series-card:hover {
+	transform: translateY(-4px);
+}
+
+.series-card img {
+	max-width: 90%;
+	max-height: 140px;
+	object-fit: contain;
+}
+</style>

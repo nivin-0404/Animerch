@@ -1,0 +1,39 @@
+---
+const navItems = [
+	'Collectibles',
+	'Merchandise',
+	'In Stock',
+	'Contacts'
+];  
+---
+
+<header class="header">
+	<div class="topbar">
+<a href="/" class="logo">
+	<img src="/assets/logo.png" alt="Animerch logo" />
+</a>
+
+		<div class="search-wrapper">
+			<input
+				type="text"
+				placeholder="Search..."
+				class="search"
+			/>
+		</div>
+
+<div class="icons">
+<button><img src="/assets/profile.svg" alt="Profile" /></button>
+<button><img src="/assets/cart.svg" alt="Cart" /></button>
+<button><img src="/assets/global.svg" alt="Language" /></button>
+</div>
+	</div>
+
+	<nav class="navbar">
+		{
+			navItems.map((item) => (
+				<a href="#">{item}</a>
+			))
+		}
+	</nav>
+</header>
+
