@@ -117,18 +117,20 @@ const products = [
 						data-availability={product.availability}
 						data-price={product.price.replace('$', '')}
 					>
-						<div class="card-image">
-							<img
-								src={product.image}
-								alt={product.name}
-							/>
+<a href="/Productpage" class="product-link">
+	<div class="card-image">
+		<img
+			src={product.image}
+			alt={product.name}
+		/>
 
-							<button class="favorite">♡</button>
+		<button class="favorite">♡</button>
 
-							<span class="badge">
-								{product.badge}
-							</span>
-						</div>
+		<span class="badge">
+			{product.badge}
+		</span>
+	</div>
+</a>
 
 						<div class="card-content">
 							<h3>{product.name}</h3>
