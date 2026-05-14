@@ -1,0 +1,200 @@
+---
+const title = "My Cart";
+---
+
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>{title}</title>
+</head>
+
+<body>
+
+<main class="cart-page">
+
+	<h1>My Cart (<span id="cartCount">0</span>)</h1>
+
+	<div id="cartItems" class="cart-items"></div>
+
+	<div class="summary">
+		<h2>Order Summary</h2>
+
+		<div class="row">
+			<span>Subtotal</span>
+			<span id="subtotal">$0.00</span>
+		</div>
+
+		<div class="row">
+			<span>Shipping</span>
+			<span>$8.99</span>
+		</div>
+
+		<div class="total">
+			<span>Total</span>
+			<span id="total">$0.00</span>
+		</div>
+
+		<button class="checkout">Proceed to Checkout</button>
+	</div>
+
+</main>
+
+<script>
+	let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+	const cartItems = document.getElementById("cartItems");
+	const cartCount = document.getElementById("cartCount");
+	const subtotalEl = document.getElementById("subtotal");
+	const totalEl = document.getElementById("total");
+
+	function saveCart() {
+		localStorage.setItem("cart", JSON.stringify(cart));
+	}
+
+	function renderCart() {
+		cartItems.innerHTML = "";
+
+		let subtotal = 0;
+
+		cart.forEach((item, index) => {
+			subtotal += item.price * item.qty;
+
+			const div = document.createElement("div");
+			div.className = "cart-item";
+
+			div.innerHTML = `
+				<img src="${item.image}" />
+
+				<div class="info">
+					<h3>${item.name}</h3>
+					<p>$${item.price}</p>
+
+					<div class="qty">
+						<button onclick="changeQty(${index}, -1)">-</button>
+						<span>${item.qty}</span>
+						<button onclick="changeQty(${index}, 1)">+</button>
+					</div>
+
+					<button onclick="removeItem(${index})" class="remove">
+						Remove
+					</button>
+				</div>
+			`;
+
+			cartItems.appendChild(div);
+		});
+
+		cartCount.innerText = cart.length;
+		subtotalEl.innerText = `$${subtotal.toFixed(2)}`;
+		totalEl.innerText = `$${(subtotal + 8.99).toFixed(2)}`;
+	}
+
+	window.changeQty = (index, amount) => {
+		cart[index].qty += amount;
+
+		if (cart[index].qty <= 0) {
+			cart.splice(index, 1);
+		}
+
+		saveCart();
+		renderCart();
+	};
+
+	window.removeItem = (index) => {
+		cart.splice(index, 1);
+		saveCart();
+		renderCart();
+	};
+
+	renderCart();
+</script>
+
+</body>
+</html>
+
+<style>
+    .cart-page {
+	max-width: 1200px;
+	margin: auto;
+	padding: 3rem 2rem;
+	display: grid;
+	gap: 2rem;
+}
+
+.cart-items {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}
+
+.cart-item {
+	display: flex;
+	gap: 1.5rem;
+	background: white;
+	padding: 1rem;
+	border-radius: 20px;
+	align-items: center;
+}
+
+.cart-item img {
+	width: 120px;
+	border-radius: 12px;
+}
+
+.info h3 {
+	margin: 0;
+	font-size: 1rem;
+	color: #4c2366;
+}
+
+.qty {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-top: 10px;
+}
+
+.qty button {
+	width: 30px;
+	height: 30px;
+	border: none;
+	border-radius: 50%;
+	background: #ef4f96;
+	color: white;
+	cursor: pointer;
+}
+
+.remove {
+	margin-top: 10px;
+	background: none;
+	border: none;
+	color: red;
+	cursor: pointer;
+}
+
+.summary {
+	background: white;
+	padding: 2rem;
+	border-radius: 20px;
+}
+
+.summary .row,
+.summary .total {
+	display: flex;
+	justify-content: space-between;
+	margin: 1rem 0;
+}
+
+.checkout {
+	width: 100%;
+	padding: 1rem;
+	border: none;
+	border-radius: 999px;
+	background: #ef4f96;
+	color: white;
+	font-size: 1rem;
+	cursor: pointer;
+}
+
+</style>

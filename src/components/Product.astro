@@ -18,6 +18,7 @@ const product = {
     Looking every bit the regal tsundere, Ram brings charm, confidence, and just a hint of sass to your shelf.
   `,
 };
+
 ---
 
 <html lang="en">
@@ -100,6 +101,102 @@ const product = {
     </div>
   </section>
 </main>
+
+<section class="related-products">
+	<h2>Related products</h2>
+
+	<div class="related-grid">
+		<div class="related-card">
+			<div class="related-image">
+				<img
+					src="/assets/ram.png"
+					alt="Anime Figure"
+				/>
+
+				<button class="favorite">
+					♡
+				</button>
+			</div>
+
+			<div class="related-content">
+				<h3>
+					Lorem ipsum dolor sit amet
+				</h3>
+
+				<p class="price">
+					29.99 $
+				</p>
+
+				<button class="cart-btn">
+					Add to Cart
+				</button>
+			</div>
+		</div>
+
+		<div class="related-card">
+			<div class="related-image">
+				<img
+					src="/assets/ram.png"
+					alt="Anime Figure"
+				/>
+
+				<button class="favorite">
+					♡
+				</button>
+
+				<span class="badge sale">
+					SALE
+				</span>
+			</div>
+
+			<div class="related-content">
+				<h3>
+					Lorem ipsum dolor sit amet
+				</h3>
+
+				<p class="price">
+					29.99 $
+				</p>
+
+				<button class="cart-btn">
+					Add to Cart
+				</button>
+			</div>
+		</div>
+
+		<div class="related-card">
+			<div class="related-image">
+				<img
+					src="/assets/ram.png"
+					alt="Anime Figure"
+				/>
+
+				<button class="favorite">
+					♡
+				</button>
+
+				<span class="badge preorder">
+					PRE-ORDER
+				</span>
+			</div>
+
+			<div class="related-content">
+				<h3>
+					Lorem ipsum dolor sit amet
+				</h3>
+
+				<p class="price">
+					29.99 $
+				</p>
+
+				<button class="cart-btn">
+					Add to Cart
+				</button>
+			</div>
+		</div>
+	</div>
+</section>
+
             <style>
                 :root {
   --pink: #ec4899;
@@ -309,6 +406,103 @@ body {
   line-height: 1.8;
   color: var(--soft-purple);
   font-size: 1rem;
+}
+
+.related-products {
+	padding: 5rem 2rem;
+}
+
+.related-products h2 {
+	text-align: center;
+	font-size: 2rem;
+	margin-bottom: 3rem;
+	color: var(--purple);
+}
+
+.related-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 2rem;
+}
+
+.related-card {
+	display: flex;
+	flex-direction: column;
+}
+
+.related-image {
+	position: relative;
+	background: #efc9cb;
+	border-radius: 20px;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	overflow: hidden;
+}
+
+.related-image img {
+	width: 72%;
+	object-fit: contain;
+}
+
+.favorite {
+	position: absolute;
+	top: 1rem;
+	right: 1rem;
+
+	width: 50px;
+	height: 50px;
+
+	border-radius: 50%;
+	border: none;
+
+	background: white;
+	color: var(--pink);
+
+	font-size: 1.5rem;
+	cursor: pointer;
+}
+
+.badge {
+	position: absolute;
+	left: 1rem;
+	bottom: 1rem;
+
+	padding: 0.8rem 1.5rem;
+	border-radius: 10px;
+
+	color: white;
+	font-weight: bold;
+	font-size: 0.9rem;
+}
+
+.sale {
+	background: #f3c93c;
+}
+
+.preorder {
+	background: var(--pink);
+}
+
+.related-content {
+	padding-top: 1rem;
+}
+
+.related-content h3 {
+	font-size: 1rem;
+	margin-bottom: 0.5rem;
+	color: var(--purple);
+}
+
+.related-content .price {
+	font-size: 1.2rem;
+	margin-bottom: 1rem;
+}
+
+.related-content .cart-btn {
+	width: 100%;
 }
 
 /* RESPONSIVE */
