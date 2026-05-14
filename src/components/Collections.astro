@@ -1,0 +1,593 @@
+---
+const products = [
+	{
+		name: 'Ram Figure',
+		price: '29.99 $',
+		image: '/assets/ram.png',
+		type: 'Prize Figures',
+		availability: 'Pre Order',
+		badge: 'PRE-ORDER'
+	},
+	{
+		name: 'Rem Figure',
+		price: '39.99 $',
+		image: '/assets/ram.png',
+		type: 'Scale Figures',
+		availability: 'In Stock',
+		badge: 'NEW'
+	},
+	{
+		name: 'Gojo Figure',
+		price: '49.99 $',
+		image: '/assets/ram.png',
+		type: 'Action Figures',
+		availability: 'In Stock',
+		badge: 'SALE'
+	},
+	{
+		name: 'Frieren Figure',
+		price: '59.99 $',
+		image: '/assets/ram.png',
+		type: 'Nendoroid',
+		availability: 'Pre Order',
+		badge: 'PRE-ORDER'
+	},
+
+    {
+	name: 'New Figure',
+	price: '49.99 $',
+	image: '/assets/ram.png',
+	badge: 'NEW'
+},
+
+{
+	name: 'New Figure',
+	price: '49.99 $',
+	image: '/assets/ram.png',
+	badge: 'NEW'
+},
+
+{
+	name: 'New Figure',
+	price: '49.99 $',
+	image: '/assets/ram.png',
+	badge: 'NEW'
+}
+];
+---
+
+<section class="collections-page">
+	<h1>Anime Collectibles</h1>
+
+	<div class="top-controls">
+		<button id="toggleFilters" class="pink-btn">
+			Hide Filters
+		</button>
+
+		<select id="sortSelect">
+			<option value="recommended">Recommended</option>
+			<option value="low-high">Price: Low to High</option>
+			<option value="high-low">Price: High to Low</option>
+		</select>
+	</div>
+
+	<div class="layout">
+		<aside class="sidebar" id="sidebar">
+			<div class="filter-group">
+				<h2>Collectibles</h2>
+
+				<ul>
+					<li data-type="all">Show All</li>
+					<li data-type="Prize Figures">Prize Figures</li>
+					<li data-type="Scale Figures">Scale Figures</li>
+					<li data-type="Nendoroid">Nendoroid</li>
+					<li data-type="Action Figures">Action Figures</li>
+				</ul>
+			</div>
+
+			<div class="filter-group">
+				<h2>Filter by</h2>
+
+				<label>
+					<input
+						type="checkbox"
+						value="In Stock"
+						class="availability-filter"
+					/>
+					In Stock
+				</label>
+
+				<label>
+					<input
+						type="checkbox"
+						value="Pre Order"
+						class="availability-filter"
+					/>
+					Pre Order
+				</label>
+			</div>
+		</aside>
+
+		<div class="products-grid" id="productsGrid">
+			{
+				products.map((product) => (
+					<div
+						class="card"
+						data-type={product.type}
+						data-availability={product.availability}
+						data-price={product.price.replace('$', '')}
+					>
+						<div class="card-image">
+							<img
+								src={product.image}
+								alt={product.name}
+							/>
+
+							<button class="favorite">♡</button>
+
+							<span class="badge">
+								{product.badge}
+							</span>
+						</div>
+
+						<div class="card-content">
+							<h3>{product.name}</h3>
+
+							<p class="price">
+								{product.price}
+							</p>
+<a href="/Productpage">
+  <button class="cart-btn">
+    Add to Cart
+  </button>
+</a>
+						</div>
+					</div>
+				))
+			}
+		</div>
+	</div>
+
+<div class="show-more-wrapper">
+	<p id="card-count">3 of 9</p>
+
+	<button class="show-more" id="showMoreBtn">
+		Show More
+	</button>
+</div>
+</section>
+
+<script>
+    
+	const sidebar =
+		document.getElementById('sidebar');
+
+	const toggleFilters =
+		document.getElementById('toggleFilters');
+
+	const sortSelect =
+		document.getElementById('sortSelect');
+
+	const cards = [
+		...document.querySelectorAll('.card')
+	];
+
+	const typeButtons =
+		document.querySelectorAll('[data-type]');
+
+	const availabilityFilters =
+		document.querySelectorAll(
+			'.availability-filter'
+		);
+
+	const grid =
+		document.getElementById('productsGrid');
+
+	let currentType = 'all';
+
+	function filterProducts() {
+		const activeAvailability = [
+			...availabilityFilters
+		]
+			.filter(
+				(checkbox) =>
+					checkbox instanceof HTMLInputElement &&
+					checkbox.checked
+			)
+			.map(
+				(checkbox) =>
+					checkbox instanceof HTMLInputElement
+						? checkbox.value
+						: ''
+			);
+
+		cards.forEach((card) => {
+			if (!(card instanceof HTMLElement))
+				return;
+
+			const matchesType =
+				currentType === 'all' ||
+				card.dataset.type === currentType;
+
+			const matchesAvailability =
+				activeAvailability.length === 0 ||
+				activeAvailability.includes(
+					card.dataset.availability || ''
+				);
+
+			if (
+				matchesType &&
+				matchesAvailability
+			) {
+				card.style.display = 'flex';
+			} else {
+				card.style.display = 'none';
+			}
+		});
+	}
+
+	typeButtons.forEach((button) => {
+		if (!(button instanceof HTMLElement))
+			return;
+
+		button.addEventListener('click', () => {
+			currentType =
+				button.dataset.type || 'all';
+
+			filterProducts();
+		});
+	});
+
+	availabilityFilters.forEach((checkbox) => {
+		checkbox.addEventListener(
+			'change',
+			filterProducts
+		);
+	});
+
+	if (
+		toggleFilters instanceof HTMLElement &&
+		sidebar instanceof HTMLElement
+	) {
+		toggleFilters.addEventListener(
+			'click',
+			() => {
+				sidebar.classList.toggle(
+					'hidden'
+				);
+
+				if (
+					sidebar.classList.contains(
+						'hidden'
+					)
+				) {
+					toggleFilters.innerText =
+						'Show Filters';
+				} else {
+					toggleFilters.innerText =
+						'Hide Filters';
+				}
+			}
+		);
+	}
+
+	if (
+		sortSelect instanceof HTMLSelectElement &&
+		grid instanceof HTMLElement
+	) {
+		sortSelect.addEventListener(
+			'change',
+			() => {
+				const value =
+					sortSelect.value;
+
+				const sortedCards = [
+					...cards
+				];
+
+				if (
+					value === 'low-high'
+				) {
+					sortedCards.sort(
+						(a, b) => {
+							if (
+								!(
+									a instanceof HTMLElement
+								) ||
+								!(
+									b instanceof HTMLElement
+								)
+							)
+								return 0;
+
+							return (
+								Number(
+									a.dataset.price
+								) -
+								Number(
+									b.dataset.price
+								)
+							);
+						}
+					);
+				}
+
+				if (
+					value === 'high-low'
+				) {
+					sortedCards.sort(
+						(a, b) => {
+							if (
+								!(
+									a instanceof HTMLElement
+								) ||
+								!(
+									b instanceof HTMLElement
+								)
+							)
+								return 0;
+
+							return (
+								Number(
+									b.dataset.price
+								) -
+								Number(
+									a.dataset.price
+								)
+							);
+						}
+					);
+				}
+
+				sortedCards.forEach(
+					(card) => {
+						grid.appendChild(
+							card
+						);
+					}
+				);
+			}
+		);
+
+        	const cards = [
+		...document.querySelectorAll('.card')
+	];
+
+	const showMoreBtn =
+		document.getElementById(
+			'showMoreBtn'
+		);
+
+	const cardCount =
+		document.getElementById(
+			'card-count'
+		);
+
+	let visibleCards = 3;
+
+	function updateCards() {
+		cards.forEach((card, index) => {
+			if (!(card instanceof HTMLElement))
+				return;
+
+			if (index < visibleCards) {
+				card.style.display = 'flex';
+			} else {
+				card.style.display = 'none';
+			}
+		});
+
+		if (
+			cardCount instanceof HTMLElement
+		) {
+			cardCount.innerText =
+				`${Math.min(
+					visibleCards,
+					cards.length
+				)} of ${cards.length}`;
+		}
+
+		if (
+			showMoreBtn instanceof
+				HTMLElement &&
+			visibleCards >= cards.length
+		) {
+			showMoreBtn.style.display =
+				'none';
+		}
+	}
+
+	updateCards();
+
+	if (
+		showMoreBtn instanceof
+		HTMLElement
+	) {
+		showMoreBtn.addEventListener(
+			'click',
+			() => {
+				visibleCards += 3;
+
+				updateCards();
+			}
+		);
+    }
+	}
+    
+</script>
+
+<style>
+.collections-page {
+	padding: 4rem;
+	background: #f5f5f5;
+	font-family: 'Balsamiq Sans', sans-serif;
+}
+
+h1 {
+	text-align: center;
+	color: #4c2366;
+	margin-bottom: 3rem;
+}
+
+.top-controls {
+	display: flex;
+	justify-content: flex-end;
+	gap: 1rem;
+	margin-bottom: 2rem;
+}
+
+.pink-btn,
+#sortSelect,
+.show-more {
+	background: #ef4f96;
+	color: white;
+	border: none;
+	padding: 0.9rem 1.2rem;
+	border-radius: 8px;
+	cursor: pointer;
+}
+
+.layout {
+	display: grid;
+	grid-template-columns: 240px 1fr;
+	gap: 3rem;
+}
+
+.sidebar.hidden {
+	display: none;
+}
+
+.filter-group {
+	margin-bottom: 3rem;
+}
+
+.filter-group h2 {
+	color: #4c2366;
+	margin-bottom: 1rem;
+}
+
+.filter-group ul {
+	list-style: none;
+	padding: 0;
+}
+
+.filter-group li {
+	padding: 0.7rem 0;
+	cursor: pointer;
+	color: #666;
+	border-bottom: 1px solid #ddd;
+}
+
+.filter-group label {
+	display: block;
+	margin: 1rem 0;
+}
+
+.products-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 2rem;
+}
+
+.card {
+	display: flex;
+	flex-direction: column;
+}
+
+.card-image {
+	position: relative;
+	border-radius: 20px;
+	overflow: hidden;
+	background: #efcfc8;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.card-image img {
+	width: 70%;
+	height: auto;
+	object-fit: contain;
+}
+
+.favorite {
+	position: absolute;
+	top: 1rem;
+	right: 1rem;
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	border: none;
+	background: white;
+	font-size: 1.5rem;
+	color: #ef4f96;
+	cursor: pointer;
+}
+
+.badge {
+	position: absolute;
+	left: 1.25rem;
+	bottom: 1.25rem;
+	background: #ef4f96;
+	color: white;
+	padding: 1rem 2rem;
+	border-radius: 14px;
+	font-weight: bold;
+	font-size: 1rem;
+}
+
+.card-content {
+	padding-top: 1rem;
+}
+
+.card-content h3 {
+	font-size: 1.1rem;
+	color: #5a2b75;
+	margin: 0 0 0.5rem;
+	font-weight: 500;
+}
+
+.price {
+	font-size: 1.2rem;
+	color: #5a2b75;
+	margin-bottom: 1.25rem;
+}
+
+.cart-btn {
+	width: 100%;
+	padding: 1rem;
+	border: none;
+	border-radius: 999px;
+	background: #e5a8da;
+	color: #4c2366;
+	font-size: 1rem;
+	cursor: pointer;
+	transition: 0.2s ease;
+}
+
+.cart-btn:hover {
+	transform: translateY(-2px);
+	opacity: 0.9;
+}
+
+.show-more-wrapper {
+	text-align: center;
+	margin-top: 4rem;
+}
+
+@media (max-width: 1000px) {
+	.products-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media (max-width: 700px) {
+	.layout {
+		grid-template-columns: 1fr;
+	}
+
+	.products-grid {
+		grid-template-columns: 1fr;
+	}
+}
+</style>
