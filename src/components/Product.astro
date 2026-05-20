@@ -197,6 +197,70 @@ const product = {
 	</div>
 </section>
 
+<script>
+	const addToCartBtn =
+		document.querySelector(
+			'.actions .cart-btn'
+		);
+
+	if (
+		addToCartBtn instanceof
+		HTMLButtonElement
+	) {
+		addToCartBtn.addEventListener(
+			'click',
+			() => {
+				const product = {
+					name:
+						'Re:ZERO -Starting Life in Another World- Ram Melty Princess Palm Size Figure',
+
+					price: 156.99,
+
+					image:
+						'/assets/ram.png',
+
+					qty: 1,
+				};
+
+				const existingCart =
+					JSON.parse(
+						localStorage.getItem(
+							'cart'
+						) || '[]'
+					);
+
+				const existingProduct =
+					existingCart.find(
+						(item: {
+							name: string;
+						}) =>
+							item.name ===
+							product.name
+					);
+
+				if (existingProduct) {
+					existingProduct.qty += 1;
+				} else {
+					existingCart.push(
+						product
+					);
+				}
+
+				localStorage.setItem(
+					'cart',
+					JSON.stringify(
+						existingCart
+					)
+				);
+
+				alert(
+					'Added to cart!'
+				);
+			}
+		);
+	}
+</script>
+
             <style>
                 :root {
   --pink: #ec4899;

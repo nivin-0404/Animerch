@@ -5,7 +5,12 @@ const title = "My Cart";
 <html lang="en">
 <head>
 	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<meta
+		name="viewport"
+		content="width=device-width, initial-scale=1.0"
+	/>
+
 	<title>{title}</title>
 </head>
 
@@ -13,84 +18,202 @@ const title = "My Cart";
 
 <main class="cart-page">
 
-	<h1>My Cart (<span id="cartCount">0</span>)</h1>
+	<h1>
+		My Cart (
+		<span id="cartCount">0</span>
+		)
+	</h1>
 
-	<div id="cartItems" class="cart-items"></div>
+	<div
+		id="cartItems"
+		class="cart-items"
+	></div>
 
 	<div class="summary">
+
 		<h2>Order Summary</h2>
 
-		<div class="row">
-			<span>Subtotal</span>
-			<span id="subtotal">$0.00</span>
-		</div>
+		<div class="summary-box">
 
-		<div class="row">
-			<span>Shipping</span>
-			<span>$8.99</span>
+			<div class="row">
+				<span>Order Subtotal</span>
+
+				<span id="subtotal">
+					$0.00
+				</span>
+			</div>
+
+			<div class="row">
+				<span>
+					Estimated Shipping
+				</span>
+
+				<span>$8.99</span>
+			</div>
+
 		</div>
 
 		<div class="total">
+
 			<span>Total</span>
-			<span id="total">$0.00</span>
+
+			<span id="total">
+				$0.00
+			</span>
+
 		</div>
 
-		<button class="checkout">Proceed to Checkout</button>
+		<p class="tax-note">
+			Shipping & taxes are
+			calculated at checkout
+		</p>
+
+		<div class="checkout-buttons">
+
+			<button class="checkout">
+				Proceed to Checkout
+			</button>
+
+			<button class="gpay">
+				G Pay Checkout
+			</button>
+
+		</div>
+
 	</div>
 
 </main>
 
 <script>
-	let cart = JSON.parse(localStorage.getItem("cart")) || [];
+	let cart = JSON.parse(
+		localStorage.getItem('cart') || '[]'
+	);
 
-	const cartItems = document.getElementById("cartItems");
-	const cartCount = document.getElementById("cartCount");
-	const subtotalEl = document.getElementById("subtotal");
-	const totalEl = document.getElementById("total");
+	const cartItems =
+		document.getElementById(
+			'cartItems'
+		);
+
+	const cartCount =
+		document.getElementById(
+			'cartCount'
+		);
+
+	const subtotalEl =
+		document.getElementById(
+			'subtotal'
+		);
+
+	const totalEl =
+		document.getElementById(
+			'total'
+		);
 
 	function saveCart() {
-		localStorage.setItem("cart", JSON.stringify(cart));
+		localStorage.setItem(
+			'cart',
+			JSON.stringify(cart)
+		);
 	}
 
 	function renderCart() {
-		cartItems.innerHTML = "";
+		if (!cartItems) return;
+
+		cartItems.innerHTML = '';
 
 		let subtotal = 0;
 
 		cart.forEach((item, index) => {
-			subtotal += item.price * item.qty;
+			subtotal +=
+				item.price * item.qty;
 
-			const div = document.createElement("div");
-			div.className = "cart-item";
+			const div =
+				document.createElement(
+					'div'
+				);
+
+			div.className =
+				'cart-item';
 
 			div.innerHTML = `
 				<img src="${item.image}" />
 
-				<div class="info">
-					<h3>${item.name}</h3>
-					<p>$${item.price}</p>
+				<div class="cart-info">
 
-					<div class="qty">
-						<button onclick="changeQty(${index}, -1)">-</button>
-						<span>${item.qty}</span>
-						<button onclick="changeQty(${index}, 1)">+</button>
+					<span class="cart-badge">
+						PRE-ORDER
+					</span>
+
+					<h3>${item.name}</h3>
+
+					<div class="qty-wrapper">
+
+						<p>Quantity</p>
+
+						<div class="qty">
+							<button onclick="changeQty(${index}, -1)">
+								-
+							</button>
+
+							<span>${item.qty}</span>
+
+							<button onclick="changeQty(${index}, 1)">
+								+
+							</button>
+						</div>
+
 					</div>
 
-					<button onclick="removeItem(${index})" class="remove">
-						Remove
-					</button>
+					<p class="release">
+						Pre-Order release date:
+						01/01/2027
+					</p>
+
+					<div class="cart-actions">
+						<button class="link-btn">
+							Move to Wishlist
+						</button>
+
+						<button
+							class="link-btn"
+							onclick="removeItem(${index})"
+						>
+							Remove
+						</button>
+					</div>
+
 				</div>
+
+				<p class="item-price">
+					$${item.price}
+				</p>
 			`;
 
 			cartItems.appendChild(div);
 		});
 
-		cartCount.innerText = cart.length;
-		subtotalEl.innerText = `$${subtotal.toFixed(2)}`;
-		totalEl.innerText = `$${(subtotal + 8.99).toFixed(2)}`;
+		if (cartCount) {
+			cartCount.innerText =
+				cart.length;
+		}
+
+		if (subtotalEl) {
+			subtotalEl.innerText =
+				`$${subtotal.toFixed(2)}`;
+		}
+
+		if (totalEl) {
+			totalEl.innerText =
+				`$${(
+					subtotal + 8.99
+				).toFixed(2)}`;
+		}
 	}
 
-	window.changeQty = (index, amount) => {
+	window.changeQty = (
+		index,
+		amount
+	) => {
 		cart[index].qty += amount;
 
 		if (cart[index].qty <= 0) {
@@ -98,12 +221,17 @@ const title = "My Cart";
 		}
 
 		saveCart();
+
 		renderCart();
 	};
 
-	window.removeItem = (index) => {
+	window.removeItem = (
+		index
+	) => {
 		cart.splice(index, 1);
+
 		saveCart();
+
 		renderCart();
 	};
 
@@ -114,87 +242,285 @@ const title = "My Cart";
 </html>
 
 <style>
-    .cart-page {
-	max-width: 1200px;
+:root {
+	--pink: #ef4f96;
+	--light-pink: #f8b8da;
+	--purple: #4c2366;
+	--bg: #f7f4f8;
+	--line: #cfa8e6;
+	--white: #ffffff;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	background: var(--bg);
+	font-family: Inter, sans-serif;
+	color: var(--purple);
+}
+
+/* PAGE */
+
+.cart-page {
+	max-width: 1400px;
 	margin: auto;
-	padding: 3rem 2rem;
-	display: grid;
+	padding: 2rem;
+}
+
+/* TITLE */
+
+.cart-page h1 {
+	font-size: 3rem;
+	color: var(--purple);
+	margin-bottom: 2rem;
+	font-weight: 700;
+}
+
+/* CART ITEMS */
+
+.cart-items {
+	border-top: 2px solid var(--line);
+	padding-top: 2rem;
+
+	display: flex;
+	flex-direction: column;
 	gap: 2rem;
 }
 
-.cart-items {
-	display: flex;
-	flex-direction: column;
-	gap: 1.5rem;
-}
+/* ITEM */
 
 .cart-item {
-	display: flex;
+	display: grid;
+	grid-template-columns: 160px 1fr auto;
+
 	gap: 1.5rem;
-	background: white;
-	padding: 1rem;
-	border-radius: 20px;
-	align-items: center;
+	align-items: start;
+
+	padding: 2rem 0;
+	border-bottom: 2px solid var(--line);
 }
+
+/* IMAGE */
 
 .cart-item img {
-	width: 120px;
-	border-radius: 12px;
+	width: 160px;
+	height: 160px;
+
+	object-fit: contain;
+
+	border-radius: 16px;
+	background: #efc9cb;
+
+	padding: 10px;
 }
 
-.info h3 {
-	margin: 0;
+/* INFO */
+
+.cart-info {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+/* BADGE */
+
+.cart-badge {
+	background: var(--pink);
+	color: white;
+
+	width: fit-content;
+
+	padding: 0.8rem 1.4rem;
+	border-radius: 12px;
+
 	font-size: 1rem;
-	color: #4c2366;
+	font-weight: 700;
+}
+
+/* TITLE */
+
+.cart-info h3 {
+	font-size: 1.2rem;
+	font-weight: 500;
+	line-height: 1.5;
+
+	max-width: 600px;
+}
+
+/* QUANTITY */
+
+.qty-wrapper {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+}
+
+.qty-wrapper p {
+	font-size: 1.1rem;
 }
 
 .qty {
 	display: flex;
 	align-items: center;
-	gap: 10px;
-	margin-top: 10px;
+	gap: 1rem;
+
+	border: 2px solid var(--pink);
+	border-radius: 12px;
+
+	padding: 0.4rem 1rem;
 }
 
 .qty button {
-	width: 30px;
-	height: 30px;
 	border: none;
-	border-radius: 50%;
-	background: #ef4f96;
-	color: white;
+	background: transparent;
+
+	font-size: 1.4rem;
+	font-weight: bold;
+
+	color: var(--purple);
+
 	cursor: pointer;
 }
 
-.remove {
-	margin-top: 10px;
+.qty span {
+	font-size: 1.2rem;
+	font-weight: 700;
+	min-width: 20px;
+	text-align: center;
+}
+
+/* RELEASE */
+
+.release {
+	color: red;
+	font-weight: 600;
+	font-size: 1rem;
+}
+
+/* ACTIONS */
+
+.cart-actions {
+	display: flex;
+	gap: 2rem;
+	margin-top: 1rem;
+}
+
+.link-btn {
 	background: none;
 	border: none;
-	color: red;
+
+	color: var(--purple);
+
+	text-decoration: underline;
+	font-size: 1rem;
+
 	cursor: pointer;
 }
 
-.summary {
-	background: white;
-	padding: 2rem;
-	border-radius: 20px;
+/* PRICE */
+
+.item-price {
+	font-size: 1.3rem;
+	font-weight: 600;
+
+	padding-top: 1rem;
 }
 
-.summary .row,
+/* SUMMARY */
+
+.summary {
+	margin-top: 3rem;
+	border-top: 2px solid var(--line);
+	padding-top: 2rem;
+}
+
+/* SUMMARY TITLE */
+
+.summary h2 {
+	font-size: 2.5rem;
+	margin-bottom: 2rem;
+}
+
+/* ROWS */
+
+.summary .row {
+	display: flex;
+	justify-content: space-between;
+
+	padding: 1rem 0;
+
+	font-size: 1.2rem;
+}
+
+/* TOTAL */
+
 .summary .total {
 	display: flex;
 	justify-content: space-between;
-	margin: 1rem 0;
+	align-items: center;
+
+	border-top: 2px solid var(--line);
+
+	margin-top: 2rem;
+	padding-top: 2rem;
+
+	font-size: 2rem;
+	font-weight: 700;
 }
+
+/* CHECKOUT */
 
 .checkout {
 	width: 100%;
-	padding: 1rem;
+
+	margin-top: 2rem;
+
+	padding: 1.4rem;
+
 	border: none;
 	border-radius: 999px;
-	background: #ef4f96;
+
+	background: var(--pink);
 	color: white;
-	font-size: 1rem;
+
+	font-size: 1.2rem;
+	font-weight: 600;
+
 	cursor: pointer;
+	transition: 0.2s ease;
 }
 
+.checkout:hover {
+	transform: translateY(-2px);
+	opacity: 0.95;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+	.cart-item {
+		grid-template-columns: 1fr;
+	}
+
+	.cart-item img {
+		width: 100%;
+		height: auto;
+	}
+
+	.item-price {
+		align-self: start;
+	}
+
+	.cart-page h1 {
+		font-size: 2.2rem;
+	}
+
+	.summary h2 {
+		font-size: 2rem;
+	}
+}
 </style>
