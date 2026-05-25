@@ -1,61 +1,84 @@
+---
+/* @ts-nocheck */
+
+import { createClient }
+	from '@supabase/supabase-js'
+
+const supabase =
+	createClient(
+		'https://vvdrdzonanhxygaiviid.supabase.co',
+		'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2ZHJkem9uYW5oeHlnYWl2aWlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzNjU1MjEsImV4cCI6MjA5NDk0MTUyMX0.rX97Rt41Hj5SLBQe6d1WqWddShgQ0lMZzIR1q9gUQ6M'
+	)
+
+const { data: products, error } =
+	await supabase
+		.from('Products')
+		.select('*')
+---
+
 <section class="featured">
+
 	<div class="section-header">
+
 		<h2>New Featured</h2>
-<a href="/Collectionspage">Shop more ›</a>
+
+		<a href="/Collectionspage">
+			Shop more ›
+		</a>
+
 	</div>
 
 	<div class="card-grid">
-		<div class="card">
-			<div class="card-image">
-				<img src="/assets/ram.png" alt="Anime Figure" />
 
-				<button class="favorite">♡</button>
+		{
+products?.slice(0, 3).map((product: any) => (
 
-				<span class="badge">NEW</span>
-			</div>
+				<div class="card">
 
-			<div class="card-content">
-				<h3>Lorem ipsum dolor sit amet</h3>
-				<p class="price">29.99 $</p>
+					<div class="card-image">
 
-				<button class="cart-btn">Add to Cart</button>
-			</div>
-		</div>
+						<img
+							src={product.image}
+							alt={product.title}
+						/>
 
-		<div class="card">
-			<div class="card-image">
-				<img src="/assets/ram.png" alt="Anime Figure" />
+						<button class="favorite">
+							♡
+						</button>
 
-				<button class="favorite">♡</button>
+						{
+							product.badge && (
+								<span class="badge">
+									{product.badge}
+								</span>
+							)
+						}
 
-				<span class="badge">NEW</span>
-			</div>
+					</div>
 
-			<div class="card-content">
-				<h3>Lorem ipsum dolor sit amet</h3>
-				<p class="price">29.99 $</p>
+					<div class="card-content">
 
-				<button class="cart-btn">Add to Cart</button>
-			</div>
-		</div>
+						<h3>
+							{product.title}
+						</h3>
 
-		<div class="card">
-			<div class="card-image">
-				<img src="/assets/ram.png" alt="Anime Figure" />
+						<p class="price">
+							{product.price}kr
+						</p>
 
-				<button class="favorite">♡</button>
+						<button class="cart-btn">
+							Add to Cart
+						</button>
 
-				<span class="badge">NEW</span>
-			</div>
+					</div>
 
-			<div class="card-content">
-				<h3>Lorem ipsum dolor sit amet</h3>
-				<p class="price">29.99 $</p>
+				</div>
 
-				<button class="cart-btn">Add to Cart</button>
-			</div>
-		</div>
+			))
+		}
+
 	</div>
+
 </section>
 
 <style>
@@ -74,66 +97,72 @@
 .section-header h2 {
 	font-size: 2rem;
 	color: #4c2366;
-	margin: 0;
 }
 
 .section-header a {
 	text-decoration: none;
 	color: #4c2366;
-	font-size: 1rem;
 }
 
 .card-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+	grid-template-columns: repeat(3, minmax(0, 1fr));
 	gap: 2rem;
-}
-
-.card {
-	display: flex;
-	flex-direction: column;
 }
 
 .card-image {
 	position: relative;
-	border-radius: 20px;
-	overflow: hidden;
 	background: #efcfc8;
+	border-radius: 20px;
+	padding: 2rem;
+
+	aspect-ratio: 1 / 1;
+
 	display: flex;
 	align-items: center;
 	justify-content: center;
+
+	overflow: hidden;
 }
 
 .card-image img {
-	width: 65%;
-	height: auto;
+	width: 100%;
+	height: 100%;
 	object-fit: contain;
+	display: block;
 }
 
 .favorite {
 	position: absolute;
 	top: 1rem;
 	right: 1rem;
+
 	width: 50px;
 	height: 50px;
+
 	border-radius: 50%;
 	border: none;
+
 	background: white;
-	font-size: 1.5rem;
 	color: #ef4f96;
+
+	font-size: 1.5rem;
 	cursor: pointer;
 }
 
 .badge {
 	position: absolute;
-	left: 1.25rem;
-	bottom: 1.25rem;
+	left: 1rem;
+	bottom: 1rem;
+
 	background: #8d5bc5;
 	color: white;
-	padding: 1rem 2rem;
-	border-radius: 14px;
+
+	padding: 0.8rem 1.5rem;
+
+	border-radius: 12px;
+
 	font-weight: bold;
-	font-size: 1rem;
 }
 
 .card-content {
@@ -141,32 +170,42 @@
 }
 
 .card-content h3 {
-	font-size: 1.1rem;
-	color: #5a2b75;
-	margin: 0 0 0.5rem;
-	font-weight: 500;
+	font-size: 1rem;
+	color: #4c2366;
+	margin-bottom: 0.5rem;
 }
 
 .price {
-	font-size: 1.5rem;
-	color: #5a2b75;
-	margin-bottom: 1.25rem;
+	font-size: 1.3rem;
+	font-weight: 700;
+	color: #4c2366;
+
+	margin-bottom: 1rem;
 }
 
 .cart-btn {
 	width: 100%;
+
 	padding: 1rem;
+
 	border: none;
 	border-radius: 999px;
+
 	background: #e5a8da;
 	color: #4c2366;
-	font-size: 1rem;
+
 	cursor: pointer;
-	transition: 0.2s ease;
 }
 
-.cart-btn:hover {
-	transform: translateY(-2px);
-	opacity: 0.9;
+@media (max-width: 1024px) {
+	.card-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media (max-width: 640px) {
+	.card-grid {
+		grid-template-columns: 1fr;
+	}
 }
 </style>
