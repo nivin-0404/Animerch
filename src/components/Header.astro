@@ -1,46 +1,228 @@
 ---
 const navItems = [
-	'Collectibles',
-	'Merchandise',
-	'In Stock',
-	'Contacts'
-];  
+	{ key: 'collectibles', href: '/Collectionspage' },
+	{ key: 'merchandise', href: '#' },
+	{ key: 'inStock', href: '#' },
+	{ key: 'contacts', href: '#' }
+];
 ---
 
 <header class="header">
 	<div class="topbar">
-<a href="/" class="logo">
-	<img src="/assets/logo.png" alt="Animerch logo" />
-</a>
+		<a href="/" class="logo">
+			<img src="/assets/logo.png" alt="Animerch logo" />
+		</a>
 
 		<div class="search-wrapper">
 			<input
 				type="text"
 				placeholder="Search..."
 				class="search"
+				data-i18n-placeholder="search"
 			/>
 		</div>
 
-<div class="icons">
-<button ><img src="/assets/profile.svg" alt="Profile" /></button>
-<a href="/Cartpage">
-	<button>
-		<img
-			src="/assets/cart.svg"
-			alt="Cart"
-		/>
-	</button>
-</a>
-<button><img src="/assets/global.svg" alt="Language" /></button>
-</div>
+		<div class="icons">
+			<div class="profile-wrapper">
+				<button
+					id="profileToggle"
+					class="icon-button"
+					aria-label="Profile"
+					type="button"
+				>
+					<img src="/assets/profile.svg" alt="Profile" />
+				</button>
+
+				<div class="profile-menu" id="profileMenu">
+					<a href="/Wishlistpage">
+						♡ My Wishlist
+					</a>
+
+					<a href="/Cartpage">
+						🛒 My Cart
+					</a>
+				</div>
+			</div>
+
+			<a href="/Cartpage" class="icon-button" aria-label="Cart">
+				<img src="/assets/cart.svg" alt="Cart" />
+			</a>
+
+			<div class="language-wrapper">
+				<button
+					id="languageToggle"
+					class="icon-button"
+					aria-label="Language"
+					type="button"
+				>
+					<img src="/assets/global.svg" alt="Language" />
+				</button>
+
+				<div class="language-menu" id="languageMenu">
+					<button type="button" data-lang="en">English</button>
+					<button type="button" data-lang="da">Dansk</button>
+					<button type="button" data-lang="sv">Svenska</button>
+					<button type="button" data-lang="no">Norsk</button>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<nav class="navbar">
 		{
 			navItems.map((item) => (
-				<a href="#">{item}</a>
+				<a href={item.href} data-i18n={item.key}>
+					{item.key}
+				</a>
 			))
 		}
 	</nav>
 </header>
 
+<script>
+	import '../lib/language.js';
+</script>
+
+<script is:inline>
+	const profileToggle =
+		document.getElementById('profileToggle');
+
+	const profileMenu =
+		document.getElementById('profileMenu');
+
+	if (profileToggle && profileMenu) {
+		profileToggle.addEventListener('click', () => {
+			profileMenu.classList.toggle('active');
+		});
+
+		document.addEventListener('click', (event) => {
+			const target = event.target;
+
+			if (
+				!profileToggle.contains(target) &&
+				!profileMenu.contains(target)
+			) {
+				profileMenu.classList.remove('active');
+			}
+		});
+	}
+</script>
+
+<style>
+.icons {
+	display: flex;
+	align-items: center;
+	gap: 0.8rem;
+}
+
+.icon-button {
+	width: 40px;
+	height: 40px;
+
+	border: none;
+	border-radius: 50%;
+
+	background: var(--pink);
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.icon-button img {
+	width: 20px;
+	height: 20px;
+	object-fit: contain;
+}
+
+.profile-wrapper,
+.language-wrapper {
+	position: relative;
+}
+
+/* PROFILE DROPDOWN */
+
+.profile-menu {
+	position: absolute;
+	top: 50px;
+	right: 0;
+
+	background: white;
+	border-radius: 16px;
+	box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+
+	padding: 0.6rem;
+
+	display: none;
+	flex-direction: column;
+
+	min-width: 170px;
+	z-index: 999;
+}
+
+.profile-menu.active {
+	display: flex;
+}
+
+.profile-menu a {
+	text-decoration: none;
+	color: #4c2366;
+
+	padding: 0.8rem 1rem;
+	border-radius: 10px;
+
+	font-size: 0.95rem;
+	font-weight: 600;
+}
+
+.profile-menu a:hover {
+	background: #f5d7e8;
+}
+
+/* LANGUAGE DROPDOWN */
+
+.language-menu {
+	position: absolute;
+	top: 50px;
+	right: 0;
+
+	background: white;
+	border-radius: 16px;
+	box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+
+	padding: 0.5rem;
+
+	display: none;
+	flex-direction: column;
+
+	min-width: 140px;
+	z-index: 999;
+}
+
+.language-menu.active {
+	display: flex;
+}
+
+.language-menu button {
+	background: transparent;
+	border: none;
+
+	color: #4c2366;
+
+	padding: 0.8rem 1rem;
+	border-radius: 10px;
+
+	text-align: left;
+	font-size: 0.9rem;
+	font-weight: 600;
+
+	cursor: pointer;
+}
+
+.language-menu button:hover {
+	background: #f5d7e8;
+}
+</style>

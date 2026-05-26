@@ -1,85 +1,196 @@
 ---
 /* @ts-nocheck */
 
-import { createClient }
-	from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js'
 
-const supabase =
-	createClient(
-		'https://vvdrdzonanhxygaiviid.supabase.co',
-		'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2ZHJkem9uYW5oeHlnYWl2aWlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzNjU1MjEsImV4cCI6MjA5NDk0MTUyMX0.rX97Rt41Hj5SLBQe6d1WqWddShgQ0lMZzIR1q9gUQ6M'
-	)
+const supabase = createClient(
+	'https://vvdrdzonanhxygaiviid.supabase.co',
+	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2ZHJkem9uYW5oeHlnYWl2aWlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzNjU1MjEsImV4cCI6MjA5NDk0MTUyMX0.rX97Rt41Hj5SLBQe6d1WqWddShgQ0lMZzIR1q9gUQ6M'
+)
 
-const { data: products, error } =
-	await supabase
-		.from('Products')
-		.select('*')
+const { data: products, error } = await supabase
+	.from('Products')
+	.select('*')
+
+if (error) {
+	console.error('Supabase error:', error)
+}
 ---
 
 <section class="featured">
-
 	<div class="section-header">
+		<h2 data-i18n="newFeatured">New Featured</h2>
 
-		<h2>New Featured</h2>
-
-		<a href="/Collectionspage">
+		<a href="/Collectionspage" data-i18n="shopMore">
 			Shop more ›
 		</a>
-
 	</div>
 
 	<div class="card-grid">
-
 		{
-products?.slice(0, 3).map((product: any) => (
-
+			products?.slice(0, 3).map((product: any) => (
 				<div class="card">
-
 					<div class="card-image">
-
 						<img
 							src={product.image}
 							alt={product.title}
 						/>
 
-						<button class="favorite">
+						<button
+							class="favorite add-to-wishlist"
+							type="button"
+							data-id={product.id}
+							data-title={product.title}
+							data-price={product.price}
+							data-image={product.image}
+							data-badge={product.badge || ''}
+						>
 							♡
 						</button>
 
-						{
-							product.badge && (
-								<span class="badge">
-									{product.badge}
-								</span>
-							)
-						}
-
+						{product.badge && (
+							<span class={`badge ${product.badge.toLowerCase()}`}>
+								{product.badge}
+							</span>
+						)}
 					</div>
 
 					<div class="card-content">
-
-						<h3>
-							{product.title}
-						</h3>
+						<h3>{product.title}</h3>
 
 						<p class="price">
-							{product.price}kr
+							{product.price} kr
 						</p>
 
-						<button class="cart-btn">
+						<button
+							class="cart-btn add-to-cart"
+							type="button"
+							data-id={product.id}
+							data-title={product.title}
+							data-price={product.price}
+							data-image={product.image}
+							data-badge={product.badge || ''}
+							data-release-date={product.release_date || ''}
+							data-i18n="addToCart"
+						>
 							Add to Cart
 						</button>
-
 					</div>
-
 				</div>
-
 			))
 		}
-
 	</div>
-
 </section>
+
+<script is:inline>
+	const cartButtons = document.querySelectorAll('.add-to-cart');
+
+	cartButtons.forEach((button) => {
+		button.addEventListener('click', () => {
+			const product = {
+				id: button.dataset.id,
+				name: button.dataset.title,
+				price: Number(button.dataset.price),
+				image: button.dataset.image,
+				badge: button.dataset.badge || '',
+				releaseDate: button.dataset.releaseDate || '',
+				qty: 1
+			};
+
+			const cart = JSON.parse(
+				localStorage.getItem('cart') || '[]'
+			);
+
+			const existingProduct = cart.find(
+				(item) => item.id === product.id
+			);
+
+			if (existingProduct) {
+				existingProduct.qty += 1;
+			} else {
+				cart.push(product);
+			}
+
+			localStorage.setItem(
+				'cart',
+				JSON.stringify(cart)
+			);
+
+			button.innerText = 'Added ✓';
+
+			setTimeout(() => {
+				button.innerText = 'Add to Cart';
+			}, 1000);
+		});
+	});
+
+	const wishlistButtons = document.querySelectorAll('.add-to-wishlist');
+
+	function loadWishlistState() {
+		const wishlist = JSON.parse(
+			localStorage.getItem('wishlist') || '[]'
+		);
+
+		wishlistButtons.forEach((button) => {
+			const productId = button.dataset.id;
+
+			const alreadyExists = wishlist.find(
+				(item) => item.id === productId
+			);
+
+			if (alreadyExists) {
+				button.innerText = '♥';
+				button.classList.add('active');
+			}
+		});
+	}
+
+	wishlistButtons.forEach((button) => {
+		button.addEventListener('click', () => {
+			const product = {
+				id: button.dataset.id,
+				name: button.dataset.title,
+				price: Number(button.dataset.price),
+				image: button.dataset.image,
+				badge: button.dataset.badge || ''
+			};
+
+			let wishlist = JSON.parse(
+				localStorage.getItem('wishlist') || '[]'
+			);
+
+			const alreadyExists = wishlist.find(
+				(item) => item.id === product.id
+			);
+
+			if (!alreadyExists) {
+				wishlist.push(product);
+
+				localStorage.setItem(
+					'wishlist',
+					JSON.stringify(wishlist)
+				);
+
+				button.innerText = '♥';
+				button.classList.add('active');
+			} else {
+				wishlist = wishlist.filter(
+					(item) => item.id !== product.id
+				);
+
+				localStorage.setItem(
+					'wishlist',
+					JSON.stringify(wishlist)
+				);
+
+				button.innerText = '♡';
+				button.classList.remove('active');
+			}
+		});
+	});
+
+	loadWishlistState();
+</script>
 
 <style>
 .featured {
@@ -150,19 +261,36 @@ products?.slice(0, 3).map((product: any) => (
 	cursor: pointer;
 }
 
+.favorite.active {
+	background: #ef4f96;
+	color: white;
+}
+
 .badge {
 	position: absolute;
-	left: 1rem;
-	bottom: 1rem;
+	left: 1.25rem;
+	bottom: 1.25rem;
 
-	background: #8d5bc5;
 	color: white;
 
-	padding: 0.8rem 1.5rem;
-
-	border-radius: 12px;
+	padding: 1rem 2rem;
+	border-radius: 14px;
 
 	font-weight: bold;
+	font-size: 1rem;
+}
+
+.badge.new {
+	background: #8d5bc5;
+}
+
+.badge.sale {
+	background: #f4c542;
+	color: #4c2366;
+}
+
+.badge.pre-order {
+	background: #ff5ca8;
 }
 
 .card-content {
@@ -179,22 +307,24 @@ products?.slice(0, 3).map((product: any) => (
 	font-size: 1.3rem;
 	font-weight: 700;
 	color: #4c2366;
-
 	margin-bottom: 1rem;
 }
 
 .cart-btn {
 	width: 100%;
-
 	padding: 1rem;
-
 	border: none;
 	border-radius: 999px;
-
 	background: #e5a8da;
 	color: #4c2366;
-
+	font-size: 1rem;
 	cursor: pointer;
+	transition: 0.2s ease;
+}
+
+.cart-btn:hover {
+	transform: translateY(-2px);
+	opacity: 0.9;
 }
 
 @media (max-width: 1024px) {
@@ -204,6 +334,10 @@ products?.slice(0, 3).map((product: any) => (
 }
 
 @media (max-width: 640px) {
+	.featured {
+		padding: 3rem 2rem;
+	}
+
 	.card-grid {
 		grid-template-columns: 1fr;
 	}

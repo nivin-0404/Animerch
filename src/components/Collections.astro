@@ -1,92 +1,87 @@
 ---
-const products = [
-	{
-		name: 'Ram Figure',
-		price: '29.99 $',
-		image: '/assets/ram.png',
-		type: 'Prize Figures',
-		availability: 'Pre Order',
-		badge: 'PRE-ORDER'
-	},
-	{
-		name: 'Rem Figure',
-		price: '39.99 $',
-		image: '/assets/ram.png',
-		type: 'Scale Figures',
-		availability: 'In Stock',
-		badge: 'NEW'
-	},
-	{
-		name: 'Gojo Figure',
-		price: '49.99 $',
-		image: '/assets/ram.png',
-		type: 'Action Figures',
-		availability: 'In Stock',
-		badge: 'SALE'
-	},
-	{
-		name: 'Frieren Figure',
-		price: '59.99 $',
-		image: '/assets/ram.png',
-		type: 'Nendoroid',
-		availability: 'Pre Order',
-		badge: 'PRE-ORDER'
-	},
+/* @ts-nocheck */
 
-    {
-	name: 'New Figure',
-	price: '49.99 $',
-	image: '/assets/ram.png',
-	badge: 'NEW'
-},
+import { createClient } from '@supabase/supabase-js'
 
-{
-	name: 'New Figure',
-	price: '49.99 $',
-	image: '/assets/ram.png',
-	badge: 'NEW'
-},
+const supabase = createClient(
+	'https://vvdrdzonanhxygaiviid.supabase.co',
+	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2ZHJkem9uYW5oeHlnYWl2aWlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzNjU1MjEsImV4cCI6MjA5NDk0MTUyMX0.rX97Rt41Hj5SLBQe6d1WqWddShgQ0lMZzIR1q9gUQ6M'
+)
 
-{
-	name: 'New Figure',
-	price: '49.99 $',
-	image: '/assets/ram.png',
-	badge: 'NEW'
+const { data: products, error } = await supabase
+	.from('Products')
+	.select('*')
+
+if (error) {
+	console.error('Supabase error:', error)
 }
-];
+
+const allProducts = products || []
 ---
 
 <section class="collections-page">
-	<h1>Anime Collectibles</h1>
+	<h1 data-i18n="animeCollection">
+		Anime Collection
+	</h1>
 
 	<div class="top-controls">
-		<button id="toggleFilters" class="pink-btn">
+		<button
+			id="toggleFilters"
+			class="pink-btn"
+			data-i18n="hideFilters"
+		>
 			Hide Filters
 		</button>
 
 		<select id="sortSelect">
-			<option value="recommended">Recommended</option>
-			<option value="low-high">Price: Low to High</option>
-			<option value="high-low">Price: High to Low</option>
+			<option value="recommended" data-i18n="recommended">
+				Recommended
+			</option>
+
+			<option value="low-high" data-i18n="priceLowToHigh">
+				Price: Low to High
+			</option>
+
+			<option value="high-low" data-i18n="priceHighToLow">
+				Price: High to Low
+			</option>
 		</select>
 	</div>
 
-	<div class="layout">
+	<div class="layout" id="layout">
 		<aside class="sidebar" id="sidebar">
 			<div class="filter-group">
-				<h2>Collectibles</h2>
+				<h2 data-i18n="collectibles">
+					Collectibles
+				</h2>
 
 				<ul>
-					<li data-type="all">Show All</li>
-					<li data-type="Prize Figures">Prize Figures</li>
-					<li data-type="Scale Figures">Scale Figures</li>
-					<li data-type="Nendoroid">Nendoroid</li>
-					<li data-type="Action Figures">Action Figures</li>
+					<li class="type-filter" data-type="all" data-i18n="all">
+						Show All
+					</li>
+
+					<li class="type-filter" data-type="Prize Figures" data-i18n="prizeFigures">
+						Prize Figures
+					</li>
+
+					<li class="type-filter" data-type="Scale Figures" data-i18n="scaleFigures">
+						Scale Figures
+					</li>
+
+					<li class="type-filter" data-type="Nendoroid" data-i18n="nendoroid">
+						Nendoroid
+					</li>
+
+					<li class="type-filter" data-type="Action Figures" data-i18n="actionFigures">
+						Action Figures
+					</li>
 				</ul>
 			</div>
 
 			<div class="filter-group">
-				<h2>Filter by</h2>
+				<h2 data-i18n="filter">
+					Filter
+				</h2>
 
 				<label>
 					<input
@@ -94,7 +89,10 @@ const products = [
 						value="In Stock"
 						class="availability-filter"
 					/>
-					In Stock
+
+					<span data-i18n="inStockFilter">
+						In Stock
+					</span>
 				</label>
 
 				<label>
@@ -103,319 +101,255 @@ const products = [
 						value="Pre Order"
 						class="availability-filter"
 					/>
-					Pre Order
+
+					<span data-i18n="preOrder">
+						Pre Order
+					</span>
 				</label>
 			</div>
 		</aside>
 
 		<div class="products-grid" id="productsGrid">
 			{
-				products.map((product) => (
-					<div
-						class="card"
-						data-type={product.type}
-						data-availability={product.availability}
-						data-price={product.price.replace('$', '')}
-					>
-<a href="/Productpage" class="product-link">
-	<div class="card-image">
-		<img
-			src={product.image}
-			alt={product.name}
-		/>
+				allProducts.map((product) => {
+					const availability =
+						product.badge === 'PRE-ORDER'
+							? 'Pre Order'
+							: 'In Stock'
 
-		<button class="favorite">♡</button>
+					const type =
+						product.category || 'Prize Figures'
 
-		<span class="badge">
-			{product.badge}
-		</span>
-	</div>
-</a>
+					return (
+						<div
+							class="card"
+							data-type={type}
+							data-availability={availability}
+							data-price={product.price}
+						>
+							<a href="/Productpage" class="product-link">
+								<div class="card-image">
+									<img
+										src={product.image || '/assets/ram.png'}
+										alt={product.title}
+									/>
 
-						<div class="card-content">
-							<h3>{product.name}</h3>
+									<button class="favorite" type="button">
+										♡
+									</button>
 
-							<p class="price">
-								{product.price}
-							</p>
-<a href="/Productpage">
-  <button class="cart-btn">
-    Add to Cart
-  </button>
-</a>
+									{product.badge && (
+										<span class={`badge ${product.badge.toLowerCase()}`}>
+											{product.badge}
+										</span>
+									)}
+								</div>
+							</a>
+
+							<div class="card-content">
+								<h3>
+									{product.title}
+								</h3>
+
+								<p class="price">
+									{product.price} kr
+								</p>
+
+								<a href="/Productpage">
+									<button
+										class="cart-btn"
+										type="button"
+										data-i18n="addToCart"
+									>
+										Add to Cart
+									</button>
+								</a>
+							</div>
 						</div>
-					</div>
-				))
+					)
+				})
 			}
 		</div>
 	</div>
 
-<div class="show-more-wrapper">
-	<p id="card-count">3 of 9</p>
+	<div class="show-more-wrapper">
+		<p id="card-count">
+			0 of 0
+		</p>
 
-	<button class="show-more" id="showMoreBtn">
-		Show More
-	</button>
-</div>
+		<button
+			class="show-more"
+			id="showMoreBtn"
+			data-i18n="showMore"
+		>
+			Show More
+		</button>
+	</div>
 </section>
 
 <script>
-    
-	const sidebar =
-		document.getElementById('sidebar');
+	import '../lib/language.js'
 
-	const toggleFilters =
-		document.getElementById('toggleFilters');
+	const sidebar = document.getElementById('sidebar')
+	const layout = document.getElementById('layout')
+	const toggleFilters = document.getElementById('toggleFilters')
+	const sortSelect = document.getElementById('sortSelect')
+	const grid = document.getElementById('productsGrid')
+	const showMoreBtn = document.getElementById('showMoreBtn')
+	const cardCount = document.getElementById('card-count')
 
-	const sortSelect =
-		document.getElementById('sortSelect');
+	let currentType = 'all'
+	let visibleCards = 3
 
-	const cards = [
-		...document.querySelectorAll('.card')
-	];
+	const typeButtons = document.querySelectorAll('.type-filter')
+	const availabilityFilters = document.querySelectorAll('.availability-filter')
 
-	const typeButtons =
-		document.querySelectorAll('[data-type]');
+	function getCards() {
+		return [...document.querySelectorAll('.card')]
+	}
 
-	const availabilityFilters =
-		document.querySelectorAll(
-			'.availability-filter'
-		);
+	function getFilteredCards() {
+		const cards = getCards()
 
-	const grid =
-		document.getElementById('productsGrid');
+		const activeAvailability = [...availabilityFilters]
+			.filter((checkbox) => {
+				return checkbox instanceof HTMLInputElement && checkbox.checked
+			})
+			.map((checkbox) => {
+				return checkbox instanceof HTMLInputElement ? checkbox.value : ''
+			})
 
-	let currentType = 'all';
-
-	function filterProducts() {
-		const activeAvailability = [
-			...availabilityFilters
-		]
-			.filter(
-				(checkbox) =>
-					checkbox instanceof HTMLInputElement &&
-					checkbox.checked
-			)
-			.map(
-				(checkbox) =>
-					checkbox instanceof HTMLInputElement
-						? checkbox.value
-						: ''
-			);
-
-		cards.forEach((card) => {
-			if (!(card instanceof HTMLElement))
-				return;
+		return cards.filter((card) => {
+			if (!(card instanceof HTMLElement)) return false
 
 			const matchesType =
-				currentType === 'all' ||
-				card.dataset.type === currentType;
+				currentType === 'all' || card.dataset.type === currentType
 
 			const matchesAvailability =
 				activeAvailability.length === 0 ||
-				activeAvailability.includes(
-					card.dataset.availability || ''
-				);
+				activeAvailability.includes(card.dataset.availability || '')
 
-			if (
-				matchesType &&
-				matchesAvailability
-			) {
-				card.style.display = 'flex';
-			} else {
-				card.style.display = 'none';
+			return matchesType && matchesAvailability
+		})
+	}
+
+	function updateCards() {
+		const cards = getCards()
+		const filteredCards = getFilteredCards()
+
+		cards.forEach((card) => {
+			if (card instanceof HTMLElement) {
+				card.style.display = 'none'
 			}
-		});
+		})
+
+		filteredCards.forEach((card, index) => {
+			if (card instanceof HTMLElement && index < visibleCards) {
+				card.style.display = 'flex'
+			}
+		})
+
+		if (cardCount instanceof HTMLElement) {
+			cardCount.innerText =
+				`${Math.min(visibleCards, filteredCards.length)} of ${filteredCards.length}`
+		}
+
+		if (showMoreBtn instanceof HTMLElement) {
+			showMoreBtn.style.display =
+				visibleCards >= filteredCards.length
+					? 'none'
+					: 'inline-block'
+		}
+	}
+
+	function sortProducts() {
+		if (
+			!(sortSelect instanceof HTMLSelectElement) ||
+			!(grid instanceof HTMLElement)
+		) {
+			return
+		}
+
+		const value = sortSelect.value
+		const cards = getCards()
+
+		if (value === 'low-high') {
+			cards.sort((a, b) => {
+				if (!(a instanceof HTMLElement) || !(b instanceof HTMLElement)) return 0
+
+				return Number(a.dataset.price) - Number(b.dataset.price)
+			})
+		}
+
+		if (value === 'high-low') {
+			cards.sort((a, b) => {
+				if (!(a instanceof HTMLElement) || !(b instanceof HTMLElement)) return 0
+
+				return Number(b.dataset.price) - Number(a.dataset.price)
+			})
+		}
+
+		cards.forEach((card) => {
+			grid.appendChild(card)
+		})
+
+		visibleCards = 3
+		updateCards()
 	}
 
 	typeButtons.forEach((button) => {
-		if (!(button instanceof HTMLElement))
-			return;
+		if (!(button instanceof HTMLElement)) return
 
 		button.addEventListener('click', () => {
-			currentType =
-				button.dataset.type || 'all';
-
-			filterProducts();
-		});
-	});
+			currentType = button.dataset.type || 'all'
+			visibleCards = 3
+			updateCards()
+		})
+	})
 
 	availabilityFilters.forEach((checkbox) => {
-		checkbox.addEventListener(
-			'change',
-			filterProducts
-		);
-	});
+		checkbox.addEventListener('change', () => {
+			visibleCards = 3
+			updateCards()
+		})
+	})
 
 	if (
 		toggleFilters instanceof HTMLElement &&
-		sidebar instanceof HTMLElement
+		sidebar instanceof HTMLElement &&
+		layout instanceof HTMLElement
 	) {
-		toggleFilters.addEventListener(
-			'click',
-			() => {
-				sidebar.classList.toggle(
-					'hidden'
-				);
+		toggleFilters.addEventListener('click', () => {
+			sidebar.classList.toggle('hidden')
+			layout.classList.toggle('filters-hidden')
 
-				if (
-					sidebar.classList.contains(
-						'hidden'
-					)
-				) {
-					toggleFilters.innerText =
-						'Show Filters';
-				} else {
-					toggleFilters.innerText =
-						'Hide Filters';
-				}
-			}
-		);
-	}
-
-	if (
-		sortSelect instanceof HTMLSelectElement &&
-		grid instanceof HTMLElement
-	) {
-		sortSelect.addEventListener(
-			'change',
-			() => {
-				const value =
-					sortSelect.value;
-
-				const sortedCards = [
-					...cards
-				];
-
-				if (
-					value === 'low-high'
-				) {
-					sortedCards.sort(
-						(a, b) => {
-							if (
-								!(
-									a instanceof HTMLElement
-								) ||
-								!(
-									b instanceof HTMLElement
-								)
-							)
-								return 0;
-
-							return (
-								Number(
-									a.dataset.price
-								) -
-								Number(
-									b.dataset.price
-								)
-							);
-						}
-					);
-				}
-
-				if (
-					value === 'high-low'
-				) {
-					sortedCards.sort(
-						(a, b) => {
-							if (
-								!(
-									a instanceof HTMLElement
-								) ||
-								!(
-									b instanceof HTMLElement
-								)
-							)
-								return 0;
-
-							return (
-								Number(
-									b.dataset.price
-								) -
-								Number(
-									a.dataset.price
-								)
-							);
-						}
-					);
-				}
-
-				sortedCards.forEach(
-					(card) => {
-						grid.appendChild(
-							card
-						);
-					}
-				);
-			}
-		);
-
-        	const cards = [
-		...document.querySelectorAll('.card')
-	];
-
-	const showMoreBtn =
-		document.getElementById(
-			'showMoreBtn'
-		);
-
-	const cardCount =
-		document.getElementById(
-			'card-count'
-		);
-
-	let visibleCards = 3;
-
-	function updateCards() {
-		cards.forEach((card, index) => {
-			if (!(card instanceof HTMLElement))
-				return;
-
-			if (index < visibleCards) {
-				card.style.display = 'flex';
+			if (sidebar.classList.contains('hidden')) {
+				toggleFilters.setAttribute('data-i18n', 'showFilters')
+				toggleFilters.innerText = 'Show Filters'
 			} else {
-				card.style.display = 'none';
+				toggleFilters.setAttribute('data-i18n', 'hideFilters')
+				toggleFilters.innerText = 'Hide Filters'
 			}
-		});
 
-		if (
-			cardCount instanceof HTMLElement
-		) {
-			cardCount.innerText =
-				`${Math.min(
-					visibleCards,
-					cards.length
-				)} of ${cards.length}`;
-		}
+			const savedLanguage =
+				localStorage.getItem('language') || 'en'
 
-		if (
-			showMoreBtn instanceof
-				HTMLElement &&
-			visibleCards >= cards.length
-		) {
-			showMoreBtn.style.display =
-				'none';
-		}
+			window.setLanguage?.(savedLanguage)
+		})
 	}
 
-	updateCards();
-
-	if (
-		showMoreBtn instanceof
-		HTMLElement
-	) {
-		showMoreBtn.addEventListener(
-			'click',
-			() => {
-				visibleCards += 3;
-
-				updateCards();
-			}
-		);
-    }
+	if (sortSelect instanceof HTMLSelectElement) {
+		sortSelect.addEventListener('change', sortProducts)
 	}
-    
+
+	if (showMoreBtn instanceof HTMLElement) {
+		showMoreBtn.addEventListener('click', () => {
+			visibleCards += 3
+			updateCards()
+		})
+	}
+
+	updateCards()
 </script>
 
 <style>
@@ -449,10 +383,19 @@ h1 {
 	cursor: pointer;
 }
 
+#sortSelect {
+	outline: none;
+}
+
 .layout {
 	display: grid;
 	grid-template-columns: 240px 1fr;
 	gap: 3rem;
+	align-items: start;
+}
+
+.layout.filters-hidden {
+	grid-template-columns: 1fr;
 }
 
 .sidebar.hidden {
@@ -480,49 +423,74 @@ h1 {
 	border-bottom: 1px solid #ddd;
 }
 
+.filter-group li:hover {
+	color: #ef4f96;
+}
+
 .filter-group label {
 	display: block;
 	margin: 1rem 0;
+	color: #4c2366;
 }
 
 .products-grid {
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
+	grid-template-columns: repeat(3, minmax(0, 1fr));
 	gap: 2rem;
+	width: 100%;
 }
 
 .card {
 	display: flex;
 	flex-direction: column;
+	width: 100%;
+	min-width: 0;
+}
+
+.product-link {
+	display: block;
+	width: 100%;
+	text-decoration: none;
 }
 
 .card-image {
 	position: relative;
-	border-radius: 20px;
-	overflow: hidden;
 	background: #efcfc8;
+	border-radius: 20px;
+
+	width: 100%;
+	aspect-ratio: 1 / 1;
+
 	display: flex;
 	align-items: center;
 	justify-content: center;
+
+	overflow: hidden;
 }
 
 .card-image img {
-	width: 70%;
-	height: auto;
+	width: 100%;
+	height: 100%;
 	object-fit: contain;
+	padding: 1rem;
+	box-sizing: border-box;
 }
 
 .favorite {
 	position: absolute;
 	top: 1rem;
 	right: 1rem;
+
 	width: 50px;
 	height: 50px;
+
 	border-radius: 50%;
 	border: none;
+
 	background: white;
 	font-size: 1.5rem;
 	color: #ef4f96;
+
 	cursor: pointer;
 }
 
@@ -530,12 +498,27 @@ h1 {
 	position: absolute;
 	left: 1.25rem;
 	bottom: 1.25rem;
-	background: #ef4f96;
+
 	color: white;
+
 	padding: 1rem 2rem;
 	border-radius: 14px;
+
 	font-weight: bold;
 	font-size: 1rem;
+}
+
+.badge.new {
+	background: #8d5bc5;
+}
+
+.badge.sale {
+	background: #f4c542;
+	color: #4c2366;
+}
+
+.badge.pre-order {
+	background: #ff5ca8;
 }
 
 .card-content {
@@ -558,11 +541,15 @@ h1 {
 .cart-btn {
 	width: 100%;
 	padding: 1rem;
+
 	border: none;
 	border-radius: 999px;
+
 	background: #e5a8da;
 	color: #4c2366;
+
 	font-size: 1rem;
+
 	cursor: pointer;
 	transition: 0.2s ease;
 }
@@ -584,7 +571,15 @@ h1 {
 }
 
 @media (max-width: 700px) {
+	.collections-page {
+		padding: 2rem;
+	}
+
 	.layout {
+		grid-template-columns: 1fr;
+	}
+
+	.layout.filters-hidden {
 		grid-template-columns: 1fr;
 	}
 
