@@ -1,6 +1,7 @@
 ---
 /* @ts-nocheck */
 
+import '../style/global.css';
 import { createClient } from '@supabase/supabase-js'
 
 const supabase = createClient(
@@ -31,10 +32,15 @@ if (error) {
 			products?.slice(0, 3).map((product: any) => (
 				<div class="card">
 					<div class="card-image">
-						<img
-							src={product.image}
-							alt={product.title}
-						/>
+<a
+	href={`/Productpage?id=${product.id}`}
+	class="product-image-link"
+>
+	<img
+		src={product.image || '/assets/ram.png'}
+		alt={product.title}
+	/>
+</a>
 
 						<button
 							class="favorite add-to-wishlist"
@@ -42,7 +48,7 @@ if (error) {
 							data-id={product.id}
 							data-title={product.title}
 							data-price={product.price}
-							data-image={product.image}
+							data-image={product.image || '/assets/ram.png'}
 							data-badge={product.badge || ''}
 						>
 							♡
@@ -56,7 +62,12 @@ if (error) {
 					</div>
 
 					<div class="card-content">
-						<h3>{product.title}</h3>
+<a
+	href={`/Productpage?id=${product.id}`}
+	class="product-title-link"
+>
+	<h3>{product.title}</h3>
+</a>
 
 						<p class="price">
 							{product.price} kr
@@ -68,7 +79,7 @@ if (error) {
 							data-id={product.id}
 							data-title={product.title}
 							data-price={product.price}
-							data-image={product.image}
+							data-image={product.image || '/assets/ram.png'}
 							data-badge={product.badge || ''}
 							data-release-date={product.release_date || ''}
 							data-i18n="addToCart"
@@ -83,6 +94,7 @@ if (error) {
 </section>
 
 <script is:inline>
+(() => {
 	const cartButtons = document.querySelectorAll('.add-to-cart');
 
 	cartButtons.forEach((button) => {
@@ -102,7 +114,7 @@ if (error) {
 			);
 
 			const existingProduct = cart.find(
-				(item) => item.id === product.id
+				(item) => String(item.id) === String(product.id)
 			);
 
 			if (existingProduct) {
@@ -135,7 +147,7 @@ if (error) {
 			const productId = button.dataset.id;
 
 			const alreadyExists = wishlist.find(
-				(item) => item.id === productId
+				(item) => String(item.id) === String(productId)
 			);
 
 			if (alreadyExists) {
@@ -160,7 +172,7 @@ if (error) {
 			);
 
 			const alreadyExists = wishlist.find(
-				(item) => item.id === product.id
+				(item) => String(item.id) === String(product.id)
 			);
 
 			if (!alreadyExists) {
@@ -175,7 +187,7 @@ if (error) {
 				button.classList.add('active');
 			} else {
 				wishlist = wishlist.filter(
-					(item) => item.id !== product.id
+					(item) => String(item.id) !== String(product.id)
 				);
 
 				localStorage.setItem(
@@ -190,6 +202,7 @@ if (error) {
 	});
 
 	loadWishlistState();
+})();
 </script>
 
 <style>
@@ -236,6 +249,18 @@ if (error) {
 	overflow: hidden;
 }
 
+.product-image-link {
+	width: 100%;
+	height: 100%;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	text-decoration: none;
+	color: inherit;
+}
+
 .card-image img {
 	width: 100%;
 	height: 100%;
@@ -259,6 +284,7 @@ if (error) {
 
 	font-size: 1.5rem;
 	cursor: pointer;
+	z-index: 5;
 }
 
 .favorite.active {
@@ -278,6 +304,8 @@ if (error) {
 
 	font-weight: bold;
 	font-size: 1rem;
+
+	z-index: 4;
 }
 
 .badge.new {
@@ -297,10 +325,20 @@ if (error) {
 	padding-top: 1rem;
 }
 
-.card-content h3 {
+.product-title-link {
+	text-decoration: none;
+	color: inherit;
+}
+
+.product-title-link h3 {
 	font-size: 1rem;
 	color: #4c2366;
 	margin-bottom: 0.5rem;
+	cursor: pointer;
+}
+
+.product-title-link h3:hover {
+	color: #ef4f96;
 }
 
 .price {

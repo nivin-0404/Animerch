@@ -20,6 +20,27 @@ if (error) {
 }
 
 const products = relatedProducts || []
+
+function getProductImages(product: any) {
+	return [
+		product.image,
+		product.image2,
+		product.image3,
+		product.image4,
+		product.image5,
+		product.image_2,
+		product.image_3,
+		product.image_4,
+		product.image_5
+	]
+		.filter(Boolean)
+		.flatMap((value) => {
+			return String(value)
+				.split(/\n|,/)
+				.map((url) => url.trim())
+				.filter(Boolean)
+		})
+}
 ---
 
 <html lang="en">
@@ -97,16 +118,33 @@ const products = relatedProducts || []
 
 		<div class="related-grid">
 			{
-				products.map((product) => (
-					<div class="related-card">
-						<a href="/Productpage" class="related-link">
-							<div class="related-image">
-								<img
-									src={product.image || '/assets/ram.png'}
-									alt={product.title}
-								/>
+				products.map((product) => {
+					const productImages = getProductImages(product)
+					const image = productImages[0] || '/assets/ram.png'
 
-								<button class="favorite" type="button">
+					return (
+						<div class="related-card">
+							<div class="related-image">
+								<a
+									href={`/Productpage?id=${product.id}`}
+									class="related-link"
+								>
+									<img
+										src={image}
+										alt={product.title}
+									/>
+								</a>
+
+								<button
+									class="favorite related-wishlist"
+									type="button"
+									aria-label="Add to wishlist"
+									data-id={product.id}
+									data-title={product.title}
+									data-price={product.price}
+									data-image={image}
+									data-badge={product.badge || ''}
+								>
 									♡
 								</button>
 
@@ -118,33 +156,38 @@ const products = relatedProducts || []
 									)
 								}
 							</div>
-						</a>
 
-						<div class="related-content">
-							<h3>
-								{product.title}
-							</h3>
+							<div class="related-content">
+								<a
+									href={`/Productpage?id=${product.id}`}
+									class="related-title-link"
+								>
+									<h3>
+										{product.title}
+									</h3>
+								</a>
 
-							<p class="price">
-								{product.price} kr
-							</p>
+								<p class="price">
+									{product.price} kr
+								</p>
 
-							<button
-								class="related-cart-btn add-to-cart"
-								type="button"
-								data-id={product.id}
-								data-title={product.title}
-								data-price={product.price}
-								data-image={product.image}
-								data-badge={product.badge || ''}
-								data-release-date={product.release_date || ''}
-								data-i18n="addToCart"
-							>
-								Add to Cart
-							</button>
+								<button
+									class="related-cart-btn add-to-cart"
+									type="button"
+									data-id={product.id}
+									data-title={product.title}
+									data-price={product.price}
+									data-image={image}
+									data-badge={product.badge || ''}
+									data-release-date={product.release_date || ''}
+									data-i18n="addToCart"
+								>
+									Add to Cart
+								</button>
+							</div>
 						</div>
-					</div>
-				))
+					)
+				})
 			}
 		</div>
 	</section>
@@ -252,7 +295,11 @@ const products = relatedProducts || []
 						}
 
 						<div class="cart-actions">
-							<button class="link-btn">
+							<button
+								class="link-btn move-wishlist-btn"
+								type="button"
+								data-index="${index}"
+							>
 								Move to Wishlist
 							</button>
 
@@ -303,6 +350,9 @@ const products = relatedProducts || []
 			const removeButtons =
 				document.querySelectorAll('.remove-btn');
 
+			const moveWishlistButtons =
+				document.querySelectorAll('.move-wishlist-btn');
+
 			qtyButtons.forEach((button) => {
 				button.addEventListener('click', () => {
 					const index = Number(button.dataset.index);
@@ -329,6 +379,43 @@ const products = relatedProducts || []
 					renderCart();
 				});
 			});
+
+			moveWishlistButtons.forEach((button) => {
+				button.addEventListener('click', () => {
+					const index = Number(button.dataset.index);
+					const item = cart[index];
+
+					let wishlist = JSON.parse(
+						localStorage.getItem('wishlist') || '[]'
+					);
+
+					const product = {
+						id: item.id,
+						name: item.name,
+						price: Number(item.price),
+						image: item.image,
+						badge: item.badge || ''
+					};
+
+					const alreadyExists = wishlist.find(
+						(wishlistItem) => String(wishlistItem.id) === String(product.id)
+					);
+
+					if (!alreadyExists) {
+						wishlist.push(product);
+					}
+
+					localStorage.setItem(
+						'wishlist',
+						JSON.stringify(wishlist)
+					);
+
+					cart.splice(index, 1);
+					saveCart();
+					renderCart();
+					setupWishlistButtons();
+				});
+			});
 		}
 
 		function setupAddToCartButtons() {
@@ -348,7 +435,7 @@ const products = relatedProducts || []
 					};
 
 					const existingProduct =
-						cart.find((item) => item.id === product.id);
+						cart.find((item) => String(item.id) === String(product.id));
 
 					if (existingProduct) {
 						existingProduct.qty += 1;
@@ -368,7 +455,75 @@ const products = relatedProducts || []
 			});
 		}
 
+		function setupWishlistButtons() {
+			const wishlistButtons =
+				document.querySelectorAll('.related-wishlist');
+
+			let wishlist = JSON.parse(
+				localStorage.getItem('wishlist') || '[]'
+			);
+
+			wishlistButtons.forEach((button) => {
+				const alreadyExists = wishlist.find(
+					(item) => String(item.id) === String(button.dataset.id)
+				);
+
+				if (alreadyExists) {
+					button.innerText = '♥';
+					button.classList.add('active');
+					button.setAttribute('aria-label', 'Remove from wishlist');
+				} else {
+					button.innerText = '♡';
+					button.classList.remove('active');
+					button.setAttribute('aria-label', 'Add to wishlist');
+				}
+
+				button.addEventListener('click', (event) => {
+					event.preventDefault();
+					event.stopPropagation();
+
+					let wishlist = JSON.parse(
+						localStorage.getItem('wishlist') || '[]'
+					);
+
+					const product = {
+						id: button.dataset.id,
+						name: button.dataset.title,
+						price: Number(button.dataset.price),
+						image: button.dataset.image,
+						badge: button.dataset.badge || ''
+					};
+
+					const alreadyExists = wishlist.find(
+						(item) => String(item.id) === String(product.id)
+					);
+
+					if (!alreadyExists) {
+						wishlist.push(product);
+
+						button.innerText = '♥';
+						button.classList.add('active');
+						button.setAttribute('aria-label', 'Remove from wishlist');
+					} else {
+						wishlist = wishlist.filter(
+							(item) => String(item.id) !== String(product.id)
+						);
+
+						button.innerText = '♡';
+						button.classList.remove('active');
+						button.setAttribute('aria-label', 'Add to wishlist');
+					}
+
+					localStorage.setItem(
+						'wishlist',
+						JSON.stringify(wishlist)
+					);
+				});
+			});
+		}
+
 		setupAddToCartButtons();
+		setupWishlistButtons();
 		renderCart();
 	</script>
 </body>
@@ -594,8 +749,12 @@ body {
 	background: #111;
 }
 
+/* RELATED PRODUCTS */
+
 .related-products {
-	padding: 5rem 4rem;
+	padding: 5rem 2rem;
+	max-width: 1400px;
+	margin: 0 auto;
 	background: #ffffff;
 }
 
@@ -621,19 +780,11 @@ body {
 	min-width: 0;
 }
 
-.related-link {
-	display: block;
-	width: 100%;
-	text-decoration: none;
-	color: inherit;
-}
-
 .related-image {
 	position: relative;
-	background: #efcfc8;
+	background: #efc9cb;
 	border-radius: 20px;
 	padding: 2rem;
-
 	aspect-ratio: 1 / 1;
 
 	display: flex;
@@ -643,11 +794,24 @@ body {
 	overflow: hidden;
 }
 
+.related-link {
+	width: 100%;
+	height: 100%;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	text-decoration: none;
+	color: inherit;
+}
+
 .related-image img {
 	width: 100%;
 	height: 100%;
 	object-fit: contain;
-	padding: 1rem;
+	display: block;
+	padding: 0;
 	box-sizing: border-box;
 }
 
@@ -659,14 +823,33 @@ body {
 	width: 50px;
 	height: 50px;
 
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
 	border-radius: 50%;
 	border: none;
 
-	background: white;
-	font-size: 1.5rem;
-	color: #ef4f96;
+	background: #ffffff;
+	color: var(--pink);
+
+	font-size: 1.35rem;
+	font-weight: 700;
+	line-height: 1;
 
 	cursor: pointer;
+	z-index: 10;
+
+	transition: 0.2s ease;
+}
+
+.favorite:hover {
+	transform: scale(1.05);
+}
+
+.favorite.active {
+	background: var(--pink) !important;
+	color: #ffffff !important;
 }
 
 .badge {
@@ -681,6 +864,8 @@ body {
 
 	font-weight: bold;
 	font-size: 1rem;
+
+	z-index: 4;
 }
 
 .sale {
@@ -701,12 +886,16 @@ body {
 	padding-top: 1rem;
 }
 
-.related-content h3 {
-	font-size: 1.1rem;
-	color: #5a2b75;
-	margin: 0 0 0.5rem;
-	font-weight: 500;
-	line-height: 1.4;
+.related-title-link {
+	text-decoration: none;
+	color: inherit;
+}
+
+.related-title-link h3 {
+	font-size: 1rem;
+	color: #4c2366;
+	margin-bottom: 0.5rem;
+	cursor: pointer;
 
 	display: -webkit-box;
 	-webkit-line-clamp: 2;
@@ -714,35 +903,41 @@ body {
 	overflow: hidden;
 
 	min-height: 3rem;
+	line-height: 1.5;
+}
+
+.related-title-link h3:hover {
+	color: var(--pink);
 }
 
 .related-content .price {
-	font-size: 1.2rem;
-	color: #5a2b75;
-	margin-bottom: 1.25rem;
+	font-size: 1.3rem;
 	font-weight: 700;
+	color: #4c2366;
+	margin-bottom: 1rem;
 }
 
 .related-cart-btn {
 	width: 100%;
-	padding: 1rem;
 
 	border: none;
-	border-radius: 999px;
-
 	background: #e5a8da;
 	color: #4c2366;
+
+	padding: 1rem 3rem;
+	border-radius: 999px;
 
 	font-size: 1rem;
 	font-weight: 600;
 
 	cursor: pointer;
-	transition: 0.2s ease;
+	transition: 0.25s ease;
+	box-shadow: none;
 }
 
 .related-cart-btn:hover {
 	transform: translateY(-2px);
-	opacity: 0.9;
+	opacity: 0.95;
 }
 
 @media (max-width: 1000px) {

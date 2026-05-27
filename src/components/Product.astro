@@ -1,479 +1,779 @@
 ---
-const product = {
-  title: 'Re:ZERO -Starting Life in Another World- Ram Melty Princess Palm Size Figure',
+/* @ts-nocheck */
 
-  price: 156.99,
+import { createClient } from '@supabase/supabase-js'
 
-  releaseDate: '1/1/2027',
+const supabase = createClient(
+	'https://vvdrdzonanhxygaiviid.supabase.co',
+	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2ZHJkem9uYW5oeHlnYWl2aWlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzNjU1MjEsImV4cCI6MjA5NDk0MTUyMX0.rX97Rt41Hj5SLBQe6d1WqWddShgQ0lMZzIR1q9gUQ6M'
+)
 
-  images: [
-    '/assets/ram.png',
-    '/assets/ram.png',
-    '/assets/ram.png',
-  ],
+const productIdFromProps = Astro.props.productId
+const productIdFromUrl = Astro.url.searchParams.get('id')
 
-  description: `
-    Ram is ready to claim her spot in your collection with this Melty Princess Palm Size Figure from Re:ZERO -Starting Life in Another World-.
+const productId = productIdFromProps || productIdFromUrl
 
-    Looking every bit the regal tsundere, Ram brings charm, confidence, and just a hint of sass to your shelf.
-  `,
-};
+const { data: allProducts, error } = await supabase
+	.from('Products')
+	.select('*')
 
+if (error) {
+	console.error('Supabase products error:', error)
+}
+
+const products = allProducts || []
+
+const product = products.find((item) => {
+	return String(item.id).trim() === String(productId).trim()
+})
+
+const relatedProducts = products
+	.filter((item) => String(item.id).trim() !== String(productId).trim())
+	.slice(0, 3)
+
+const productImages = [
+	product?.image || '/assets/ram.png',
+	product?.image || '/assets/ram.png',
+	product?.image || '/assets/ram.png'
+]
+
+const isPreOrder = product?.badge === 'PRE-ORDER'
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{product.title}</title>
-  </head>
+{
+	!product && (
+		<main class="missing-product">
+			<h1>
+				Product not found
+			</h1>
 
-  <body>
-   <main class="product-page">
-  <section class="gallery">
-    <div class="main-image">
-      <img
-        id="mainImage"
-        src={product.images[0]}
-        alt={product.title}
-      />
-    </div>
+			<p>
+				Sorry, this product could not be loaded.
+			</p>
 
-    <div class="thumbnails">
-      {
-        product.images.map((img) => (
-          <button
-            class="thumbnail-btn"
-            data-image={img}
-          >
-            <img src={img} alt="thumbnail" />
-          </button>
-        ))
-      }
-    </div>
-  </section>
+			<p class="debug-text">
+				URL id: {productId || 'No id found in URL'}
+			</p>
 
-  <section class="details">
-    <h1>{product.title}</h1>
+			<p class="debug-text">
+				Products found in Supabase: {products.length}
+			</p>
 
-    <p class="price">
-      ${product.price}
-    </p>
+			<p class="debug-text">
+				Product ids in Supabase: {products.map((item) => item.id).join(', ')}
+			</p>
 
-    <p class="notice">
-      Note: This item is on pre-order and is expected release
-      date: {product.releaseDate}.
-    </p>
+			<a href="/">
+				Go back home
+			</a>
+		</main>
+	)
+}
 
-    <div class="actions">
-      <div class="quantity-selector">
-        <button>-</button>
-        <span>1</span>
-        <button>+</button>
-      </div>
+{
+	product && (
+		<>
+			<main class="product-page">
+				<section class="gallery">
+					<div class="main-image">
+						<img
+							id="mainImage"
+							src={productImages[0]}
+							alt={product.title}
+						/>
+					</div>
 
-      <button class="cart-btn">
-        Add to Cart
-      </button>
+					<div class="thumbnails">
+						{
+							productImages.map((img) => (
+								<button
+									class="thumbnail-btn"
+									type="button"
+									data-image={img}
+								>
+									<img src={img} alt="thumbnail" />
+								</button>
+							))
+						}
+					</div>
+				</section>
 
-      <button class="wishlist-btn">
-        ♡
-      </button>
-    </div>
+				<section class="details">
+					<h1>
+						{product.title}
+					</h1>
 
-    <div class="content-section">
-      <h2>Description</h2>
-      <p>{product.description}</p>
-    </div>
+					<p class="price">
+						{product.price} kr
+					</p>
 
-    <div class="content-section">
-      <h2>Shipping Info</h2>
+					{
+						isPreOrder && (
+							<p class="notice">
+								Note: This item is on pre-order
+								{product.release_date && (
+									<span>
+										{' '}and expected release date: {product.release_date}.
+									</span>
+								)}
+							</p>
+						)
+					}
 
-      <p>
-        Ships in 5-10 business days after release.
-      </p>
-    </div>
+					<div class="actions">
+						<div class="quantity-selector">
+							<button id="minusBtn" type="button">
+								-
+							</button>
 
-    <div class="content-section">
-      <h2>Size Guide</h2>
+							<span id="quantityNumber">
+								1
+							</span>
 
-      <p>Approximately 9 cm tall.</p>
-    </div>
-  </section>
-</main>
+							<button id="plusBtn" type="button">
+								+
+							</button>
+						</div>
 
-<section class="related-products">
-	<h2>Related products</h2>
+						<button
+							id="singleAddToCart"
+							class="cart-btn"
+							type="button"
+							data-id={product.id}
+							data-title={product.title}
+							data-price={product.price}
+							data-image={product.image || '/assets/ram.png'}
+							data-badge={product.badge || ''}
+							data-release-date={product.release_date || ''}
+						>
+							Add to Cart
+						</button>
 
-	<div class="related-grid">
-		<div class="related-card">
-			<div class="related-image">
-				<img
-					src="/assets/ram.png"
-					alt="Anime Figure"
-				/>
+						<button
+							id="singleWishlist"
+							class="wishlist-btn"
+							type="button"
+							data-id={product.id}
+							data-title={product.title}
+							data-price={product.price}
+							data-image={product.image || '/assets/ram.png'}
+							data-badge={product.badge || ''}
+						>
+							♡
+						</button>
+					</div>
 
-				<button class="favorite">
-					♡
-				</button>
-			</div>
+					<div class="content-section">
+						<h2>
+							Description
+						</h2>
 
-			<div class="related-content">
-				<h3>
-					Lorem ipsum dolor sit amet
-				</h3>
+						<p>
+							{product.description || 'No description available yet.'}
+						</p>
+					</div>
 
-				<p class="price">
-					29.99 $
-				</p>
+					<div class="content-section">
+						<h2>
+							Shipping Info
+						</h2>
 
-				<button class="cart-btn">
-					Add to Cart
-				</button>
-			</div>
-		</div>
+						<p>
+							Ships in 5-10 business days.
+						</p>
+					</div>
 
-		<div class="related-card">
-			<div class="related-image">
-				<img
-					src="/assets/ram.png"
-					alt="Anime Figure"
-				/>
+					<div class="content-section">
+						<h2>
+							Size Guide
+						</h2>
 
-				<button class="favorite">
-					♡
-				</button>
+						<p>
+							Size information will be added soon.
+						</p>
+					</div>
+				</section>
+			</main>
 
-				<span class="badge sale">
-					SALE
-				</span>
-			</div>
+			<section class="related-products">
+				<h2>
+					Related products
+				</h2>
 
-			<div class="related-content">
-				<h3>
-					Lorem ipsum dolor sit amet
-				</h3>
+				<div class="related-grid">
+					{
+						relatedProducts.map((related) => (
+							<div class="related-card">
+								<div class="related-image">
+									<a
+										href={`/Productpage?id=${related.id}`}
+										class="related-image-link"
+									>
+										<img
+											src={related.image || '/assets/ram.png'}
+											alt={related.title}
+										/>
+									</a>
 
-				<p class="price">
-					29.99 $
-				</p>
+									<button
+										class="favorite related-wishlist"
+										type="button"
+										data-id={related.id}
+										data-title={related.title}
+										data-price={related.price}
+										data-image={related.image || '/assets/ram.png'}
+										data-badge={related.badge || ''}
+									>
+										♡
+									</button>
 
-				<button class="cart-btn">
-					Add to Cart
-				</button>
-			</div>
-		</div>
+									{related.badge && (
+										<span class={`badge ${related.badge.toLowerCase()}`}>
+											{related.badge}
+										</span>
+									)}
+								</div>
 
-		<div class="related-card">
-			<div class="related-image">
-				<img
-					src="/assets/ram.png"
-					alt="Anime Figure"
-				/>
+								<div class="related-content">
+									<a
+										href={`/Productpage?id=${related.id}`}
+										class="related-title-link"
+									>
+										<h3>
+											{related.title}
+										</h3>
+									</a>
 
-				<button class="favorite">
-					♡
-				</button>
+									<p class="price">
+										{related.price} kr
+									</p>
 
-				<span class="badge preorder">
-					PRE-ORDER
-				</span>
-			</div>
+									<button
+										class="cart-btn related-cart-btn"
+										type="button"
+										data-id={related.id}
+										data-title={related.title}
+										data-price={related.price}
+										data-image={related.image || '/assets/ram.png'}
+										data-badge={related.badge || ''}
+										data-release-date={related.release_date || ''}
+									>
+										Add to Cart
+									</button>
+								</div>
+							</div>
+						))
+					}
+				</div>
+			</section>
+		</>
+	)
+}
 
-			<div class="related-content">
-				<h3>
-					Lorem ipsum dolor sit amet
-				</h3>
+<script is:inline>
+	(() => {
+		const mainImage =
+			document.getElementById('mainImage');
 
-				<p class="price">
-					29.99 $
-				</p>
+		const thumbnailButtons =
+			document.querySelectorAll('.thumbnail-btn');
 
-				<button class="cart-btn">
-					Add to Cart
-				</button>
-			</div>
-		</div>
-	</div>
-</section>
+		thumbnailButtons.forEach((button) => {
+			button.addEventListener('click', () => {
+				if (mainImage) {
+					mainImage.src = button.dataset.image;
+				}
+			});
+		});
 
-<script>
-	const addToCartBtn =
-		document.querySelector(
-			'.actions .cart-btn'
-		);
+		let quantity = 1;
 
-	if (
-		addToCartBtn instanceof
-		HTMLButtonElement
-	) {
-		addToCartBtn.addEventListener(
-			'click',
-			() => {
+		const quantityNumber =
+			document.getElementById('quantityNumber');
+
+		const minusBtn =
+			document.getElementById('minusBtn');
+
+		const plusBtn =
+			document.getElementById('plusBtn');
+
+		function updateQuantity() {
+			if (quantityNumber) {
+				quantityNumber.innerText = String(quantity);
+			}
+		}
+
+		if (minusBtn) {
+			minusBtn.addEventListener('click', () => {
+				if (quantity > 1) {
+					quantity -= 1;
+					updateQuantity();
+				}
+			});
+		}
+
+		if (plusBtn) {
+			plusBtn.addEventListener('click', () => {
+				quantity += 1;
+				updateQuantity();
+			});
+		}
+
+		const addToCartBtn =
+			document.getElementById('singleAddToCart');
+
+		if (addToCartBtn) {
+			addToCartBtn.addEventListener('click', () => {
 				const product = {
-					name:
-						'Re:ZERO -Starting Life in Another World- Ram Melty Princess Palm Size Figure',
-
-					price: 156.99,
-
-					image:
-						'/assets/ram.png',
-
-					qty: 1,
+					id: addToCartBtn.dataset.id,
+					name: addToCartBtn.dataset.title,
+					price: Number(addToCartBtn.dataset.price),
+					image: addToCartBtn.dataset.image,
+					badge: addToCartBtn.dataset.badge || '',
+					releaseDate: addToCartBtn.dataset.releaseDate || '',
+					qty: quantity
 				};
 
-				const existingCart =
-					JSON.parse(
-						localStorage.getItem(
-							'cart'
-						) || '[]'
-					);
+				const cart = JSON.parse(
+					localStorage.getItem('cart') || '[]'
+				);
 
-				const existingProduct =
-					existingCart.find(
-						(item: {
-							name: string;
-						}) =>
-							item.name ===
-							product.name
-					);
+				const existingProduct = cart.find(
+					(item) => String(item.id) === String(product.id)
+				);
 
 				if (existingProduct) {
-					existingProduct.qty += 1;
+					existingProduct.qty += quantity;
 				} else {
-					existingCart.push(
-						product
-					);
+					cart.push(product);
 				}
 
 				localStorage.setItem(
 					'cart',
-					JSON.stringify(
-						existingCart
-					)
+					JSON.stringify(cart)
 				);
 
-				alert(
-					'Added to cart!'
-				);
+				addToCartBtn.innerText = 'Added ✓';
+
+				setTimeout(() => {
+					addToCartBtn.innerText = 'Add to Cart';
+				}, 1000);
+			});
+		}
+
+		const wishlistBtn =
+			document.getElementById('singleWishlist');
+
+		function loadSingleWishlistButton() {
+			if (!wishlistBtn) return;
+
+			const wishlist = JSON.parse(
+				localStorage.getItem('wishlist') || '[]'
+			);
+
+			const alreadyExists = wishlist.find(
+				(item) => String(item.id) === String(wishlistBtn.dataset.id)
+			);
+
+			if (alreadyExists) {
+				wishlistBtn.innerText = '♥';
+				wishlistBtn.classList.add('active');
 			}
-		);
-	}
+		}
+
+		if (wishlistBtn) {
+			wishlistBtn.addEventListener('click', () => {
+				const product = {
+					id: wishlistBtn.dataset.id,
+					name: wishlistBtn.dataset.title,
+					price: Number(wishlistBtn.dataset.price),
+					image: wishlistBtn.dataset.image,
+					badge: wishlistBtn.dataset.badge || ''
+				};
+
+				let wishlist = JSON.parse(
+					localStorage.getItem('wishlist') || '[]'
+				);
+
+				const alreadyExists = wishlist.find(
+					(item) => String(item.id) === String(product.id)
+				);
+
+				if (!alreadyExists) {
+					wishlist.push(product);
+
+					localStorage.setItem(
+						'wishlist',
+						JSON.stringify(wishlist)
+					);
+
+					wishlistBtn.innerText = '♥';
+					wishlistBtn.classList.add('active');
+				} else {
+					wishlist = wishlist.filter(
+						(item) => String(item.id) !== String(product.id)
+					);
+
+					localStorage.setItem(
+						'wishlist',
+						JSON.stringify(wishlist)
+					);
+
+					wishlistBtn.innerText = '♡';
+					wishlistBtn.classList.remove('active');
+				}
+			});
+		}
+
+		const relatedCartButtons =
+			document.querySelectorAll('.related-cart-btn');
+
+		relatedCartButtons.forEach((button) => {
+			button.addEventListener('click', () => {
+				const product = {
+					id: button.dataset.id,
+					name: button.dataset.title,
+					price: Number(button.dataset.price),
+					image: button.dataset.image,
+					badge: button.dataset.badge || '',
+					releaseDate: button.dataset.releaseDate || '',
+					qty: 1
+				};
+
+				const cart = JSON.parse(
+					localStorage.getItem('cart') || '[]'
+				);
+
+				const existingProduct = cart.find(
+					(item) => String(item.id) === String(product.id)
+				);
+
+				if (existingProduct) {
+					existingProduct.qty += 1;
+				} else {
+					cart.push(product);
+				}
+
+				localStorage.setItem(
+					'cart',
+					JSON.stringify(cart)
+				);
+
+				button.innerText = 'Added ✓';
+
+				setTimeout(() => {
+					button.innerText = 'Add to Cart';
+				}, 1000);
+			});
+		});
+
+		const relatedWishlistButtons =
+			document.querySelectorAll('.related-wishlist');
+
+		function loadRelatedWishlistButtons() {
+			const wishlist = JSON.parse(
+				localStorage.getItem('wishlist') || '[]'
+			);
+
+			relatedWishlistButtons.forEach((button) => {
+				const alreadyExists = wishlist.find(
+					(item) => String(item.id) === String(button.dataset.id)
+				);
+
+				if (alreadyExists) {
+					button.innerText = '♥';
+					button.classList.add('active');
+				}
+			});
+		}
+
+		relatedWishlistButtons.forEach((button) => {
+			button.addEventListener('click', () => {
+				const product = {
+					id: button.dataset.id,
+					name: button.dataset.title,
+					price: Number(button.dataset.price),
+					image: button.dataset.image,
+					badge: button.dataset.badge || ''
+				};
+
+				let wishlist = JSON.parse(
+					localStorage.getItem('wishlist') || '[]'
+				);
+
+				const alreadyExists = wishlist.find(
+					(item) => String(item.id) === String(product.id)
+				);
+
+				if (!alreadyExists) {
+					wishlist.push(product);
+
+					localStorage.setItem(
+						'wishlist',
+						JSON.stringify(wishlist)
+					);
+
+					button.innerText = '♥';
+					button.classList.add('active');
+				} else {
+					wishlist = wishlist.filter(
+						(item) => String(item.id) !== String(product.id)
+					);
+
+					localStorage.setItem(
+						'wishlist',
+						JSON.stringify(wishlist)
+					);
+
+					button.innerText = '♡';
+					button.classList.remove('active');
+				}
+			});
+		});
+
+		loadSingleWishlistButton();
+		loadRelatedWishlistButtons();
+	})();
 </script>
 
-            <style>
-                :root {
-  --pink: #ec4899;
-  --light-pink: #f9a8d4;
-  --purple: #4b1d59;
-  --soft-purple: #6b4b74;
-  --bg: #f8f4f7;
-  --white: #ffffff;
-  --border: #f1d4e5;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+<style>
+:root {
+	--pink: #ec4899;
+	--light-pink: #f9a8d4;
+	--purple: #4b1d59;
+	--soft-purple: #6b4b74;
+	--bg: #f8f4f7;
+	--white: #ffffff;
+	--border: #f1d4e5;
 }
 
 body {
-  background: var(--bg);
-  font-family: Inter, sans-serif;
-  color: var(--purple);
+	background: var(--bg);
+	color: var(--purple);
+}
+
+/* MISSING PRODUCT */
+
+.missing-product {
+	min-height: 60vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 1rem;
+	text-align: center;
+	padding: 4rem 2rem;
+}
+
+.missing-product h1 {
+	color: var(--purple);
+}
+
+.missing-product a {
+	color: white;
+	background: var(--pink);
+	padding: 1rem 2rem;
+	border-radius: 999px;
+	text-decoration: none;
+}
+
+.debug-text {
+	font-size: 0.95rem;
+	color: var(--purple);
 }
 
 /* PAGE */
 
 .product-page {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 3rem 2rem;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 5rem;
-  align-items: start;
+	max-width: 1400px;
+	margin: 0 auto;
+	padding: 3rem 2rem;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 5rem;
+	align-items: start;
 }
 
 /* GALLERY */
 
 .gallery {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
 }
 
 .main-image {
-  width: 100%;
-  background: #efc9cb;
-  border-radius: 24px;
-  overflow: hidden;
-  padding: 1rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+	width: 100%;
+	background: #efc9cb;
+	border-radius: 24px;
+	overflow: hidden;
+	padding: 1rem;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
 .main-image img {
-  width: 100%;
-  display: block;
-  object-fit: contain;
+	width: 100%;
+	display: block;
+	object-fit: contain;
 }
 
 .thumbnails {
-  display: flex;
-  gap: 1rem;
+	display: flex;
+	gap: 1rem;
 }
 
 .thumbnail-btn {
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  transition: 0.2s ease;
+	border: none;
+	background: transparent;
+	cursor: pointer;
+	transition: 0.2s ease;
 }
 
 .thumbnail-btn img {
-  width: 85px;
-  height: 85px;
-  object-fit: cover;
-  border-radius: 14px;
-  border: 2px solid transparent;
+	width: 85px;
+	height: 85px;
+	object-fit: cover;
+	border-radius: 14px;
+	border: 2px solid transparent;
 }
 
 .thumbnail-btn:hover img {
-  border-color: var(--pink);
-  transform: translateY(-2px);
+	border-color: var(--pink);
+	transform: translateY(-2px);
 }
 
 /* DETAILS */
 
 .details {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
 }
 
 .details h1 {
-  font-size: 2.5rem;
-  line-height: 1.2;
-  font-weight: 700;
-  color: var(--purple);
+	font-size: 2.5rem;
+	line-height: 1.2;
+	color: var(--purple);
 }
 
 .price {
-  font-size: 2rem;
-  font-weight: 700;
+	font-size: 2rem;
+	font-weight: 700;
 }
 
 .notice {
-  color: #e11d48;
-  font-weight: 600;
-  font-size: 0.95rem;
+	color: #e11d48;
+	font-weight: 600;
+	font-size: 0.95rem;
 }
 
 /* ACTIONS */
 
 .actions {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-top: 2rem;
-  flex-wrap: wrap;
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	margin-top: 2rem;
+	flex-wrap: wrap;
 }
 
 /* QUANTITY */
 
 .quantity-selector {
-  display: flex;
-  align-items: center;
-  background: var(--pink);
-  border-radius: 999px;
-  overflow: hidden;
+	display: flex;
+	align-items: center;
+	background: var(--pink);
+	border-radius: 999px;
+	overflow: hidden;
 }
 
 .quantity-selector button {
-  width: 55px;
-  height: 55px;
-  border: none;
-  background: transparent;
-  color: white;
-  font-size: 1.5rem;
-  cursor: pointer;
-  transition: 0.2s ease;
+	width: 55px;
+	height: 55px;
+	border: none;
+	background: transparent;
+	color: white;
+	font-size: 1.5rem;
+	cursor: pointer;
+	transition: 0.2s ease;
 }
 
 .quantity-selector button:hover {
-  background: rgba(255,255,255,0.15);
+	background: rgba(255, 255, 255, 0.15);
 }
 
 .quantity-selector span {
-  width: 50px;
-  text-align: center;
-  color: white;
-  font-weight: 700;
-  font-size: 1rem;
+	width: 50px;
+	text-align: center;
+	color: white;
+	font-weight: 700;
+	font-size: 1rem;
 }
 
-/* ADD TO CART */
+/* BUTTONS */
 
 .cart-btn {
-  border: none;
-  background: var(--pink);
-  color: white;
-  padding: 1rem 3rem;
-  border-radius: 999px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.25s ease;
-  box-shadow: 0 8px 20px rgba(236, 72, 153, 0.3);
+	border: none;
+	background: var(--pink);
+	color: white;
+	padding: 1rem 3rem;
+	border-radius: 999px;
+	font-size: 1rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: 0.25s ease;
+	box-shadow: 0 8px 20px rgba(236, 72, 153, 0.3);
 }
 
 .cart-btn:hover {
-  transform: translateY(-2px);
-  opacity: 0.95;
+	transform: translateY(-2px);
+	opacity: 0.95;
 }
-
-/* WISHLIST */
 
 .wishlist-btn {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  border: 2px solid var(--light-pink);
-  background: white;
-  color: var(--pink);
-  font-size: 1.5rem;
-  cursor: pointer;
-  transition: 0.25s ease;
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	border: 2px solid var(--light-pink);
+	background: white;
+	color: var(--pink);
+	font-size: 1.5rem;
+	cursor: pointer;
+	transition: 0.25s ease;
 }
 
-.wishlist-btn:hover {
-  background: var(--pink);
-  color: white;
+.wishlist-btn:hover,
+.wishlist-btn.active {
+	background: var(--pink);
+	color: white;
 }
 
 /* INFO SECTIONS */
 
 .content-section {
-  border-top: 1px solid var(--border);
-  padding-top: 2rem;
-  margin-top: 1rem;
+	border-top: 1px solid var(--border);
+	padding-top: 2rem;
+	margin-top: 1rem;
 }
 
 .content-section h2 {
-  font-size: 1.6rem;
-  margin-bottom: 1rem;
-  color: var(--purple);
+	font-size: 1.6rem;
+	margin-bottom: 1rem;
+	color: var(--purple);
 }
 
 .content-section p {
-  line-height: 1.8;
-  color: var(--soft-purple);
-  font-size: 1rem;
+	line-height: 1.8;
+	color: var(--soft-purple);
+	font-size: 1rem;
 }
+
+/* RELATED */
 
 .related-products {
 	padding: 5rem 2rem;
+	max-width: 1400px;
+	margin: 0 auto;
 }
 
 .related-products h2 {
@@ -485,7 +785,7 @@ body {
 
 .related-grid {
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
+	grid-template-columns: repeat(3, minmax(0, 1fr));
 	gap: 2rem;
 }
 
@@ -498,6 +798,8 @@ body {
 	position: relative;
 	background: #efc9cb;
 	border-radius: 20px;
+	padding: 2rem;
+	aspect-ratio: 1 / 1;
 
 	display: flex;
 	align-items: center;
@@ -506,9 +808,23 @@ body {
 	overflow: hidden;
 }
 
+.related-image-link {
+	width: 100%;
+	height: 100%;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	text-decoration: none;
+	color: inherit;
+}
+
 .related-image img {
-	width: 72%;
+	width: 100%;
+	height: 100%;
 	object-fit: contain;
+	display: block;
 }
 
 .favorite {
@@ -527,73 +843,111 @@ body {
 
 	font-size: 1.5rem;
 	cursor: pointer;
+	z-index: 5;
+}
+
+.favorite.active {
+	background: var(--pink);
+	color: white;
 }
 
 .badge {
 	position: absolute;
-	left: 1rem;
-	bottom: 1rem;
-
-	padding: 0.8rem 1.5rem;
-	border-radius: 10px;
+	left: 1.25rem;
+	bottom: 1.25rem;
 
 	color: white;
+
+	padding: 1rem 2rem;
+	border-radius: 14px;
+
 	font-weight: bold;
-	font-size: 0.9rem;
+	font-size: 1rem;
+
+	z-index: 4;
 }
 
-.sale {
-	background: #f3c93c;
+.badge.new {
+	background: #8d5bc5;
 }
 
-.preorder {
-	background: var(--pink);
+.badge.sale {
+	background: #f4c542;
+	color: #4c2366;
+}
+
+.badge.pre-order {
+	background: #ff5ca8;
 }
 
 .related-content {
 	padding-top: 1rem;
 }
 
-.related-content h3 {
+.related-title-link {
+	text-decoration: none;
+	color: inherit;
+}
+
+.related-title-link h3 {
 	font-size: 1rem;
+	color: #4c2366;
 	margin-bottom: 0.5rem;
-	color: var(--purple);
+	cursor: pointer;
+}
+
+.related-title-link h3:hover {
+	color: var(--pink);
 }
 
 .related-content .price {
-	font-size: 1.2rem;
+	font-size: 1.3rem;
+	font-weight: 700;
+	color: #4c2366;
 	margin-bottom: 1rem;
 }
 
-.related-content .cart-btn {
+.related-cart-btn {
 	width: 100%;
+	background: #e5a8da;
+	color: #4c2366;
+	box-shadow: none;
 }
 
 /* RESPONSIVE */
 
 @media (max-width: 950px) {
-  .product-page {
-    grid-template-columns: 1fr;
-    gap: 3rem;
-  }
+	.product-page {
+		grid-template-columns: 1fr;
+		gap: 3rem;
+	}
 
-  .details h1 {
-    font-size: 2rem;
-  }
+	.details h1 {
+		font-size: 2rem;
+	}
 
-  .actions {
-    flex-direction: column;
-    align-items: stretch;
-  }
+	.actions {
+		flex-direction: column;
+		align-items: stretch;
+	}
 
-  .cart-btn {
-    width: 100%;
-  }
+	.cart-btn {
+		width: 100%;
+	}
 
-  .wishlist-btn {
-    width: 100%;
-    border-radius: 999px;
-  }
+	.wishlist-btn {
+		width: 100%;
+		border-radius: 999px;
+	}
+
+	.related-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
 }
-            </style>
 
+@media (max-width: 640px) {
+	.related-grid {
+		grid-template-columns: 1fr;
+	}
+}
+</style>
