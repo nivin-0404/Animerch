@@ -33,6 +33,10 @@ import Header from '../components/Header.astro';
 					Favorites
 				</h1>
 
+				<h2 class="sr-only">
+					Saved wishlist products
+				</h2>
+
 				<div id="wishlistGrid" class="wishlist-grid"></div>
 			</section>
 		</main>
@@ -43,6 +47,17 @@ import Header from '../components/Header.astro';
 			const wishlistGrid = document.getElementById('wishlistGrid');
 
 			let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+
+			function cleanImageUrl(image) {
+				if (!image) return '/assets/ram.png';
+
+				const imageUrl = String(image)
+					.split(/\n|,|\s+/)
+					.map((url) => url.trim())
+					.find((url) => url.startsWith('http') || url.startsWith('/'));
+
+				return imageUrl || '/assets/ram.png';
+			}
 
 			function saveWishlist() {
 				localStorage.setItem('wishlist', JSON.stringify(wishlist));
@@ -73,12 +88,13 @@ import Header from '../components/Header.astro';
 
 				wishlist.forEach((item, index) => {
 					const card = document.createElement('div');
+					const image = cleanImageUrl(item.image);
 
 					card.className = 'wishlist-card';
 
 					card.innerHTML = `
 						<div class="wishlist-image">
-							<img src="${item.image}" alt="${item.name}" />
+							<img src="${image}" alt="${item.name || 'Wishlist product'}" />
 
 							<button
 								class="remove-wishlist"
@@ -90,7 +106,7 @@ import Header from '../components/Header.astro';
 							</button>
 						</div>
 
-						<h3>${item.name}</h3>
+						<h3>${item.name || 'Product'}</h3>
 
 						<p>${item.price} kr</p>
 
@@ -139,7 +155,7 @@ import Header from '../components/Header.astro';
 								id: item.id,
 								name: item.name,
 								price: Number(item.price),
-								image: item.image,
+								image: cleanImageUrl(item.image),
 								badge: item.badge || '',
 								qty: 1
 							});
@@ -178,6 +194,18 @@ body {
 	background: white;
 	color: var(--purple);
 	font-family: Inter, sans-serif;
+}
+
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
 }
 
 /* WISHLIST PAGE */
