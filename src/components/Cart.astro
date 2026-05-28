@@ -1,9 +1,12 @@
 ---
 /* @ts-nocheck */
 
-import { createClient } from '@supabase/supabase-js';
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../style/global.css';
 
-const title = 'My Cart';
+import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
 	'https://vvdrdzonanhxygaiviid.supabase.co',
@@ -36,460 +39,470 @@ function getProductImages(product: any) {
 		.filter(Boolean)
 		.flatMap((value) => {
 			return String(value)
-				.split(/\n|,/)
+				.split(/\n|,|\s+/)
 				.map((url) => url.trim())
-				.filter(Boolean);
+				.filter((url) => url.startsWith('http'));
 		});
 }
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
+<Layout>
+	<Header />
 
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1.0"
-		/>
+	<main class="cart-page">
+		<h1>
+			My Cart (
+			<span id="cartCount">0</span>
+			)
+		</h1>
 
-		<title>{title}</title>
-	</head>
+		<div id="cartItems" class="cart-items"></div>
 
-	<body>
-		<main class="cart-page">
-			<h1>
-				My Cart (
-				<span id="cartCount">0</span>
-				)
-			</h1>
-
-			<div id="cartItems" class="cart-items"></div>
-
-			<div class="summary">
-				<h2>
-					Order Summary
-				</h2>
-
-				<div class="summary-box">
-					<div class="row">
-						<span>Order Subtotal</span>
-						<span id="subtotal">0 kr</span>
-					</div>
-
-					<div class="row">
-						<span>Estimated Shipping</span>
-						<span>8.99 kr</span>
-					</div>
-				</div>
-
-				<div class="total">
-					<span>Total</span>
-					<span id="total">0 kr</span>
-				</div>
-
-				<p class="tax-note">
-					Shipping & taxes are calculated at checkout
-				</p>
-
-				<div class="checkout-buttons">
-					<button class="checkout" type="button">
-						Proceed to Checkout
-					</button>
-
-					<button class="gpay" type="button">
-						G Pay Checkout
-					</button>
-				</div>
-			</div>
-		</main>
-
-		<section class="related-products">
-			<h2 data-i18n="relatedProducts">
-				Related products
+		<section class="summary" aria-labelledby="summaryTitle">
+			<h2 id="summaryTitle">
+				Order Summary
 			</h2>
 
-			<div class="related-grid">
-				{
-					products.map((product) => {
-						const productImages = getProductImages(product);
-						const image = productImages[0] || '/assets/ram.png';
+			<div class="summary-box">
+				<div class="row">
+					<span>Order Subtotal</span>
+					<span id="subtotal">0 kr</span>
+				</div>
 
-						return (
-							<div class="related-card">
-								<div class="related-image">
-									<a
-										href={`/Productpage?id=${product.id}`}
-										class="related-link"
-									>
-										<img src={image} alt={product.title} />
-									</a>
+				<div class="row">
+					<span>Estimated Shipping</span>
+					<span>8.99 kr</span>
+				</div>
+			</div>
 
-									<button
-										class="favorite related-wishlist"
-										type="button"
-										aria-label="Add to wishlist"
-										data-id={product.id}
-										data-title={product.title}
-										data-price={product.price}
-										data-image={image}
-										data-badge={product.badge || ''}
-									>
-										♡
-									</button>
+			<div class="total">
+				<span>Total</span>
+				<span id="total">0 kr</span>
+			</div>
 
-									{product.badge && (
-										<span class={`badge ${product.badge.toLowerCase()}`}>
-											{product.badge}
-										</span>
-									)}
-								</div>
+			<p class="tax-note">
+				Shipping & taxes are calculated at checkout
+			</p>
 
-								<div class="related-content">
-									<a
-										href={`/Productpage?id=${product.id}`}
-										class="related-title-link"
-									>
-										<h3>
-											{product.title}
-										</h3>
-									</a>
+			<div class="checkout-buttons">
+				<button class="checkout" type="button">
+					Proceed to Checkout
+				</button>
 
-									<p class="price">
-										{product.price} kr
-									</p>
-
-									<button
-										class="related-cart-btn add-to-cart"
-										type="button"
-										data-id={product.id}
-										data-title={product.title}
-										data-price={product.price}
-										data-image={image}
-										data-badge={product.badge || ''}
-										data-release-date={product.release_date || ''}
-										data-i18n="addToCart"
-									>
-										Add to Cart
-									</button>
-								</div>
-							</div>
-						);
-					})
-				}
+				<button class="gpay" type="button">
+					G Pay Checkout
+				</button>
 			</div>
 		</section>
+	</main>
 
-		<script is:inline>
-			let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+	<section class="related-products" aria-labelledby="relatedProductsTitle">
+		<h2 id="relatedProductsTitle" data-i18n="relatedProducts">
+			Related products
+		</h2>
 
-			const cartItems = document.getElementById('cartItems');
-			const cartCount = document.getElementById('cartCount');
-			const subtotalEl = document.getElementById('subtotal');
-			const totalEl = document.getElementById('total');
+		<div class="related-grid">
+			{
+				products.map((product) => {
+					const productImages = getProductImages(product);
+					const image = productImages[0] || '/assets/ram.png';
 
-			const shipping = 8.99;
-
-			function saveCart() {
-				localStorage.setItem('cart', JSON.stringify(cart));
-			}
-
-			function getWishlist() {
-				return JSON.parse(localStorage.getItem('wishlist') || '[]');
-			}
-
-			function saveWishlist(wishlist) {
-				localStorage.setItem('wishlist', JSON.stringify(wishlist));
-			}
-
-			function renderCart() {
-				if (!cartItems) return;
-
-				cartItems.innerHTML = '';
-
-				let subtotal = 0;
-
-				if (cart.length === 0) {
-					cartItems.innerHTML = `
-						<p class="empty-cart">
-							Your cart is empty.
-						</p>
-					`;
-				}
-
-				cart.forEach((item, index) => {
-					subtotal += item.price * item.qty;
-
-					const div = document.createElement('div');
-
-					div.className = 'cart-item';
-
-					div.innerHTML = `
-						<img src="${item.image}" alt="${item.name}" />
-
-						<div class="cart-info">
-							${
-								item.badge
-									? `
-										<span class="cart-badge">
-											${item.badge}
-										</span>
-									`
-									: ''
-							}
-
-							<h3>${item.name}</h3>
-
-							<div class="qty-wrapper">
-								<p>Quantity</p>
-
-								<div class="qty">
-									<button
-										type="button"
-										class="qty-btn"
-										data-index="${index}"
-										data-amount="-1"
-									>
-										-
-									</button>
-
-									<span>${item.qty}</span>
-
-									<button
-										type="button"
-										class="qty-btn"
-										data-index="${index}"
-										data-amount="1"
-									>
-										+
-									</button>
-								</div>
-							</div>
-
-							${
-								item.releaseDate
-									? `
-										<p class="release">
-											Pre-Order release date:
-											${item.releaseDate}
-										</p>
-									`
-									: ''
-							}
-
-							<div class="cart-actions">
-								<button
-									class="link-btn move-wishlist-btn"
-									type="button"
-									data-index="${index}"
+					return (
+						<div class="related-card">
+							<div class="related-image">
+								<a
+									href={`/Productpage?id=${product.id}`}
+									class="related-link"
 								>
-									Move to Wishlist
+									<img src={image} alt={product.title} />
+								</a>
+
+								<button
+									class="favorite related-wishlist"
+									type="button"
+									aria-label="Add to wishlist"
+									data-id={product.id}
+									data-title={product.title}
+									data-price={product.price}
+									data-image={image}
+									data-badge={product.badge || ''}
+								>
+									♡
 								</button>
 
-								<button
-									class="link-btn remove-btn"
-									type="button"
-									data-index="${index}"
+								{product.badge && (
+									<span class={`badge ${product.badge.toLowerCase()}`}>
+										{product.badge}
+									</span>
+								)}
+							</div>
+
+							<div class="related-content">
+								<a
+									href={`/Productpage?id=${product.id}`}
+									class="related-title-link"
 								>
-									Remove
+									<h3>
+										{product.title}
+									</h3>
+								</a>
+
+								<p class="price">
+									{product.price} kr
+								</p>
+
+								<button
+									class="related-cart-btn add-to-cart"
+									type="button"
+									data-id={product.id}
+									data-title={product.title}
+									data-price={product.price}
+									data-image={image}
+									data-badge={product.badge || ''}
+									data-release-date={product.release_date || ''}
+									data-i18n="addToCart"
+								>
+									Add to Cart
+								</button>
+							</div>
+						</div>
+					);
+				})
+			}
+		</div>
+	</section>
+
+	<Footer />
+
+	<script is:inline>
+		let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+
+		const cartItems = document.getElementById('cartItems');
+		const cartCount = document.getElementById('cartCount');
+		const subtotalEl = document.getElementById('subtotal');
+		const totalEl = document.getElementById('total');
+
+		const shipping = 8.99;
+
+		function cleanImageUrl(image) {
+			if (!image) return '/assets/ram.png';
+
+			const imageUrl = String(image)
+				.split(/\n|,|\s+/)
+				.map((url) => url.trim())
+				.find((url) => url.startsWith('http') || url.startsWith('/'));
+
+			return imageUrl || '/assets/ram.png';
+		}
+
+		function getCart() {
+			return JSON.parse(localStorage.getItem('cart') || '[]');
+		}
+
+		function saveCart() {
+			localStorage.setItem('cart', JSON.stringify(cart));
+		}
+
+		function getWishlist() {
+			return JSON.parse(localStorage.getItem('wishlist') || '[]');
+		}
+
+		function saveWishlist(wishlist) {
+			localStorage.setItem('wishlist', JSON.stringify(wishlist));
+		}
+
+		function renderCart() {
+			if (!cartItems) return;
+
+			cart = getCart();
+			cartItems.innerHTML = '';
+
+			let subtotal = 0;
+
+			if (cart.length === 0) {
+				cartItems.innerHTML = `
+					<p class="empty-cart">
+						Your cart is empty.
+					</p>
+				`;
+			}
+
+			cart.forEach((item, index) => {
+				const itemImage = cleanImageUrl(item.image);
+				const itemName = item.name || 'Product';
+				const itemPrice = Number(item.price) || 0;
+				const itemQty = Number(item.qty) || 1;
+
+				subtotal += itemPrice * itemQty;
+
+				const div = document.createElement('div');
+
+				div.className = 'cart-item';
+
+				div.innerHTML = `
+					<img src="${itemImage}" alt="${itemName}" />
+
+					<div class="cart-info">
+						${
+							item.badge
+								? `
+									<span class="cart-badge">
+										${item.badge}
+									</span>
+								`
+								: ''
+						}
+
+						<h3>${itemName}</h3>
+
+						<div class="qty-wrapper">
+							<p>Quantity</p>
+
+							<div class="qty">
+								<button
+									type="button"
+									class="qty-btn"
+									data-index="${index}"
+									data-amount="-1"
+								>
+									-
+								</button>
+
+								<span>${itemQty}</span>
+
+								<button
+									type="button"
+									class="qty-btn"
+									data-index="${index}"
+									data-amount="1"
+								>
+									+
 								</button>
 							</div>
 						</div>
 
-						<p class="item-price">
-							${item.price} kr
-						</p>
-					`;
-
-					cartItems.appendChild(div);
-				});
-
-				if (cartCount) {
-					cartCount.innerText = String(cart.length);
-				}
-
-				if (subtotalEl) {
-					subtotalEl.innerText = `${subtotal.toFixed(2)} kr`;
-				}
-
-				if (totalEl) {
-					const total = cart.length > 0 ? subtotal + shipping : 0;
-					totalEl.innerText = `${total.toFixed(2)} kr`;
-				}
-
-				setupCartButtons();
-			}
-
-			function setupCartButtons() {
-				const qtyButtons = document.querySelectorAll('.qty-btn');
-				const removeButtons = document.querySelectorAll('.remove-btn');
-				const moveWishlistButtons =
-					document.querySelectorAll('.move-wishlist-btn');
-
-				qtyButtons.forEach((button) => {
-					button.addEventListener('click', () => {
-						const index = Number(button.dataset.index);
-						const amount = Number(button.dataset.amount);
-
-						cart[index].qty += amount;
-
-						if (cart[index].qty <= 0) {
-							cart.splice(index, 1);
+						${
+							item.releaseDate
+								? `
+									<p class="release">
+										Pre-Order release date:
+										${item.releaseDate}
+									</p>
+								`
+								: ''
 						}
 
-						saveCart();
-						renderCart();
-					});
-				});
+						<div class="cart-actions">
+							<button
+								class="link-btn move-wishlist-btn"
+								type="button"
+								data-index="${index}"
+							>
+								Move to Wishlist
+							</button>
 
-				removeButtons.forEach((button) => {
-					button.addEventListener('click', () => {
-						const index = Number(button.dataset.index);
+							<button
+								class="link-btn remove-btn"
+								type="button"
+								data-index="${index}"
+							>
+								Remove
+							</button>
+						</div>
+					</div>
 
+					<p class="item-price">
+						${itemPrice} kr
+					</p>
+				`;
+
+				cartItems.appendChild(div);
+			});
+
+			if (cartCount) {
+				cartCount.innerText = String(cart.length);
+			}
+
+			if (subtotalEl) {
+				subtotalEl.innerText = `${subtotal.toFixed(2)} kr`;
+			}
+
+			if (totalEl) {
+				const total = cart.length > 0 ? subtotal + shipping : 0;
+				totalEl.innerText = `${total.toFixed(2)} kr`;
+			}
+
+			setupCartButtons();
+		}
+
+		function setupCartButtons() {
+			const qtyButtons = document.querySelectorAll('.qty-btn');
+			const removeButtons = document.querySelectorAll('.remove-btn');
+			const moveWishlistButtons = document.querySelectorAll('.move-wishlist-btn');
+
+			qtyButtons.forEach((button) => {
+				button.addEventListener('click', () => {
+					const index = Number(button.dataset.index);
+					const amount = Number(button.dataset.amount);
+
+					cart[index].qty += amount;
+
+					if (cart[index].qty <= 0) {
 						cart.splice(index, 1);
+					}
 
-						saveCart();
-						renderCart();
+					saveCart();
+					renderCart();
+				});
+			});
+
+			removeButtons.forEach((button) => {
+				button.addEventListener('click', () => {
+					const index = Number(button.dataset.index);
+
+					cart.splice(index, 1);
+
+					saveCart();
+					renderCart();
+				});
+			});
+
+			moveWishlistButtons.forEach((button) => {
+				button.addEventListener('click', () => {
+					const index = Number(button.dataset.index);
+					const item = cart[index];
+
+					let wishlist = getWishlist();
+
+					const product = {
+						id: item.id,
+						name: item.name,
+						price: Number(item.price),
+						image: cleanImageUrl(item.image),
+						badge: item.badge || ''
+					};
+
+					const alreadyExists = wishlist.find((wishlistItem) => {
+						return String(wishlistItem.id) === String(product.id);
 					});
+
+					if (!alreadyExists) {
+						wishlist.push(product);
+					}
+
+					saveWishlist(wishlist);
+
+					cart.splice(index, 1);
+
+					saveCart();
+					renderCart();
+					setupWishlistButtons();
+				});
+			});
+		}
+
+		function setupAddToCartButtons() {
+			const buttons = document.querySelectorAll('.add-to-cart');
+
+			buttons.forEach((button) => {
+				button.addEventListener('click', () => {
+					const product = {
+						id: button.dataset.id,
+						name: button.dataset.title,
+						price: Number(button.dataset.price),
+						image: cleanImageUrl(button.dataset.image),
+						badge: button.dataset.badge || '',
+						releaseDate: button.dataset.releaseDate || '',
+						qty: 1
+					};
+
+					const existingProduct = cart.find((item) => {
+						return String(item.id) === String(product.id);
+					});
+
+					if (existingProduct) {
+						existingProduct.qty += 1;
+					} else {
+						cart.push(product);
+					}
+
+					saveCart();
+					renderCart();
+
+					button.innerText = 'Added ✓';
+
+					setTimeout(() => {
+						button.innerText = 'Add to Cart';
+					}, 1000);
+				});
+			});
+		}
+
+		function setupWishlistButtons() {
+			const wishlistButtons = document.querySelectorAll('.related-wishlist');
+			const wishlist = getWishlist();
+
+			wishlistButtons.forEach((button) => {
+				const alreadyExists = wishlist.find((item) => {
+					return String(item.id) === String(button.dataset.id);
 				});
 
-				moveWishlistButtons.forEach((button) => {
-					button.addEventListener('click', () => {
-						const index = Number(button.dataset.index);
-						const item = cart[index];
+				if (alreadyExists) {
+					button.innerText = '♥';
+					button.classList.add('active');
+					button.setAttribute('aria-label', 'Remove from wishlist');
+				} else {
+					button.innerText = '♡';
+					button.classList.remove('active');
+					button.setAttribute('aria-label', 'Add to wishlist');
+				}
 
-						let wishlist = getWishlist();
+				button.addEventListener('click', (event) => {
+					event.preventDefault();
+					event.stopPropagation();
 
-						const product = {
-							id: item.id,
-							name: item.name,
-							price: Number(item.price),
-							image: item.image,
-							badge: item.badge || ''
-						};
+					let wishlist = getWishlist();
 
-						const alreadyExists = wishlist.find(
-							(wishlistItem) =>
-								String(wishlistItem.id) === String(product.id)
-						);
+					const product = {
+						id: button.dataset.id,
+						name: button.dataset.title,
+						price: Number(button.dataset.price),
+						image: cleanImageUrl(button.dataset.image),
+						badge: button.dataset.badge || ''
+					};
 
-						if (!alreadyExists) {
-							wishlist.push(product);
-						}
-
-						saveWishlist(wishlist);
-
-						cart.splice(index, 1);
-
-						saveCart();
-						renderCart();
-						setupWishlistButtons();
+					const alreadyExists = wishlist.find((item) => {
+						return String(item.id) === String(product.id);
 					});
-				});
-			}
 
-			function setupAddToCartButtons() {
-				const buttons = document.querySelectorAll('.add-to-cart');
+					if (!alreadyExists) {
+						wishlist.push(product);
 
-				buttons.forEach((button) => {
-					button.addEventListener('click', () => {
-						const product = {
-							id: button.dataset.id,
-							name: button.dataset.title,
-							price: Number(button.dataset.price),
-							image: button.dataset.image,
-							badge: button.dataset.badge || '',
-							releaseDate: button.dataset.releaseDate || '',
-							qty: 1
-						};
-
-						const existingProduct = cart.find(
-							(item) => String(item.id) === String(product.id)
-						);
-
-						if (existingProduct) {
-							existingProduct.qty += 1;
-						} else {
-							cart.push(product);
-						}
-
-						saveCart();
-						renderCart();
-
-						button.innerText = 'Added ✓';
-
-						setTimeout(() => {
-							button.innerText = 'Add to Cart';
-						}, 1000);
-					});
-				});
-			}
-
-			function setupWishlistButtons() {
-				const wishlistButtons = document.querySelectorAll('.related-wishlist');
-				const wishlist = getWishlist();
-
-				wishlistButtons.forEach((button) => {
-					const alreadyExists = wishlist.find(
-						(item) => String(item.id) === String(button.dataset.id)
-					);
-
-					if (alreadyExists) {
 						button.innerText = '♥';
 						button.classList.add('active');
 						button.setAttribute('aria-label', 'Remove from wishlist');
 					} else {
+						wishlist = wishlist.filter((item) => {
+							return String(item.id) !== String(product.id);
+						});
+
 						button.innerText = '♡';
 						button.classList.remove('active');
 						button.setAttribute('aria-label', 'Add to wishlist');
 					}
 
-					button.addEventListener('click', (event) => {
-						event.preventDefault();
-						event.stopPropagation();
-
-						let wishlist = getWishlist();
-
-						const product = {
-							id: button.dataset.id,
-							name: button.dataset.title,
-							price: Number(button.dataset.price),
-							image: button.dataset.image,
-							badge: button.dataset.badge || ''
-						};
-
-						const alreadyExists = wishlist.find(
-							(item) => String(item.id) === String(product.id)
-						);
-
-						if (!alreadyExists) {
-							wishlist.push(product);
-
-							button.innerText = '♥';
-							button.classList.add('active');
-							button.setAttribute('aria-label', 'Remove from wishlist');
-						} else {
-							wishlist = wishlist.filter(
-								(item) => String(item.id) !== String(product.id)
-							);
-
-							button.innerText = '♡';
-							button.classList.remove('active');
-							button.setAttribute('aria-label', 'Add to wishlist');
-						}
-
-						saveWishlist(wishlist);
-					});
+					saveWishlist(wishlist);
 				});
-			}
+			});
+		}
 
-			setupAddToCartButtons();
-			setupWishlistButtons();
-			renderCart();
-		</script>
-	</body>
-</html>
+		setupAddToCartButtons();
+		setupWishlistButtons();
+		renderCart();
+	</script>
+</Layout>
 
-<style>
+<style is:global>
 :root {
 	--pink: #ef4f96;
 	--light-pink: #f8b8da;
@@ -499,18 +512,9 @@ function getProductImages(product: any) {
 	--tax-pink: #f4a9ce;
 }
 
-* {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-}
-
 body {
 	background: var(--bg);
 	color: var(--purple);
-
-	font-family: Inter, sans-serif;
-	-webkit-font-smoothing: antialiased;
 }
 
 /* CART PAGE */
@@ -538,7 +542,7 @@ body {
 	border-top: 1px solid var(--line);
 }
 
-:global(.empty-cart) {
+.empty-cart {
 	padding: 2rem 0;
 
 	color: var(--purple);
@@ -548,7 +552,7 @@ body {
 
 /* CART ITEM */
 
-:global(.cart-item) {
+.cart-item {
 	display: grid;
 	grid-template-columns: 190px minmax(0, 1fr) auto;
 	align-items: flex-start;
@@ -559,7 +563,7 @@ body {
 	border-bottom: 1px solid var(--line);
 }
 
-:global(.cart-item img) {
+.cart-item img {
 	width: 190px;
 	height: 190px;
 
@@ -572,14 +576,14 @@ body {
 	flex-shrink: 0;
 }
 
-:global(.cart-info) {
+.cart-info {
 	min-width: 0;
 
 	display: flex;
 	flex-direction: column;
 }
 
-:global(.cart-badge) {
+.cart-badge {
 	width: fit-content;
 
 	margin-bottom: 1rem;
@@ -595,7 +599,7 @@ body {
 	letter-spacing: 0.03em;
 }
 
-:global(.cart-info h3) {
+.cart-info h3 {
 	margin-bottom: 1.2rem;
 
 	font-size: 1.05rem;
@@ -603,7 +607,7 @@ body {
 	line-height: 1.4;
 }
 
-:global(.qty-wrapper) {
+.qty-wrapper {
 	display: flex;
 	align-items: center;
 	gap: 1.5rem;
@@ -611,11 +615,11 @@ body {
 	margin-bottom: 1.2rem;
 }
 
-:global(.qty-wrapper p) {
+.qty-wrapper p {
 	font-size: 0.95rem;
 }
 
-:global(.qty) {
+.qty {
 	display: flex;
 	align-items: center;
 	gap: 1.2rem;
@@ -626,7 +630,7 @@ body {
 	border-radius: 8px;
 }
 
-:global(.qty button) {
+.qty button {
 	border: none;
 
 	background: transparent;
@@ -637,7 +641,7 @@ body {
 	cursor: pointer;
 }
 
-:global(.qty span) {
+.qty span {
 	min-width: 15px;
 
 	text-align: center;
@@ -645,7 +649,7 @@ body {
 	font-weight: 700;
 }
 
-:global(.release) {
+.release {
 	margin-bottom: 2.5rem;
 
 	color: #ff0000;
@@ -654,14 +658,14 @@ body {
 	font-weight: 700;
 }
 
-:global(.cart-actions) {
+.cart-actions {
 	display: flex;
 	gap: 2.5rem;
 
 	margin-top: auto;
 }
 
-:global(.link-btn) {
+.link-btn {
 	border: none;
 
 	background: none;
@@ -673,7 +677,7 @@ body {
 	cursor: pointer;
 }
 
-:global(.item-price) {
+.item-price {
 	margin-left: auto;
 
 	font-size: 1rem;
@@ -980,12 +984,12 @@ body {
 /* TABLET */
 
 @media (max-width: 1000px) {
-	:global(.cart-item) {
+	.cart-item {
 		grid-template-columns: 160px minmax(0, 1fr) auto;
 		gap: 1.5rem;
 	}
 
-	:global(.cart-item img) {
+	.cart-item img {
 		width: 160px;
 		height: 160px;
 	}
@@ -1007,25 +1011,25 @@ body {
 		margin-bottom: 1.5rem;
 	}
 
-	:global(.cart-item) {
+	.cart-item {
 		grid-template-columns: 120px minmax(0, 1fr);
 		gap: 1rem;
 
 		padding: 1.5rem 0;
 	}
 
-	:global(.cart-item img) {
+	.cart-item img {
 		width: 120px;
 		height: 120px;
 		padding: 0.75rem;
 	}
 
-	:global(.cart-info h3) {
+	.cart-info h3 {
 		font-size: 0.95rem;
 		margin-bottom: 1rem;
 	}
 
-	:global(.qty-wrapper) {
+	.qty-wrapper {
 		align-items: flex-start;
 		flex-direction: column;
 		gap: 0.5rem;
@@ -1033,21 +1037,21 @@ body {
 		margin-bottom: 1rem;
 	}
 
-	:global(.qty) {
+	.qty {
 		width: fit-content;
 		gap: 1rem;
 	}
 
-	:global(.cart-actions) {
+	.cart-actions {
 		flex-wrap: wrap;
 		gap: 1rem;
 	}
 
-	:global(.link-btn) {
+	.link-btn {
 		font-size: 0.9rem;
 	}
 
-	:global(.item-price) {
+	.item-price {
 		grid-column: 2;
 		margin-left: 0;
 
@@ -1155,43 +1159,43 @@ body {
 		font-size: 1.55rem;
 	}
 
-	:global(.cart-item) {
+	.cart-item {
 		grid-template-columns: 95px minmax(0, 1fr);
 		gap: 0.8rem;
 	}
 
-	:global(.cart-item img) {
+	.cart-item img {
 		width: 95px;
 		height: 95px;
 		padding: 0.55rem;
 	}
 
-	:global(.cart-badge) {
+	.cart-badge {
 		font-size: 0.68rem;
 		padding: 0.3rem 0.7rem;
 		margin-bottom: 0.7rem;
 	}
 
-	:global(.cart-info h3) {
+	.cart-info h3 {
 		font-size: 0.9rem;
 		line-height: 1.35;
 	}
 
-	:global(.qty-wrapper p) {
+	.qty-wrapper p {
 		font-size: 0.85rem;
 	}
 
-	:global(.qty) {
+	.qty {
 		gap: 0.8rem;
 		padding: 0.15rem 0.55rem;
 	}
 
-	:global(.release) {
+	.release {
 		font-size: 0.85rem;
 		margin-bottom: 1rem;
 	}
 
-	:global(.cart-actions) {
+	.cart-actions {
 		flex-direction: column;
 		gap: 0.5rem;
 	}
