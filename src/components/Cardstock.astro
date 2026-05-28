@@ -17,6 +17,27 @@ if (error) {
 	console.error('Supabase error:', error);
 }
 
+function getProductImage(product: any) {
+	return [
+		product.image,
+		product.image2,
+		product.image3,
+		product.image4,
+		product.image5,
+		product.image_2,
+		product.image_3,
+		product.image_4,
+		product.image_5
+	]
+		.filter(Boolean)
+		.flatMap((value) =>
+			String(value)
+				.split(/\n|,|\s+/)
+				.map((url) => url.trim())
+				.filter((url) => url.startsWith('http'))
+		)[0] || '/assets/ram.png';
+}
+
 const filteredProducts = products?.filter((product) => {
 	return product.badge === 'SALE' || !product.badge;
 });
@@ -35,68 +56,72 @@ const filteredProducts = products?.filter((product) => {
 
 	<div class="card-grid">
 		{
-			filteredProducts?.slice(0, 3).map((product: any) => (
-				<div class="card">
-					<div class="card-image">
-						<a
-							href={`/Productpage?id=${product.id}`}
-							class="product-image-link"
-						>
-							<img
-								src={product.image || '/assets/ram.png'}
-								alt={product.title}
-							/>
-						</a>
+			filteredProducts?.slice(0, 3).map((product: any) => {
+				const image = getProductImage(product);
 
-						<button
-							class="favorite in-stock-wishlist"
-							type="button"
-							data-id={product.id}
-							data-title={product.title}
-							data-price={product.price}
-							data-image={product.image || '/assets/ram.png'}
-							data-badge={product.badge || ''}
-						>
-							♡
-						</button>
+				return (
+					<div class="card">
+						<div class="card-image">
+							<a
+								href={`/Productpage?id=${product.id}`}
+								class="product-image-link"
+							>
+								<img
+									src={image}
+									alt={product.title}
+								/>
+							</a>
 
-						{product.badge && (
-							<span class={`badge ${product.badge.toLowerCase()}`}>
-								{product.badge}
-							</span>
-						)}
+							<button
+								class="favorite in-stock-wishlist"
+								type="button"
+								data-id={product.id}
+								data-title={product.title}
+								data-price={product.price}
+								data-image={image}
+								data-badge={product.badge || ''}
+							>
+								♡
+							</button>
+
+							{product.badge && (
+								<span class={`badge ${product.badge.toLowerCase()}`}>
+									{product.badge}
+								</span>
+							)}
+						</div>
+
+						<div class="card-content">
+							<a
+								href={`/Productpage?id=${product.id}`}
+								class="product-title-link"
+							>
+								<h3>
+									{product.title}
+								</h3>
+							</a>
+
+							<p class="price">
+								{product.price} kr
+							</p>
+
+							<button
+								class="cart-btn in-stock-cart"
+								type="button"
+								data-id={product.id}
+								data-title={product.title}
+								data-price={product.price}
+								data-image={image}
+								data-badge={product.badge || ''}
+								data-release-date={product.release_date || ''}
+								data-i18n="addToCart"
+							>
+								Add to Cart
+							</button>
+						</div>
 					</div>
-
-					<div class="card-content">
-						<a
-							href={`/Productpage?id=${product.id}`}
-							class="product-title-link"
-						>
-							<h3>
-								{product.title}
-							</h3>
-						</a>
-
-						<p class="price">
-							{product.price} kr
-						</p>
-
-						<button
-							class="cart-btn in-stock-cart"
-							type="button"
-							data-id={product.id}
-							data-title={product.title}
-							data-price={product.price}
-							data-image={product.image || '/assets/ram.png'}
-							data-badge={product.badge || ''}
-							data-release-date={product.release_date || ''}
-							data-i18n="addToCart"
-						>
-							Add to Cart
-						</button>
-					</div>
-				</div>
-			))
+				);
+			})
 		}
 	</div>
 </section>
