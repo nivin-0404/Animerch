@@ -1,22 +1,43 @@
 ---
 /* @ts-nocheck */
 
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
 	'https://vvdrdzonanhxygaiviid.supabase.co',
 	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2ZHJkem9uYW5oeHlnYWl2aWlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzNjU1MjEsImV4cCI6MjA5NDk0MTUyMX0.rX97Rt41Hj5SLBQe6d1WqWddShgQ0lMZzIR1q9gUQ6M'
-)
+);
 
 const { data: products, error } = await supabase
 	.from('Products')
-	.select('*')
+	.select('*');
 
 if (error) {
-	console.error('Supabase error:', error)
+	console.error('Supabase error:', error);
 }
 
-const allProducts = products || []
+function getProductImage(product: any) {
+	return [
+		product.image,
+		product.image2,
+		product.image3,
+		product.image4,
+		product.image5,
+		product.image_2,
+		product.image_3,
+		product.image_4,
+		product.image_5
+	]
+		.filter(Boolean)
+		.flatMap((value) =>
+			String(value)
+				.split(/\n|,|\s+/)
+				.map((url) => url.trim())
+				.filter((url) => url.startsWith('http'))
+		)[0] || '/assets/ram.png';
+}
+
+const allProducts = products || [];
 ---
 
 <section class="collections-page">
@@ -28,6 +49,7 @@ const allProducts = products || []
 		<button
 			id="toggleFilters"
 			class="pink-btn"
+			type="button"
 			data-i18n="hideFilters"
 		>
 			Hide Filters
@@ -112,13 +134,15 @@ const allProducts = products || []
 		<div class="products-grid" id="productsGrid">
 			{
 				allProducts.map((product) => {
+					const image = getProductImage(product);
+
 					const availability =
 						product.badge === 'PRE-ORDER'
 							? 'Pre Order'
-							: 'In Stock'
+							: 'In Stock';
 
 					const type =
-						product.category || 'Prize Figures'
+						product.category || 'Prize Figures';
 
 					return (
 						<div
@@ -127,16 +151,15 @@ const allProducts = products || []
 							data-availability={availability}
 							data-price={product.price}
 						>
-							<a href="/Productpage" class="product-link">
+							<a
+								href={`/Productpage?id=${product.id}`}
+								class="product-link"
+							>
 								<div class="card-image">
 									<img
-										src={product.image || '/assets/ram.png'}
+										src={image}
 										alt={product.title}
 									/>
-
-									<button class="favorite" type="button">
-										♡
-									</button>
 
 									{product.badge && (
 										<span class={`badge ${product.badge.toLowerCase()}`}>
@@ -146,27 +169,49 @@ const allProducts = products || []
 								</div>
 							</a>
 
+							<button
+								class="favorite"
+								type="button"
+								data-id={product.id}
+								data-title={product.title}
+								data-price={product.price}
+								data-image={image}
+								data-badge={product.badge || ''}
+								aria-label="Add to wishlist"
+							>
+								♡
+							</button>
+
 							<div class="card-content">
-								<h3>
-									{product.title}
-								</h3>
+								<a
+									href={`/Productpage?id=${product.id}`}
+									class="product-title-link"
+								>
+									<h3>
+										{product.title}
+									</h3>
+								</a>
 
 								<p class="price">
 									{product.price} kr
 								</p>
 
-								<a href="/Productpage">
-									<button
-										class="cart-btn"
-										type="button"
-										data-i18n="addToCart"
-									>
-										Add to Cart
-									</button>
-								</a>
+								<button
+									class="cart-btn"
+									type="button"
+									data-id={product.id}
+									data-title={product.title}
+									data-price={product.price}
+									data-image={image}
+									data-badge={product.badge || ''}
+									data-release-date={product.release_date || ''}
+									data-i18n="addToCart"
+								>
+									Add to Cart
+								</button>
 							</div>
 						</div>
-					)
+					);
 				})
 			}
 		</div>
@@ -180,6 +225,7 @@ const allProducts = products || []
 		<button
 			class="show-more"
 			id="showMoreBtn"
+			type="button"
 			data-i18n="showMore"
 		>
 			Show More
@@ -188,77 +234,97 @@ const allProducts = products || []
 </section>
 
 <script>
-	import '../lib/language.js'
+	// @ts-nocheck
 
-	const sidebar = document.getElementById('sidebar')
-	const layout = document.getElementById('layout')
-	const toggleFilters = document.getElementById('toggleFilters')
-	const sortSelect = document.getElementById('sortSelect')
-	const grid = document.getElementById('productsGrid')
-	const showMoreBtn = document.getElementById('showMoreBtn')
-	const cardCount = document.getElementById('card-count')
+	import '../lib/language.js';
 
-	let currentType = 'all'
-	let visibleCards = 3
+	const sidebar = document.getElementById('sidebar');
+	const layout = document.getElementById('layout');
+	const toggleFilters = document.getElementById('toggleFilters');
+	const sortSelect = document.getElementById('sortSelect');
+	const grid = document.getElementById('productsGrid');
+	const showMoreBtn = document.getElementById('showMoreBtn');
+	const cardCount = document.getElementById('card-count');
 
-	const typeButtons = document.querySelectorAll('.type-filter')
-	const availabilityFilters = document.querySelectorAll('.availability-filter')
+	let currentType = 'all';
+	let visibleCards = 3;
+
+	const typeButtons = document.querySelectorAll('.type-filter');
+	const availabilityFilters = document.querySelectorAll('.availability-filter');
+	const cartButtons = document.querySelectorAll('.cart-btn');
+	const wishlistButtons = document.querySelectorAll('.favorite');
 
 	function getCards() {
-		return [...document.querySelectorAll('.card')]
+		return [...document.querySelectorAll('.card')];
+	}
+
+	function getCart() {
+		return JSON.parse(localStorage.getItem('cart') || '[]');
+	}
+
+	function saveCart(cart) {
+		localStorage.setItem('cart', JSON.stringify(cart));
+	}
+
+	function getWishlist() {
+		return JSON.parse(localStorage.getItem('wishlist') || '[]');
+	}
+
+	function saveWishlist(wishlist) {
+		localStorage.setItem('wishlist', JSON.stringify(wishlist));
 	}
 
 	function getFilteredCards() {
-		const cards = getCards()
+		const cards = getCards();
 
 		const activeAvailability = [...availabilityFilters]
 			.filter((checkbox) => {
-				return checkbox instanceof HTMLInputElement && checkbox.checked
+				return checkbox instanceof HTMLInputElement && checkbox.checked;
 			})
 			.map((checkbox) => {
-				return checkbox instanceof HTMLInputElement ? checkbox.value : ''
-			})
+				return checkbox instanceof HTMLInputElement ? checkbox.value : '';
+			});
 
 		return cards.filter((card) => {
-			if (!(card instanceof HTMLElement)) return false
+			if (!(card instanceof HTMLElement)) return false;
 
 			const matchesType =
-				currentType === 'all' || card.dataset.type === currentType
+				currentType === 'all' || card.dataset.type === currentType;
 
 			const matchesAvailability =
 				activeAvailability.length === 0 ||
-				activeAvailability.includes(card.dataset.availability || '')
+				activeAvailability.includes(card.dataset.availability || '');
 
-			return matchesType && matchesAvailability
-		})
+			return matchesType && matchesAvailability;
+		});
 	}
 
 	function updateCards() {
-		const cards = getCards()
-		const filteredCards = getFilteredCards()
+		const cards = getCards();
+		const filteredCards = getFilteredCards();
 
 		cards.forEach((card) => {
 			if (card instanceof HTMLElement) {
-				card.style.display = 'none'
+				card.style.display = 'none';
 			}
-		})
+		});
 
 		filteredCards.forEach((card, index) => {
 			if (card instanceof HTMLElement && index < visibleCards) {
-				card.style.display = 'flex'
+				card.style.display = 'flex';
 			}
-		})
+		});
 
 		if (cardCount instanceof HTMLElement) {
 			cardCount.innerText =
-				`${Math.min(visibleCards, filteredCards.length)} of ${filteredCards.length}`
+				`${Math.min(visibleCards, filteredCards.length)} of ${filteredCards.length}`;
 		}
 
 		if (showMoreBtn instanceof HTMLElement) {
 			showMoreBtn.style.display =
 				visibleCards >= filteredCards.length
 					? 'none'
-					: 'inline-block'
+					: 'inline-block';
 		}
 	}
 
@@ -267,52 +333,145 @@ const allProducts = products || []
 			!(sortSelect instanceof HTMLSelectElement) ||
 			!(grid instanceof HTMLElement)
 		) {
-			return
+			return;
 		}
 
-		const value = sortSelect.value
-		const cards = getCards()
+		const value = sortSelect.value;
+		const cards = getCards();
 
 		if (value === 'low-high') {
 			cards.sort((a, b) => {
-				if (!(a instanceof HTMLElement) || !(b instanceof HTMLElement)) return 0
+				if (!(a instanceof HTMLElement) || !(b instanceof HTMLElement)) {
+					return 0;
+				}
 
-				return Number(a.dataset.price) - Number(b.dataset.price)
-			})
+				return Number(a.dataset.price) - Number(b.dataset.price);
+			});
 		}
 
 		if (value === 'high-low') {
 			cards.sort((a, b) => {
-				if (!(a instanceof HTMLElement) || !(b instanceof HTMLElement)) return 0
+				if (!(a instanceof HTMLElement) || !(b instanceof HTMLElement)) {
+					return 0;
+				}
 
-				return Number(b.dataset.price) - Number(a.dataset.price)
-			})
+				return Number(b.dataset.price) - Number(a.dataset.price);
+			});
 		}
 
 		cards.forEach((card) => {
-			grid.appendChild(card)
-		})
+			grid.appendChild(card);
+		});
 
-		visibleCards = 3
-		updateCards()
+		visibleCards = 3;
+		updateCards();
+	}
+
+	function loadWishlistState() {
+		const wishlist = getWishlist();
+
+		wishlistButtons.forEach((button) => {
+			if (!(button instanceof HTMLElement)) return;
+
+			const alreadyExists = wishlist.find((item) => {
+				return String(item.id) === String(button.dataset.id);
+			});
+
+			if (alreadyExists) {
+				button.innerText = '♥';
+				button.classList.add('active');
+			}
+		});
 	}
 
 	typeButtons.forEach((button) => {
-		if (!(button instanceof HTMLElement)) return
+		if (!(button instanceof HTMLElement)) return;
 
 		button.addEventListener('click', () => {
-			currentType = button.dataset.type || 'all'
-			visibleCards = 3
-			updateCards()
-		})
-	})
+			currentType = button.dataset.type || 'all';
+			visibleCards = 3;
+			updateCards();
+		});
+	});
 
 	availabilityFilters.forEach((checkbox) => {
 		checkbox.addEventListener('change', () => {
-			visibleCards = 3
-			updateCards()
-		})
-	})
+			visibleCards = 3;
+			updateCards();
+		});
+	});
+
+	cartButtons.forEach((button) => {
+		button.addEventListener('click', () => {
+			if (!(button instanceof HTMLElement)) return;
+
+			const product = {
+				id: button.dataset.id,
+				name: button.dataset.title,
+				price: Number(button.dataset.price),
+				image: button.dataset.image,
+				badge: button.dataset.badge || '',
+				releaseDate: button.dataset.releaseDate || '',
+				qty: 1
+			};
+
+			const cart = getCart();
+
+			const existingProduct = cart.find((item) => {
+				return String(item.id) === String(product.id);
+			});
+
+			if (existingProduct) {
+				existingProduct.qty += 1;
+			} else {
+				cart.push(product);
+			}
+
+			saveCart(cart);
+
+			button.innerText = 'Added ✓';
+
+			setTimeout(() => {
+				button.innerText = 'Add to Cart';
+			}, 1000);
+		});
+	});
+
+	wishlistButtons.forEach((button) => {
+		button.addEventListener('click', () => {
+			if (!(button instanceof HTMLElement)) return;
+
+			const product = {
+				id: button.dataset.id,
+				name: button.dataset.title,
+				price: Number(button.dataset.price),
+				image: button.dataset.image,
+				badge: button.dataset.badge || ''
+			};
+
+			let wishlist = getWishlist();
+
+			const alreadyExists = wishlist.find((item) => {
+				return String(item.id) === String(product.id);
+			});
+
+			if (!alreadyExists) {
+				wishlist.push(product);
+
+				button.innerText = '♥';
+				button.classList.add('active');
+			} else {
+				wishlist = wishlist.filter((item) => {
+					return String(item.id) !== String(product.id);
+				});
+
+				button.innerText = '♡';
+				button.classList.remove('active');
+			}
+
+			saveWishlist(wishlist);
+		});
+	});
 
 	if (
 		toggleFilters instanceof HTMLElement &&
@@ -320,36 +479,46 @@ const allProducts = products || []
 		layout instanceof HTMLElement
 	) {
 		toggleFilters.addEventListener('click', () => {
-			sidebar.classList.toggle('hidden')
-			layout.classList.toggle('filters-hidden')
+			sidebar.classList.toggle('hidden');
+			layout.classList.toggle('filters-hidden');
 
 			if (sidebar.classList.contains('hidden')) {
-				toggleFilters.setAttribute('data-i18n', 'showFilters')
-				toggleFilters.innerText = 'Show Filters'
+				toggleFilters.setAttribute('data-i18n', 'showFilters');
+				toggleFilters.innerText = 'Show Filters';
 			} else {
-				toggleFilters.setAttribute('data-i18n', 'hideFilters')
-				toggleFilters.innerText = 'Hide Filters'
+				toggleFilters.setAttribute('data-i18n', 'hideFilters');
+				toggleFilters.innerText = 'Hide Filters';
 			}
 
 			const savedLanguage =
-				localStorage.getItem('language') || 'en'
+				localStorage.getItem('language') ||
+				localStorage.getItem('selectedLanguage') ||
+				localStorage.getItem('lang') ||
+				'en';
 
-			window.setLanguage?.(savedLanguage)
-		})
+			if (window.applyLanguage) {
+				window.applyLanguage(savedLanguage);
+			}
+
+			if (window.setLanguage) {
+				window.setLanguage(savedLanguage);
+			}
+		});
 	}
 
 	if (sortSelect instanceof HTMLSelectElement) {
-		sortSelect.addEventListener('change', sortProducts)
+		sortSelect.addEventListener('change', sortProducts);
 	}
 
 	if (showMoreBtn instanceof HTMLElement) {
 		showMoreBtn.addEventListener('click', () => {
-			visibleCards += 3
-			updateCards()
-		})
+			visibleCards += 3;
+			updateCards();
+		});
 	}
 
-	updateCards()
+	loadWishlistState();
+	updateCards();
 </script>
 
 <style>
@@ -441,13 +610,16 @@ h1 {
 }
 
 .card {
+	position: relative;
+
 	display: flex;
 	flex-direction: column;
 	width: 100%;
 	min-width: 0;
 }
 
-.product-link {
+.product-link,
+.product-title-link {
 	display: block;
 	width: 100%;
 	text-decoration: none;
@@ -480,6 +652,7 @@ h1 {
 	position: absolute;
 	top: 1rem;
 	right: 1rem;
+	z-index: 5;
 
 	width: 50px;
 	height: 50px;
@@ -492,6 +665,11 @@ h1 {
 	color: #ef4f96;
 
 	cursor: pointer;
+}
+
+.favorite.active {
+	background: #ef4f96;
+	color: white;
 }
 
 .badge {
