@@ -682,13 +682,16 @@ const navItems = [
 
 <style is:global>
 .header {
-	position: relative;
-	z-index: 1000;
+	position: sticky;
+	top: 0;
+	left: 0;
+	z-index: 999999;
 
 	width: 100%;
 	background: var(--pink);
-}
 
+	box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+}
 .topbar {
 	width: 100%;
 	padding: 0.8rem 2rem;

@@ -90,3 +90,6 @@ applyLanguage(savedLanguage);
 setupLanguageButtons();
 
 window.applyLanguage = applyLanguage;
+
+
+
