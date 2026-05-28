@@ -47,7 +47,6 @@ function getProductImages(product: any) {
 ---
 
 <Layout>
-	<Header />
 
 	<main class="cart-page">
 		<h1>
@@ -171,8 +170,6 @@ function getProductImages(product: any) {
 			}
 		</div>
 	</section>
-
-	<Footer />
 
 	<script is:inline>
 		let cart = JSON.parse(localStorage.getItem('cart') || '[]');
