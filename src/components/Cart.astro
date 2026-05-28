@@ -1,9 +1,5 @@
 ---
 /* @ts-nocheck */
-
-import Layout from '../layouts/Layout.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
 import '../style/global.css';
 
 import { createClient } from '@supabase/supabase-js';
@@ -45,8 +41,6 @@ function getProductImages(product: any) {
 		});
 }
 ---
-
-<Layout>
 
 	<main class="cart-page">
 		<h1>
@@ -497,7 +491,6 @@ function getProductImages(product: any) {
 		setupWishlistButtons();
 		renderCart();
 	</script>
-</Layout>
 
 <style is:global>
 :root {
