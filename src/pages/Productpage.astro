@@ -6,1395 +6,1390 @@ import '../style/global.css';
 ---
 
 <Layout>
-	<Header />
-
-	<section id="productArea" class="product-page" aria-labelledby="productTitle">
-		<section class="gallery" aria-labelledby="galleryTitle">
-			<h2 id="galleryTitle" class="sr-only">
-				Product images
-			</h2>
-
-			<div class="main-image">
-				<button id="prevImageBtn" class="image-arrow left" type="button">
-					‹
-				</button>
-
-				<img id="mainImage" src="/assets/ram.png" alt="Product image" />
-
-				<button id="nextImageBtn" class="image-arrow right" type="button">
-					›
-				</button>
-			</div>
-
-			<div id="thumbnails" class="thumbnails"></div>
-		</section>
-
-		<section class="details" aria-labelledby="productTitle">
-			<h1 id="productTitle">
-				Loading product...
-			</h1>
-
-			<p id="productPrice" class="price"></p>
-
-			<p id="preorderNotice" class="notice"></p>
-
-			<div class="actions">
-				<div class="quantity-selector">
-					<button id="minusBtn" type="button">
-						-
-					</button>
-
-					<span id="quantityNumber">1</span>
-
-					<button id="plusBtn" type="button">
-						+
-					</button>
-				</div>
-
-				<button id="singleAddToCart" class="cart-btn" type="button">
-					Add to Cart
-				</button>
-
-				<button id="singleWishlist" class="wishlist-btn" type="button">
-					♡
-				</button>
-			</div>
-
-			<div class="content-section">
-				<h2>
-					Description
-				</h2>
-
-				<p id="productDescription">
-					Loading description...
-				</p>
-			</div>
-
-			<div class="content-section">
-				<h2>
-					Shipping Info
-				</h2>
-
-				<p>
-					Ships in 5-10 business days.
-				</p>
-			</div>
-
-			<div class="content-section">
-				<h2>
-					Size Guide
-				</h2>
-
-				<p>
-					Size information will be added soon.
-				</p>
-			</div>
-		</section>
-	</section>
-
-	<section
-		id="missingProduct"
-		class="missing-product"
-		style="display: none;"
-		aria-labelledby="missingProductTitle"
-	>
-		<h2 id="missingProductTitle">
-			Product not found
-		</h2>
-
-		<p>
-			Sorry, this product could not be loaded.
-		</p>
-
-		<p id="debugUrl" class="debug-text"></p>
-		<p id="debugCount" class="debug-text"></p>
-		<p id="debugIds" class="debug-text"></p>
+    <Header />
+
+    <section id="productArea" class="product-page" aria-labelledby="productTitle">
+        <section class="gallery" aria-labelledby="galleryTitle">
+            <h2 id="galleryTitle" class="sr-only">
+                Product images
+            </h2>
+
+            <div class="main-image">
+                <button id="prevImageBtn" class="image-arrow left" type="button">
+                    ‹
+                </button>
+
+                <img id="mainImage" src="/assets/ram.png" alt="Product image" />
+
+                <button id="nextImageBtn" class="image-arrow right" type="button">
+                    ›
+                </button>
+            </div>
+
+            <div id="thumbnails" class="thumbnails"></div>
+        </section>
+
+        <section class="details" aria-labelledby="productTitle">
+            <h1 id="productTitle">
+                Loading product...
+            </h1>
+
+            <p id="productPrice" class="price"></p>
+
+            <p id="preorderNotice" class="notice"></p>
+
+            <div class="actions">
+                <div class="quantity-selector">
+                    <button id="minusBtn" type="button">
+                        -
+                    </button>
+
+                    <span id="quantityNumber">1</span>
+
+                    <button id="plusBtn" type="button">
+                        +
+                    </button>
+                </div>
+
+                <button id="singleAddToCart" class="cart-btn" type="button">
+                    Add to Cart
+                </button>
+
+                <button id="singleWishlist" class="wishlist-btn" type="button">
+                    ♡
+                </button>
+            </div>
+
+            <div class="content-section">
+                <h2>
+                    Description
+                </h2>
+
+                <p id="productDescription">
+                    Loading description...
+                </p>
+            </div>
+
+            <div class="content-section">
+                <h2>
+                    Shipping Info
+                </h2>
+
+                <p>
+                    Ships in 5-10 business days.
+                </p>
+            </div>
+
+            <div class="content-section">
+                <h2>
+                    Size Guide
+                </h2>
+
+                <p>
+                    Size information will be added soon.
+                </p>
+            </div>
+        </section>
+    </section>
+
+    <section
+        id="missingProduct"
+        class="missing-product"
+        style="display: none;"
+        aria-labelledby="missingProductTitle"
+    >
+        <h2 id="missingProductTitle">
+            Product not found
+        </h2>
+
+        <p>
+            Sorry, this product could not be loaded.
+        </p>
+
+        <p id="debugUrl" class="debug-text"></p>
+        <p id="debugCount" class="debug-text"></p>
+        <p id="debugIds" class="debug-text"></p>
 
-		<a href="/">
-			Go back home
-		</a>
-	</section>
+        <a href="/">
+            Go back home
+        </a>
+    </section>
 
-	<section id="relatedSection" class="related-products" aria-labelledby="relatedTitle">
-		<h2 id="relatedTitle">
-			Related products
-		</h2>
-
-		<div id="relatedGrid" class="related-grid"></div>
-	</section>
+    <section id="relatedSection" class="related-products" aria-labelledby="relatedTitle">
+        <h2 id="relatedTitle">
+            Related products
+        </h2>
+
+        <div id="relatedGrid" class="related-grid"></div>
+    </section>
 
-	<Footer />
-
-	<script>
-		// @ts-nocheck
-
-		import { createClient } from '@supabase/supabase-js';
-
-		const supabase = createClient(
-			'https://vvdrdzonanhxygaiviid.supabase.co',
-			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2ZHJkem9uYW5oeHlnYWl2aWlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzNjU1MjEsImV4cCI6MjA5NDk0MTUyMX0.rX97Rt41Hj5SLBQe6d1WqWddShgQ0lMZzIR1q9gUQ6M'
-		);
-
-		const params = new URLSearchParams(window.location.search);
-		const productId = params.get('id');
-
-		const productArea = document.getElementById('productArea');
-		const missingProduct = document.getElementById('missingProduct');
-		const relatedSection = document.getElementById('relatedSection');
-
-		const mainImage = document.getElementById('mainImage');
-		const thumbnails = document.getElementById('thumbnails');
-
-		const productTitle = document.getElementById('productTitle');
-		const productPrice = document.getElementById('productPrice');
-		const preorderNotice = document.getElementById('preorderNotice');
-		const productDescription = document.getElementById('productDescription');
-
-		const debugUrl = document.getElementById('debugUrl');
-		const debugCount = document.getElementById('debugCount');
-		const debugIds = document.getElementById('debugIds');
-
-		const singleAddToCart = document.getElementById('singleAddToCart');
-		const singleWishlist = document.getElementById('singleWishlist');
-
-		const relatedGrid = document.getElementById('relatedGrid');
-
-		const prevImageBtn = document.getElementById('prevImageBtn');
-		const nextImageBtn = document.getElementById('nextImageBtn');
-
-		const quantityNumber = document.getElementById('quantityNumber');
-		const minusBtn = document.getElementById('minusBtn');
-		const plusBtn = document.getElementById('plusBtn');
-
-		let currentProduct = null;
-		let quantity = 1;
-		let productImages = [];
-		let currentImageIndex = 0;
-
-		function getCart() {
-			return JSON.parse(localStorage.getItem('cart') || '[]');
-		}
-
-		function saveCart(cart) {
-			localStorage.setItem('cart', JSON.stringify(cart));
-		}
-
-		function getWishlist() {
-			return JSON.parse(localStorage.getItem('wishlist') || '[]');
-		}
-
-		function saveWishlist(wishlist) {
-			localStorage.setItem('wishlist', JSON.stringify(wishlist));
-		}
-
-		function updateQuantity() {
-			if (quantityNumber) {
-				quantityNumber.innerText = String(quantity);
-			}
-		}
-
-		function showMissing(products) {
-			if (productArea) {
-				productArea.style.display = 'none';
-			}
-
-			if (relatedSection) {
-				relatedSection.style.display = 'none';
-			}
-
-			if (missingProduct) {
-				missingProduct.style.display = 'flex';
-			}
-
-			if (debugUrl) {
-				debugUrl.innerText = `URL id: ${productId || 'No id found in URL'}`;
-			}
-
-			if (debugCount) {
-				debugCount.innerText = `Products found in Supabase: ${products.length}`;
-			}
-
-			if (debugIds) {
-				debugIds.innerText = `Product ids in Supabase: ${products
-					.map((item) => item.id)
-					.join(', ')}`;
-			}
-		}
-
-		function getProductImages(product) {
-			return [
-				product.image,
-				product.image2,
-				product.image3,
-				product.image4,
-				product.image5,
-				product.image_2,
-				product.image_3,
-				product.image_4,
-				product.image_5
-			]
-				.filter(Boolean)
-				.flatMap((value) => {
-					return String(value)
-						.split(/\n|,|\s+/)
-						.map((url) => url.trim())
-						.filter((url) => url.startsWith('http'));
-				});
-		}
-
-		function updateMainImage(index) {
-			if (!productImages.length || !mainImage) return;
-
-			currentImageIndex = index;
-
-			if (currentImageIndex < 0) {
-				currentImageIndex = productImages.length - 1;
-			}
-
-			if (currentImageIndex >= productImages.length) {
-				currentImageIndex = 0;
-			}
-
-			mainImage.src = productImages[currentImageIndex];
-
-			document.querySelectorAll('.thumbnail-btn').forEach((button) => {
-				button.classList.remove('active');
-			});
-
-			const activeThumbnail = document.querySelector(
-				`.thumbnail-btn[data-index="${currentImageIndex}"]`
-			);
-
-			if (activeThumbnail) {
-				activeThumbnail.classList.add('active');
-			}
-		}
-
-		function loadWishlistButton() {
-			if (!currentProduct || !singleWishlist) return;
-
-			const wishlist = getWishlist();
-
-			const alreadyExists = wishlist.find((item) => {
-				return String(item.id) === String(currentProduct.id);
-			});
-
-			if (alreadyExists) {
-				singleWishlist.innerText = '♥';
-				singleWishlist.classList.add('active');
-			} else {
-				singleWishlist.innerText = '♡';
-				singleWishlist.classList.remove('active');
-			}
-		}
-
-		function renderProduct(product) {
-			currentProduct = product;
-			productImages = getProductImages(product);
-
-			if (!productImages.length) {
-				productImages = ['/assets/ram.png'];
-			}
-
-			currentImageIndex = 0;
-
-			if (productTitle) {
-				productTitle.innerText = product.title || 'Untitled product';
-			}
-
-			if (productPrice) {
-				productPrice.innerText = `${product.price} kr`;
-			}
-
-			if (productDescription) {
-				productDescription.innerText =
-					product.description || 'No description available yet.';
-			}
-
-			if (mainImage) {
-				mainImage.src = productImages[0];
-				mainImage.alt = product.title || 'Product image';
-			}
-
-			if (preorderNotice) {
-				if (product.badge === 'PRE-ORDER') {
-					preorderNotice.innerText = product.release_date
-						? `Note: This item is on pre-order and expected release date: ${product.release_date}.`
-						: 'Note: This item is on pre-order.';
-				} else {
-					preorderNotice.innerText = '';
-				}
-			}
-
-			if (thumbnails) {
-				thumbnails.innerHTML = productImages
-					.map((img, index) => {
-						return `
-							<button
-								class="thumbnail-btn ${index === 0 ? 'active' : ''}"
-								type="button"
-								data-image="${img}"
-								data-index="${index}"
-							>
-								<img src="${img}" alt="Product thumbnail ${index + 1}" />
-							</button>
-						`;
-					})
-					.join('');
-			}
-
-			document.querySelectorAll('.thumbnail-btn').forEach((button) => {
-				button.addEventListener('click', () => {
-					updateMainImage(Number(button.dataset.index));
-				});
-			});
-
-			loadWishlistButton();
-		}
-
-		function renderRelated(products) {
-			if (!relatedGrid) return;
-
-			const relatedProducts = products
-				.filter((item) => String(item.id) !== String(productId))
-				.slice(0, 3);
-
-			relatedGrid.innerHTML = relatedProducts
-				.map((product) => {
-					const relatedImages = getProductImages(product);
-					const image = relatedImages[0] || '/assets/ram.png';
-
-					const badge = product.badge
-						? `<span class="badge ${String(product.badge).toLowerCase()}">${product.badge}</span>`
-						: '';
-
-					return `
-						<div class="related-card">
-							<div class="related-image">
-								<a href="/Productpage?id=${product.id}" class="related-image-link">
-									<img src="${image}" alt="${product.title || 'Related product'}" />
-								</a>
-
-								<button
-									class="favorite related-wishlist"
-									type="button"
-									aria-label="Add to wishlist"
-									data-id="${product.id}"
-									data-title="${product.title}"
-									data-price="${product.price}"
-									data-image="${image}"
-									data-badge="${product.badge || ''}"
-								>
-									♡
-								</button>
-
-								${badge}
-							</div>
-
-							<div class="related-content">
-								<a href="/Productpage?id=${product.id}" class="related-title-link">
-									<h3>${product.title}</h3>
-								</a>
-
-								<p class="price">${product.price} kr</p>
-
-								<button
-									class="cart-btn related-cart-btn"
-									type="button"
-									data-id="${product.id}"
-									data-title="${product.title}"
-									data-price="${product.price}"
-									data-image="${image}"
-									data-badge="${product.badge || ''}"
-									data-release-date="${product.release_date || ''}"
-								>
-									Add to Cart
-								</button>
-							</div>
-						</div>
-					`;
-				})
-				.join('');
-
-			setupRelatedCartButtons();
-			setupRelatedWishlistButtons();
-		}
-
-		function setupRelatedCartButtons() {
-			document.querySelectorAll('.related-cart-btn').forEach((button) => {
-				button.addEventListener('click', () => {
-					const product = {
-						id: button.dataset.id,
-						name: button.dataset.title,
-						price: Number(button.dataset.price),
-						image: button.dataset.image,
-						badge: button.dataset.badge || '',
-						releaseDate: button.dataset.releaseDate || '',
-						qty: 1
-					};
-
-					const cart = getCart();
-
-					const existingProduct = cart.find((item) => {
-						return String(item.id) === String(product.id);
-					});
-
-					if (existingProduct) {
-						existingProduct.qty += 1;
-					} else {
-						cart.push(product);
-					}
-
-					saveCart(cart);
-
-					button.innerText = 'Added ✓';
-
-					setTimeout(() => {
-						button.innerText = 'Add to Cart';
-					}, 1000);
-				});
-			});
-		}
-
-		function setupRelatedWishlistButtons() {
-			const wishlistButtons = document.querySelectorAll('.related-wishlist');
-			const wishlist = getWishlist();
-
-			wishlistButtons.forEach((button) => {
-				const alreadyExists = wishlist.find((item) => {
-					return String(item.id) === String(button.dataset.id);
-				});
-
-				if (alreadyExists) {
-					button.innerText = '♥';
-					button.classList.add('active');
-					button.setAttribute('aria-label', 'Remove from wishlist');
-				} else {
-					button.innerText = '♡';
-					button.classList.remove('active');
-					button.setAttribute('aria-label', 'Add to wishlist');
-				}
-
-				button.addEventListener('click', (event) => {
-					event.preventDefault();
-					event.stopPropagation();
-
-					let wishlist = getWishlist();
-
-					const product = {
-						id: button.dataset.id,
-						name: button.dataset.title,
-						price: Number(button.dataset.price),
-						image: button.dataset.image,
-						badge: button.dataset.badge || ''
-					};
-
-					const alreadyExists = wishlist.find((item) => {
-						return String(item.id) === String(product.id);
-					});
-
-					if (!alreadyExists) {
-						wishlist.push(product);
-
-						button.innerText = '♥';
-						button.classList.add('active');
-						button.setAttribute('aria-label', 'Remove from wishlist');
-					} else {
-						wishlist = wishlist.filter((item) => {
-							return String(item.id) !== String(product.id);
-						});
-
-						button.innerText = '♡';
-						button.classList.remove('active');
-						button.setAttribute('aria-label', 'Add to wishlist');
-					}
-
-					saveWishlist(wishlist);
-				});
-			});
-		}
-
-		minusBtn?.addEventListener('click', () => {
-			if (quantity > 1) {
-				quantity -= 1;
-				updateQuantity();
-			}
-		});
-
-		plusBtn?.addEventListener('click', () => {
-			quantity += 1;
-			updateQuantity();
-		});
-
-		prevImageBtn?.addEventListener('click', () => {
-			updateMainImage(currentImageIndex - 1);
-		});
-
-		nextImageBtn?.addEventListener('click', () => {
-			updateMainImage(currentImageIndex + 1);
-		});
-
-		singleAddToCart?.addEventListener('click', () => {
-			if (!currentProduct) return;
-
-			const product = {
-				id: currentProduct.id,
-				name: currentProduct.title,
-				price: Number(currentProduct.price),
-				image: productImages[0] || '/assets/ram.png',
-				badge: currentProduct.badge || '',
-				releaseDate: currentProduct.release_date || '',
-				qty: quantity
-			};
-
-			const cart = getCart();
-
-			const existingProduct = cart.find((item) => {
-				return String(item.id) === String(product.id);
-			});
-
-			if (existingProduct) {
-				existingProduct.qty += quantity;
-			} else {
-				cart.push(product);
-			}
-
-			saveCart(cart);
-
-			singleAddToCart.innerText = 'Added ✓';
-
-			setTimeout(() => {
-				singleAddToCart.innerText = 'Add to Cart';
-			}, 1000);
-		});
-
-		singleWishlist?.addEventListener('click', () => {
-			if (!currentProduct) return;
-
-			const product = {
-				id: currentProduct.id,
-				name: currentProduct.title,
-				price: Number(currentProduct.price),
-				image: productImages[0] || '/assets/ram.png',
-				badge: currentProduct.badge || ''
-			};
-
-			let wishlist = getWishlist();
-
-			const alreadyExists = wishlist.find((item) => {
-				return String(item.id) === String(product.id);
-			});
-
-			if (!alreadyExists) {
-				wishlist.push(product);
-			} else {
-				wishlist = wishlist.filter((item) => {
-					return String(item.id) !== String(product.id);
-				});
-			}
-
-			saveWishlist(wishlist);
-			loadWishlistButton();
-		});
-
-		async function loadProduct() {
-			const { data, error } = await supabase
-				.from('Products')
-				.select('*');
-
-			if (error) {
-				console.error('Supabase error:', error);
-				showMissing([]);
-				return;
-			}
-
-			const products = data || [];
-
-			const product = products.find((item) => {
-				return String(item.id).trim() === String(productId).trim();
-			});
-
-			if (!product) {
-				showMissing(products);
-				return;
-			}
-
-			renderProduct(product);
-			renderRelated(products);
-		}
-
-		loadProduct();
-	</script>
+    <Footer />
+
+    <script>
+        // @ts-nocheck
+
+        import { createClient } from '@supabase/supabase-js';
+
+        const supabase = createClient(
+            'https://zwjiildrmidhiqqmbbja.supabase.co',
+            'sb_publishable_wbX95qCpoGWgltKUlEgRlw_RYujOXRO'
+        );
+
+        const params = new URLSearchParams(window.location.search);
+        const productId = params.get('id');
+
+        const productArea = document.getElementById('productArea');
+        const missingProduct = document.getElementById('missingProduct');
+        const relatedSection = document.getElementById('relatedSection');
+
+        const mainImage = document.getElementById('mainImage');
+        const thumbnails = document.getElementById('thumbnails');
+
+        const productTitle = document.getElementById('productTitle');
+        const productPrice = document.getElementById('productPrice');
+        const preorderNotice = document.getElementById('preorderNotice');
+        const productDescription = document.getElementById('productDescription');
+
+        const debugUrl = document.getElementById('debugUrl');
+        const debugCount = document.getElementById('debugCount');
+        const debugIds = document.getElementById('debugIds');
+
+        const singleAddToCart = document.getElementById('singleAddToCart');
+        const singleWishlist = document.getElementById('singleWishlist');
+
+        const relatedGrid = document.getElementById('relatedGrid');
+
+        const prevImageBtn = document.getElementById('prevImageBtn');
+        const nextImageBtn = document.getElementById('nextImageBtn');
+
+        const quantityNumber = document.getElementById('quantityNumber');
+        const minusBtn = document.getElementById('minusBtn');
+        const plusBtn = document.getElementById('plusBtn');
+
+        let currentProduct = null;
+        let quantity = 1;
+        let productImages = [];
+        let currentImageIndex = 0;
+
+        function getCart() {
+            return JSON.parse(localStorage.getItem('cart') || '[]');
+        }
+
+        function saveCart(cart) {
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+
+        function getWishlist() {
+            return JSON.parse(localStorage.getItem('wishlist') || '[]');
+        }
+
+        function saveWishlist(wishlist) {
+            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+        }
+
+        function updateQuantity() {
+            if (quantityNumber) {
+                quantityNumber.innerText = String(quantity);
+            }
+        }
+
+        function showMissing(products) {
+            if (productArea) {
+                productArea.style.display = 'none';
+            }
+
+            if (relatedSection) {
+                relatedSection.style.display = 'none';
+            }
+
+            if (missingProduct) {
+                missingProduct.style.display = 'flex';
+            }
+
+            if (debugUrl) {
+                debugUrl.innerText = `URL id: ${productId || 'No id found in URL'}`;
+            }
+
+            if (debugCount) {
+                debugCount.innerText = `Products found in Supabase: ${products.length}`;
+            }
+
+            if (debugIds) {
+                debugIds.innerText = `Product ids in Supabase: ${products
+                    .map((item) => item.id)
+                    .join(', ')}`;
+            }
+        }
+
+        function getProductImages(product) {
+            return [
+                product?.image,
+                product?.image2,
+                product?.image3,
+                product?.image4,
+                product?.image5,
+                product?.image_2,
+                product?.image_3,
+                product?.image_4,
+                product?.image_5
+            ]
+                .filter(Boolean)
+                .flatMap((value) => {
+                    return String(value)
+                        .split(/\n|,|\s+/)
+                        .map((url) => url.trim())
+                        .filter((url) => url.startsWith('http'));
+                });
+        }
+
+        function updateMainImage(index) {
+            if (!productImages.length || !mainImage) return;
+
+            currentImageIndex = index;
+
+            if (currentImageIndex < 0) {
+                currentImageIndex = productImages.length - 1;
+            }
+
+            if (currentImageIndex >= productImages.length) {
+                currentImageIndex = 0;
+            }
+
+            mainImage.src = productImages[currentImageIndex];
+
+            document.querySelectorAll('.thumbnail-btn').forEach((button) => {
+                button.classList.remove('active');
+            });
+
+            const activeThumbnail = document.querySelector(
+                `.thumbnail-btn[data-index="${currentImageIndex}"]`
+            );
+
+            if (activeThumbnail) {
+                activeThumbnail.classList.add('active');
+            }
+        }
+
+        function loadWishlistButton() {
+            if (!currentProduct || !singleWishlist) return;
+
+            const wishlist = getWishlist();
+
+            const alreadyExists = wishlist.find((item) => {
+                return String(item.id) === String(currentProduct.id);
+            });
+
+            if (alreadyExists) {
+                singleWishlist.innerText = '♥';
+                singleWishlist.classList.add('active');
+            } else {
+                singleWishlist.innerText = '♡';
+                singleWishlist.classList.remove('active');
+            }
+        }
+
+        function renderProduct(product) {
+            currentProduct = product;
+            productImages = getProductImages(product);
+
+            if (!productImages.length) {
+                productImages = ['/assets/ram.png'];
+            }
+
+            currentImageIndex = 0;
+
+            if (productTitle) {
+                productTitle.innerText = product.title || 'Untitled product';
+            }
+
+            if (productPrice) {
+                productPrice.innerText = `${product.price} kr`;
+            }
+
+            if (productDescription) {
+                productDescription.innerText =
+                    product.description || 'No description available yet.';
+            }
+
+            if (mainImage) {
+                mainImage.src = productImages[0];
+                mainImage.alt = product.title || 'Product image';
+            }
+
+            if (preorderNotice) {
+                const badgeVal = product.badge ? product.badge.trim().toUpperCase() : '';
+                if (badgeVal === 'PRE-ORDER') {
+                    preorderNotice.innerText = product.release_date
+                        ? `Note: This item is on pre-order and expected release date: ${product.release_date}.`
+                        : 'Note: This item is on pre-order.';
+                } else {
+                    preorderNotice.innerText = '';
+                }
+            }
+
+            if (thumbnails) {
+                thumbnails.innerHTML = productImages
+                    .map((img, index) => {
+                        return `
+                            <button
+                                class="thumbnail-btn ${index === 0 ? 'active' : ''}"
+                                type="button"
+                                data-image="${img}"
+                                data-index="${index}"
+                            >
+                                <img src="${img}" alt="Product thumbnail ${index + 1}" />
+                            </button>
+                        `;
+                    })
+                    .join('');
+            }
+
+            document.querySelectorAll('.thumbnail-btn').forEach((button) => {
+                button.addEventListener('click', () => {
+                    updateMainImage(Number(button.dataset.index));
+                });
+            });
+
+            loadWishlistButton();
+        }
+
+        function renderRelated(products) {
+            if (!relatedGrid) return;
+
+            const relatedProducts = products
+                .filter((item) => String(item.id) !== String(productId))
+                .slice(0, 3);
+
+            relatedGrid.innerHTML = relatedProducts
+                .map((product) => {
+                    const relatedImages = getProductImages(product);
+                    const image = relatedImages[0] || '/assets/ram.png';
+
+                    const badge = product.badge
+                        ? `<span class="badge ${String(product.badge).toLowerCase().replace(/\s+/g, '-')}">${product.badge}</span>`
+                        : '';
+
+                    return `
+                        <div class="related-card">
+                            <div class="related-image">
+                                <a href="/Productpage?id=${product.id}" class="related-image-link">
+                                    <img src="${image}" alt="${product.title || 'Related product'}" />
+                                </a>
+
+                                <button
+                                    class="favorite related-wishlist"
+                                    type="button"
+                                    aria-label="Add to wishlist"
+                                    data-id="${product.id}"
+                                    data-title="${product.title}"
+                                    data-price="${product.price}"
+                                    data-image="${image}"
+                                    data-badge="${product.badge || ''}"
+                                >
+                                    ♡
+                                </button>
+
+                                ${badge}
+                            </div>
+
+                            <div class="related-content">
+                                <a href="/Productpage?id=${product.id}" class="related-title-link">
+                                    <h3>${product.title}</h3>
+                                </a>
+
+                                <p class="price">${product.price} kr</p>
+
+                                <button
+                                    class="cart-btn related-cart-btn"
+                                    type="button"
+                                    data-id="${product.id}"
+                                    data-title="${product.title}"
+                                    data-price="${product.price}"
+                                    data-image="${image}"
+                                    data-badge="${product.badge || ''}"
+                                    data-release-date="${product.release_date || ''}"
+                                >
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                })
+                .join('');
+
+            setupRelatedCartButtons();
+            setupRelatedWishlistButtons();
+        }
+
+        function setupRelatedCartButtons() {
+            document.querySelectorAll('.related-cart-btn').forEach((button) => {
+                button.addEventListener('click', () => {
+                    const product = {
+                        id: button.dataset.id,
+                        name: button.dataset.title,
+                        price: Number(button.dataset.price),
+                        image: button.dataset.image,
+                        badge: button.dataset.badge || '',
+                        releaseDate: button.dataset.releaseDate || '',
+                        qty: 1
+                    };
+
+                    const cart = getCart();
+
+                    const existingProduct = cart.find((item) => {
+                        return String(item.id) === String(product.id);
+                    });
+
+                    if (existingProduct) {
+                        existingProduct.qty += 1;
+                    } else {
+                        cart.push(product);
+                    }
+
+                    saveCart(cart);
+
+                    button.innerText = 'Added ✓';
+
+                    setTimeout(() => {
+                        button.innerText = 'Add to Cart';
+                    }, 1000);
+                });
+            });
+        }
+
+        function setupRelatedWishlistButtons() {
+            const wishlistButtons = document.querySelectorAll('.related-wishlist');
+            const wishlist = getWishlist();
+
+            wishlistButtons.forEach((button) => {
+                const alreadyExists = wishlist.find((item) => {
+                    return String(item.id) === String(button.dataset.id);
+                });
+
+                if (alreadyExists) {
+                    button.innerText = '♥';
+                    button.classList.add('active');
+                    button.setAttribute('aria-label', 'Remove from wishlist');
+                } else {
+                    button.innerText = '♡';
+                    button.classList.remove('active');
+                    button.setAttribute('aria-label', 'Add to wishlist');
+                }
+
+                button.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    let wishlist = getWishlist();
+
+                    const product = {
+                        id: button.dataset.id,
+                        name: button.dataset.title,
+                        price: Number(button.dataset.price),
+                        image: button.dataset.image,
+                        badge: button.dataset.badge || ''
+                    };
+
+                    const alreadyExists = wishlist.find((item) => {
+                        return String(item.id) === String(product.id);
+                    });
+
+                    if (!alreadyExists) {
+                        wishlist.push(product);
+
+                        button.innerText = '♥';
+                        button.classList.add('active');
+                        button.setAttribute('aria-label', 'Remove from wishlist');
+                    } else {
+                        wishlist = wishlist.filter((item) => {
+                            return String(item.id) !== String(product.id);
+                        });
+
+                        button.innerText = '♡';
+                        button.classList.remove('active');
+                        button.setAttribute('aria-label', 'Add to wishlist');
+                    }
+
+                    saveWishlist(wishlist);
+                });
+            });
+        }
+
+        minusBtn?.addEventListener('click', () => {
+            if (quantity > 1) {
+                quantity -= 1;
+                updateQuantity();
+            }
+        });
+
+        plusBtn?.addEventListener('click', () => {
+            quantity += 1;
+            updateQuantity();
+        });
+
+        prevImageBtn?.addEventListener('click', () => {
+            updateMainImage(currentImageIndex - 1);
+        });
+
+        nextImageBtn?.addEventListener('click', () => {
+            updateMainImage(currentImageIndex + 1);
+        });
+
+        singleAddToCart?.addEventListener('click', () => {
+            if (!currentProduct) return;
+
+            const product = {
+                id: currentProduct.id,
+                name: currentProduct.title,
+                price: Number(currentProduct.price),
+                image: productImages[0] || '/assets/ram.png',
+                badge: currentProduct.badge || '',
+                releaseDate: currentProduct.release_date || '',
+                qty: quantity
+            };
+
+            const cart = getCart();
+
+            const existingProduct = cart.find((item) => {
+                return String(item.id) === String(product.id);
+            });
+
+            if (existingProduct) {
+                existingProduct.qty += quantity;
+            } else {
+                cart.push(product);
+            }
+
+            saveCart(cart);
+
+            singleAddToCart.innerText = 'Added ✓';
+
+            setTimeout(() => {
+                singleAddToCart.innerText = 'Add to Cart';
+            }, 1000);
+        });
+
+        singleWishlist?.addEventListener('click', () => {
+            if (!currentProduct) return;
+
+            const product = {
+                id: currentProduct.id,
+                name: currentProduct.title,
+                price: Number(currentProduct.price),
+                image: productImages[0] || '/assets/ram.png',
+                badge: currentProduct.badge || ''
+            };
+
+            let wishlist = getWishlist();
+
+            const alreadyExists = wishlist.find((item) => {
+                return String(item.id) === String(product.id);
+            });
+
+            if (!alreadyExists) {
+                wishlist.push(product);
+            } else {
+                wishlist = wishlist.filter((item) => {
+                    return String(item.id) !== String(product.id);
+                });
+            }
+
+            saveWishlist(wishlist);
+            loadWishlistButton();
+        });
+
+        async function loadProduct() {
+            try {
+                const { data, error } = await supabase
+                    .from('Products')
+                    .select('*');
+
+                if (error) {
+                    console.error('Supabase error:', error);
+                    showMissing([]);
+                    return;
+                }
+
+                const products = data || [];
+
+                const product = products.find((item) => {
+                    return String(item.id).trim() === String(productId).trim();
+                });
+
+                if (!product) {
+                    showMissing(products);
+                    return;
+                }
+
+                renderProduct(product);
+                renderRelated(products);
+            } catch (err) {
+                console.error('Failed to load product:', err);
+                showMissing([]);
+            }
+        }
+
+        loadProduct();
+    </script>
 </Layout>
 
 <style is:global>
 :root {
-	--pink: #ec4899;
-	--light-pink: #f9a8d4;
-	--purple: #4b1d59;
-	--soft-purple: #6b4b74;
-	--bg: #f8f4f7;
-	--white: #ffffff;
-	--border: #f1d4e5;
+    --pink: #ec4899;
+    --light-pink: #f9a8d4;
+    --purple: #4b1d59;
+    --soft-purple: #6b4b74;
+    --bg: #f8f4f7;
+    --white: #ffffff;
+    --border: #f1d4e5;
 }
 
 body {
-	background: var(--bg);
-	color: var(--purple);
+    background: var(--bg);
+    color: var(--purple);
 }
 
 .sr-only {
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	padding: 0;
-	margin: -1px;
-	overflow: hidden;
-	clip: rect(0, 0, 0, 0);
-	white-space: nowrap;
-	border: 0;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }
 
 /* MISSING PRODUCT */
 
 .missing-product {
-	min-height: 60vh;
-	padding: 4rem 2rem;
+    min-height: 60vh;
+    padding: 4rem 2rem;
 
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	gap: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
 
-	text-align: center;
+    text-align: center;
 }
 
 .missing-product h2 {
-	color: var(--purple);
+    color: var(--purple);
 }
 
 .missing-product a {
-	padding: 1rem 2rem;
+    padding: 1rem 2rem;
 
-	background: var(--pink);
-	color: white;
+    background: var(--pink);
+    color: white;
 
-	border-radius: 999px;
+    border-radius: 999px;
 
-	text-decoration: none;
+    text-decoration: none;
 }
 
 .debug-text {
-	color: var(--purple);
-	font-size: 0.95rem;
+    color: var(--purple);
+    font-size: 0.95rem;
 }
 
 /* PRODUCT PAGE */
 
 .product-page {
-	width: 100%;
-	max-width: 1400px;
+    width: 100%;
+    max-width: 1400px;
 
-	margin: 0 auto;
-	padding: 3rem 2rem;
+    margin: 0 auto;
+    padding: 3rem 2rem;
 
-	display: grid;
-	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-	align-items: start;
-	gap: 5rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+    gap: 5rem;
 }
 
 /* GALLERY */
 
 .gallery {
-	display: flex;
-	flex-direction: column;
-	gap: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 
-	min-width: 0;
+    min-width: 0;
 }
 
 .main-image {
-	position: relative;
+    position: relative;
 
-	width: 100%;
-	min-height: 500px;
+    width: 100%;
+    min-height: 500px;
 
-	display: flex;
-	align-items: center;
-	justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-	padding: 1rem;
+    padding: 1rem;
 
-	background: #efc9cb;
-	border-radius: 24px;
-	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    background: #efc9cb;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 
-	overflow: hidden;
+    overflow: hidden;
 }
 
 .main-image img {
-	width: 100%;
-	height: 100%;
-	max-height: 520px;
+    width: 100%;
+    height: 100%;
+    max-height: 520px;
 
-	display: block;
-	object-fit: contain;
+    display: block;
+    object-fit: contain;
 }
 
 .image-arrow {
-	position: absolute;
-	top: 50%;
-	z-index: 5;
+    position: absolute;
+    top: 50%;
+    z-index: 5;
 
-	width: 45px;
-	height: 45px;
+    width: 45px;
+    height: 45px;
 
-	border: none;
-	border-radius: 50%;
+    border: none;
+    border-radius: 50%;
 
-	background: white;
-	color: var(--pink);
+    background: white;
+    color: var(--pink);
 
-	font-size: 2rem;
-	line-height: 1;
+    font-size: 2rem;
+    line-height: 1;
 
-	cursor: pointer;
+    cursor: pointer;
 
-	box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
-	transition: 0.2s ease;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+    transition: 0.2s ease;
 
-	transform: translateY(-50%);
+    transform: translateY(-50%);
 }
 
 .image-arrow:hover {
-	background: var(--pink);
-	color: white;
+    background: var(--pink);
+    color: white;
 }
 
 .image-arrow.left {
-	left: 1rem;
+    left: 1rem;
 }
 
 .image-arrow.right {
-	right: 1rem;
+    right: 1rem;
 }
 
 /* THUMBNAILS */
 
 .thumbnails {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 
 .thumbnail-btn {
-	padding: 0;
+    padding: 0;
 
-	background: transparent;
-	border: none;
-	border-radius: 14px;
+    background: transparent;
+    border: none;
+    border-radius: 14px;
 
-	cursor: pointer;
-	transition: 0.2s ease;
+    cursor: pointer;
+    transition: 0.2s ease;
 }
 
 .thumbnail-btn img {
-	width: 85px;
-	height: 85px;
+    width: 85px;
+    height: 85px;
 
-	object-fit: cover;
+    object-fit: cover;
 
-	border: 3px solid transparent;
-	border-radius: 14px;
+    border: 3px solid transparent;
+    border-radius: 14px;
 }
 
 .thumbnail-btn:hover img,
 .thumbnail-btn.active img {
-	border-color: var(--pink);
-	transform: translateY(-2px);
+    border-color: var(--pink);
+    transform: translateY(-2px);
 }
 
 /* DETAILS */
 
 .details {
-	display: flex;
-	flex-direction: column;
-	gap: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 
-	min-width: 0;
+    min-width: 0;
 }
 
 .details h1 {
-	color: var(--purple);
+    color: var(--purple);
 
-	font-size: 2.5rem;
-	line-height: 1.2;
+    font-size: 2.5rem;
+    line-height: 1.2;
 }
 
 .price {
-	font-size: 2rem;
-	font-weight: 700;
+    font-size: 2rem;
+    font-weight: 700;
 }
 
 .notice {
-	color: #e11d48;
+    color: #e11d48;
 
-	font-size: 0.95rem;
-	font-weight: 600;
+    font-size: 0.95rem;
+    font-weight: 600;
 }
 
 /* ACTIONS */
 
 .actions {
-	display: flex;
-	align-items: center;
-	flex-wrap: wrap;
-	gap: 1rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
 
-	margin-top: 2rem;
+    margin-top: 2rem;
 }
 
 .quantity-selector {
-	display: flex;
-	align-items: center;
+    display: flex;
+    align-items: center;
 
-	background: var(--pink);
-	border-radius: 999px;
+    background: var(--pink);
+    border-radius: 999px;
 
-	overflow: hidden;
+    overflow: hidden;
 }
 
 .quantity-selector button {
-	width: 55px;
-	height: 55px;
+    width: 55px;
+    height: 55px;
 
-	border: none;
+    border: none;
 
-	background: transparent;
-	color: white;
+    background: transparent;
+    color: white;
 
-	font-size: 1.5rem;
+    font-size: 1.5rem;
 
-	cursor: pointer;
-	transition: 0.2s ease;
+    cursor: pointer;
+    transition: 0.2s ease;
 }
 
 .quantity-selector button:hover {
-	background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.15);
 }
 
 .quantity-selector span {
-	width: 50px;
+    width: 50px;
 
-	color: white;
+    color: white;
 
-	text-align: center;
-	font-size: 1rem;
-	font-weight: 700;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 700;
 }
 
 .cart-btn {
-	padding: 1rem 3rem;
+    padding: 1rem 3rem;
 
-	border: none;
-	border-radius: 999px;
+    border: none;
+    border-radius: 999px;
 
-	background: var(--pink);
-	color: white;
+    background: var(--pink);
+    color: white;
 
-	font-size: 1rem;
-	font-weight: 600;
+    font-size: 1rem;
+    font-weight: 600;
 
-	cursor: pointer;
+    cursor: pointer;
 
-	box-shadow: 0 8px 20px rgba(236, 72, 153, 0.3);
-	transition: 0.25s ease;
+    box-shadow: 0 8px 20px rgba(236, 72, 153, 0.3);
+    transition: 0.25s ease;
 }
 
 .cart-btn:hover {
-	transform: translateY(-2px);
-	opacity: 0.95;
+    transform: translateY(-2px);
+    opacity: 0.95;
 }
 
 .wishlist-btn {
-	width: 60px;
-	height: 60px;
+    width: 60px;
+    height: 60px;
 
-	border: 2px solid var(--light-pink);
-	border-radius: 50%;
+    border: 2px solid var(--light-pink);
+    border-radius: 50%;
 
-	background: white;
-	color: var(--pink);
+    background: white;
+    color: var(--pink);
 
-	font-size: 1.5rem;
+    font-size: 1.5rem;
 
-	cursor: pointer;
-	transition: 0.25s ease;
+    cursor: pointer;
+    transition: 0.25s ease;
 }
 
 .wishlist-btn:hover,
 .wishlist-btn.active {
-	background: var(--pink);
-	color: white;
+    background: var(--pink);
+    color: white;
 }
 
 /* CONTENT SECTIONS */
 
 .content-section {
-	margin-top: 1rem;
-	padding-top: 2rem;
+    margin-top: 1rem;
+    padding-top: 2rem;
 
-	border-top: 1px solid var(--border);
+    border-top: 1px solid var(--border);
 }
 
 .content-section h2 {
-	margin-bottom: 1rem;
+    margin-bottom: 1rem;
 
-	color: var(--purple);
+    color: var(--purple);
 
-	font-size: 1.6rem;
+    font-size: 1.6rem;
 }
 
 .content-section p {
-	color: var(--soft-purple);
+    color: var(--soft-purple);
 
-	font-size: 1rem;
-	line-height: 1.8;
+    font-size: 1rem;
+    line-height: 1.8;
 }
 
 /* RELATED PRODUCTS */
 
 .related-products {
-	max-width: 1400px;
+    max-width: 1400px;
 
-	margin: 0 auto;
-	padding: 5rem 2rem;
+    margin: 0 auto;
+    padding: 5rem 2rem;
 }
 
 .related-products h2 {
-	margin-bottom: 3rem;
+    margin-bottom: 3rem;
 
-	color: var(--purple);
+    color: var(--purple);
 
-	text-align: center;
-	font-size: 2rem;
+    text-align: center;
+    font-size: 2rem;
 }
 
 .related-grid {
-	display: grid;
-	grid-template-columns: repeat(3, minmax(0, 1fr));
-	gap: 2rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem;
 }
 
 .related-card {
-	display: flex;
-	flex-direction: column;
+    display: flex;
+    flex-direction: column;
 
-	min-width: 0;
+    min-width: 0;
 }
 
 .related-image {
-	position: relative;
+    position: relative;
 
-	aspect-ratio: 1 / 1;
+    aspect-ratio: 1 / 1;
 
-	display: flex;
-	align-items: center;
-	justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-	padding: 2rem;
+    padding: 2rem;
 
-	background: #efc9cb;
-	border-radius: 20px;
+    background: #efc9cb;
+    border-radius: 20px;
 
-	overflow: hidden;
+    overflow: hidden;
 }
 
 .related-image-link {
-	width: 100%;
-	height: 100%;
+    width: 100%;
+    height: 100%;
 
-	display: flex;
-	align-items: center;
-	justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-	color: inherit;
-	text-decoration: none;
+    color: inherit;
+    text-decoration: none;
 }
 
 .related-image img {
-	width: 100%;
-	height: 100%;
+    width: 100%;
+    height: 100%;
 
-	display: block;
-	object-fit: contain;
+    display: block;
+    object-fit: contain;
 }
 
 .favorite {
-	position: absolute;
-	top: 1rem;
-	right: 1rem;
-	z-index: 10;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 10;
 
-	width: 50px;
-	height: 50px;
+    width: 50px;
+    height: 50px;
 
-	display: flex;
-	align-items: center;
-	justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-	border: none;
-	border-radius: 50%;
+    border: none;
+    border-radius: 50%;
 
-	background: white;
-	color: var(--pink);
+    background: white;
+    color: var(--pink);
 
-	font-size: 1.35rem;
-	font-weight: 700;
-	line-height: 1;
+    font-size: 1.35rem;
+    font-weight: 700;
+    line-height: 1;
 
-	cursor: pointer;
-	transition: 0.2s ease;
+    cursor: pointer;
+    transition: 0.2s ease;
 }
 
 .favorite:hover {
-	transform: scale(1.05);
+    transform: scale(1.05);
 }
 
 .favorite.active {
-	background: var(--pink) !important;
-	color: white !important;
+    background: var(--pink) !important;
+    color: white !important;
 }
 
 /* BADGES */
 
 .badge {
-	position: absolute;
-	left: 1.25rem;
-	bottom: 1.25rem;
+    position: absolute;
+    left: 1.25rem;
+    bottom: 1.25rem;
 
-	padding: 1rem 2rem;
+    padding: 1rem 2rem;
 
-	border-radius: 14px;
+    border-radius: 14px;
 
-	color: white;
+    color: white;
 
-	font-size: 1rem;
-	font-weight: bold;
+    font-size: 1rem;
+    font-weight: bold;
 }
 
 .badge.new {
-	background: #8d5bc5;
+    background: #8d5bc5;
 }
 
 .badge.sale {
-	background: #f4c542;
-	color: #4c2366;
+    background: #f4c542;
+    color: #4c2366;
 }
 
 .badge.pre-order {
-	background: #ff5ca8;
+    background: #ff5ca8;
 }
 
 /* RELATED CONTENT */
 
 .related-content {
-	padding-top: 1rem;
+    padding-top: 1rem;
 }
 
 .related-title-link {
-	color: inherit;
-	text-decoration: none;
+    color: inherit;
+    text-decoration: none;
 }
 
 .related-title-link h3 {
-	margin-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
 
-	color: #4c2366;
+    color: #4c2366;
 
-	font-size: 1rem;
-	line-height: 1.4;
+    font-size: 1rem;
+    line-height: 1.4;
 
-	cursor: pointer;
+    cursor: pointer;
 
-	display: -webkit-box;
-	-webkit-line-clamp: 2;
-	-webkit-box-orient: vertical;
-	overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 
-	min-height: 2.8rem;
+    min-height: 2.8rem;
 }
 
 .related-title-link h3:hover {
-	color: var(--pink);
+    color: var(--pink);
 }
 
 .related-content .price {
-	margin-bottom: 1rem;
+    margin-bottom: 1rem;
 
-	color: #4c2366;
+    color: #4c2366;
 
-	font-size: 1.3rem;
-	font-weight: 700;
+    font-size: 1.3rem;
+    font-weight: 700;
 }
 
 .related-cart-btn {
-	width: 100%;
+    width: 100%;
 
-	background: #e5a8da;
-	color: #4c2366;
+    background: #e5a8da;
+    color: #4c2366;
 
-	box-shadow: none;
+    box-shadow: none;
 }
 
 /* TABLET */
 
 @media (max-width: 950px) {
-	.product-page {
-		grid-template-columns: 1fr;
-		gap: 3rem;
+    .product-page {
+        grid-template-columns: 1fr;
+        gap: 3rem;
 
-		padding: 3rem 2rem;
-	}
+        padding: 3rem 2rem;
+    }
 
-	.main-image {
-		min-height: 460px;
-	}
+    .main-image {
+        min-height: 460px;
+    }
 
-	.details h1 {
-		font-size: 2rem;
-	}
+    .details h1 {
+        font-size: 2rem;
+    }
 
-	.actions {
-		align-items: stretch;
-		flex-direction: column;
-	}
+    .actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
 
-	.quantity-selector {
-		width: 100%;
-		justify-content: space-between;
-	}
+    .quantity-selector {
+        width: 100%;
+        justify-content: space-between;
+    }
 
-	.cart-btn {
-		width: 100%;
-	}
+    .cart-btn {
+        width: 100%;
+    }
 
-	.wishlist-btn {
-		width: 100%;
-		border-radius: 999px;
-	}
+    .wishlist-btn {
+        width: 100%;
+        border-radius: 999px;
+    }
 
-	.related-grid {
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-	}
+    .related-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 /* MOBILE */
 
 @media (max-width: 640px) {
-	.product-page {
-		padding: 2rem 1rem;
-		gap: 2rem;
-	}
+    .product-page {
+        padding: 2rem 1rem;
+        gap: 2rem;
+    }
 
-	.main-image {
-		min-height: 330px;
-		padding: 0.8rem;
-		border-radius: 18px;
-	}
+    .main-image {
+        min-height: 330px;
+        padding: 0.8rem;
+        border-radius: 18px;
+    }
 
-	.main-image img {
-		max-height: 330px;
-	}
+    .main-image img {
+        max-height: 330px;
+    }
 
-	.image-arrow {
-		width: 38px;
-		height: 38px;
+    .image-arrow {
+        width: 38px;
+        height: 38px;
 
-		font-size: 1.6rem;
-	}
+        font-size: 1.6rem;
+    }
 
-	.image-arrow.left {
-		left: 0.7rem;
-	}
+    .image-arrow.left {
+        left: 0.7rem;
+    }
 
-	.image-arrow.right {
-		right: 0.7rem;
-	}
+    .image-arrow.right {
+        right: 0.7rem;
+    }
 
-	.thumbnails {
-		flex-wrap: nowrap;
-		gap: 0.7rem;
+    .thumbnails {
+        flex-wrap: nowrap;
+        gap: 0.7rem;
 
-		padding-bottom: 0.3rem;
+        padding-bottom: 0.3rem;
 
-		overflow-x: auto;
-	}
+        overflow-x: auto;
+    }
 
-	.thumbnail-btn {
-		flex: 0 0 auto;
-	}
+    .thumbnail-btn {
+        flex: 0 0 auto;
+    }
 
-	.thumbnail-btn img {
-		width: 70px;
-		height: 70px;
-		border-radius: 12px;
-	}
+    .thumbnail-btn img {
+        width: 70px;
+        height: 70px;
+        border-radius: 12px;
+    }
 
-	.details {
-		gap: 1.2rem;
-	}
+    .details {
+        gap: 1.2rem;
+    }
 
-	.details h1 {
-		font-size: 1.6rem;
-	}
+    .details h1 {
+        font-size: 1.6rem;
+    }
 
-	.price {
-		font-size: 1.5rem;
-	}
+    .price {
+        font-size: 1.5rem;
+    }
 
-	.actions {
-		margin-top: 1rem;
-	}
+    .actions {
+        margin-top: 1rem;
+    }
 
-	.quantity-selector button {
-		width: 48px;
-		height: 48px;
-	}
+    .quantity-selector button {
+        width: 48px;
+        height: 48px;
+    }
 
-	.quantity-selector span {
-		width: auto;
-		flex: 1;
-	}
+    .quantity-selector span {
+        width: auto;
+        flex: 1;
+    }
 
-	.cart-btn {
-		padding: 0.9rem 1rem;
-	}
+    .cart-btn {
+        padding: 0.9rem 1rem;
+    }
 
-	.wishlist-btn {
-		height: 52px;
-	}
+    .wishlist-btn {
+        height: 52px;
+    }
 
-	.content-section {
-		padding-top: 1.5rem;
-		margin-top: 0.5rem;
-	}
+    .content-section {
+        padding-top: 1.5rem;
+        margin-top: 0.5rem;
+    }
 
-	.content-section h2 {
-		font-size: 1.35rem;
-	}
+    .content-section h2 {
+        font-size: 1.35rem;
+    }
 
-	.content-section p {
-		font-size: 0.95rem;
-		line-height: 1.7;
-	}
+    .content-section p {
+        font-size: 0.95rem;
+        line-height: 1.7;
+    }
 
-	.related-products {
-		padding: 3rem 1rem;
-	}
+    .related-products {
+        padding: 3rem 1rem;
+    }
 
-	.related-products h2 {
-		font-size: 1.6rem;
-		margin-bottom: 2rem;
-	}
+    .related-products h2 {
+        font-size: 1.6rem;
+        margin-bottom: 2rem;
+    }
 
-	.related-grid {
-		grid-template-columns: 1fr;
-		gap: 2rem;
-	}
+    .related-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
 
-	.related-card {
-		max-width: 420px;
-		margin: 0 auto;
-	}
+    .related-card {
+        max-width: 420px;
+        margin: 0 auto;
+    }
 
-	.related-image {
-		padding: 1.5rem;
-		border-radius: 18px;
-	}
+    .related-image {
+        padding: 1.5rem;
+        border-radius: 18px;
+    }
 
-	.favorite {
-		top: 0.8rem;
-		right: 0.8rem;
+    .favorite {
+        top: 0.8rem;
+        right: 0.8rem;
 
-		width: 42px;
-		height: 42px;
+        width: 42px;
+        height: 42px;
 
-		font-size: 1.25rem;
-	}
+        font-size: 1.25rem;
+    }
 
-	.badge {
-		left: 0.9rem;
-		bottom: 0.9rem;
+    .badge {
+        left: 0.9rem;
+        bottom: 0.9rem;
 
-		padding: 0.65rem 1.2rem;
-		border-radius: 12px;
+        padding: 0.65rem 1.2rem;
+        border-radius: 12px;
 
-		font-size: 0.8rem;
-	}
+        font-size: 0.8rem;
+    }
 
-	.related-title-link h3 {
-		min-height: auto;
-		font-size: 0.95rem;
-	}
+    .related-title-link h3 {
+        min-height: auto;
+        font-size: 0.95rem;
+    }
 
-	.related-content .price {
-		font-size: 1.15rem;
-		margin-bottom: 0.8rem;
-	}
+    .related-content .price {
+        font-size: 1.15rem;
+        margin-bottom: 0.8rem;
+    }
 }
 
 /* SMALL MOBILE */
 
 @media (max-width: 390px) {
-	.product-page {
-		padding: 1.5rem 0.8rem;
-	}
+    .product-page {
+        padding: 1.5rem 0.8rem;
+    }
 
-	.main-image {
-		min-height: 280px;
-	}
+    .main-image {
+        min-height: 280px;
+    }
 
-	.main-image img {
-		max-height: 280px;
-	}
+    .main-image img {
+        max-height: 280px;
+    }
 
-	.details h1 {
-		font-size: 1.4rem;
-	}
+    .details h1 {
+        font-size: 1.4rem;
+    }
 
-	.price {
-		font-size: 1.35rem;
-	}
+    .price {
+        font-size: 1.35rem;
+    }
 
-	.thumbnail-btn img {
-		width: 62px;
-		height: 62px;
-	}
+    .thumbnail-btn img {
+        width: 62px;
+        height: 62px;
+    }
 
-	.related-products {
-		padding: 2.5rem 0.8rem;
-	}
+    .related-products {
+        padding: 2.5rem 0.8rem;
+    }
 
-	.related-products h2 {
-		font-size: 1.4rem;
-	}
+    .related-products h2 {
+        font-size: 1.4rem;
+    }
 
-	.related-image {
-		padding: 1.2rem;
-	}
-
-	.favorite {
-		width: 38px;
-		height: 38px;
-		font-size: 1.15rem;
-	}
-
-	.badge {
-		padding: 0.55rem 1rem;
-		font-size: 0.75rem;
-	}
+    .related-image {
+        padding: 1.2rem;
+    }
 }
 </style>

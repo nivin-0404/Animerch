@@ -1,1655 +1,1521 @@
 ---
 const navItems = [
-	{ key: 'collectibles', href: '/Collectionspage' },
-	{ key: 'merchandise', href: '#' },
-	{ key: 'inStock', href: '#' },
-	{ key: 'contacts', href: '#' }
+    { key: 'collectibles', href: '/Collectionspage' },
+    { key: 'merchandise', href: '#' },
+    { key: 'inStock', href: '#' },
+    { key: 'contacts', href: '#' }
 ];
 ---
 
 <header class="header">
-	<div class="topbar">
-		<a href="/" class="logo">
-			<img src="/assets/logo.png" alt="Animerch logo" />
-		</a>
+    <div class="topbar">
+        <a href="/" class="logo">
+            <img src="/assets/logo.png" alt="Animerch logo" />
+        </a>
 
-		<div class="search-wrapper">
-			<input
-				id="searchInput"
-				type="text"
-				placeholder="Search..."
-				class="search"
-				data-i18n-placeholder="search"
-				autocomplete="off"
-			/>
+        <div class="search-wrapper">
+            <input
+                id="searchInput"
+                type="text"
+                placeholder="Search..."
+                class="search"
+                data-i18n-placeholder="search"
+                autocomplete="off"
+            />
 
-			<div id="searchResults" class="search-results"></div>
-		</div>
+            <div id="searchResults" class="search-results"></div>
+        </div>
 
-		<div class="icons">
-			<div class="profile-wrapper desktop-only">
-				<button
-					id="profileToggle"
-					class="icon-button"
-					aria-label="Profile"
-					type="button"
-				>
-					<img src="/assets/profile.svg" alt="Profile" />
-				</button>
+        <div class="icons">
+            <div class="profile-wrapper desktop-only">
+                <button
+                    id="profileToggle"
+                    class="icon-button"
+                    aria-label="Profile"
+                    type="button"
+                >
+                    <img src="/assets/profile.svg" alt="Profile" />
+                </button>
 
-				<div class="profile-menu" id="profileMenu">
-					<p id="profileEmail" class="profile-email"></p>
+                <div class="profile-menu" id="profileMenu">
+                    <p id="profileEmail" class="profile-email"></p>
 
-					<a href="/Wishlistpage">
-						♡ My Wishlist
-					</a>
+                    <a href="/Wishlistpage">
+                        ♡ My Wishlist
+                    </a>
 
-					<button id="profileLogout" type="button">
-						Log out
-					</button>
-				</div>
-			</div>
+                    <button id="profileLogout" type="button">
+                        Log out
+                    </button>
+                </div>
+            </div>
 
-			<a href="/Cartpage" class="icon-button" aria-label="Cart">
-				<img src="/assets/cart.svg" alt="Cart" />
-			</a>
+            <a href="/Cartpage" class="icon-button" aria-label="Cart">
+                <img src="/assets/cart.svg" alt="Cart" />
+            </a>
 
-			<div class="language-wrapper desktop-only">
-				<button
-					id="languageToggle"
-					class="icon-button"
-					aria-label="Language"
-					type="button"
-				>
-					<img src="/assets/global.svg" alt="Language" />
-				</button>
+            <div class="language-wrapper desktop-only">
+                <button
+                    id="languageToggle"
+                    class="icon-button"
+                    aria-label="Language"
+                    type="button"
+                >
+                    <img src="/assets/global.svg" alt="Language" />
+                </button>
 
-				<div class="language-menu" id="languageMenu">
-					<button type="button" data-lang="en">English</button>
-					<button type="button" data-lang="da">Dansk</button>
-					<button type="button" data-lang="sv">Svenska</button>
-					<button type="button" data-lang="no">Norsk</button>
-				</div>
-			</div>
+                <div class="language-menu" id="languageMenu">
+                    <button type="button" data-lang="en">English</button>
+                    <button type="button" data-lang="da">Dansk</button>
+                    <button type="button" data-lang="sv">Svenska</button>
+                    <button type="button" data-lang="no">Norsk</button>
+                </div>
+            </div>
 
-			<button
-				id="mobileMenuToggle"
-				class="icon-button burger-button"
-				aria-label="Open menu"
-				type="button"
-			>
-				<span></span>
-				<span></span>
-				<span></span>
-			</button>
-		</div>
-	</div>
+            <button
+                id="mobileMenuToggle"
+                class="icon-button burger-button"
+                aria-label="Open menu"
+                type="button"
+            >
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </div>
 
-	<nav class="navbar">
-		{
-			navItems.map((item) => (
-				<a href={item.href} data-i18n={item.key}>
-					{item.key}
-				</a>
-			))
-		}
-	</nav>
+    <nav class="navbar">
+        {
+            navItems.map((item) => (
+                <a href={item.href} data-i18n={item.key}>
+                    {item.key}
+                </a>
+            ))
+        }
+    </nav>
 
-	<nav id="mobileMenu" class="mobile-menu">
-		<div class="mobile-menu-section">
-			<p class="mobile-menu-title">Menu</p>
+    <nav id="mobileMenu" class="mobile-menu">
+        <div class="mobile-menu-section">
+            <p class="mobile-menu-title">Menu</p>
 
-			{
-				navItems.map((item) => (
-					<a href={item.href} data-i18n={item.key}>
-						{item.key}
-					</a>
-				))
-			}
-		</div>
+            {
+                navItems.map((item) => (
+                    <a href={item.href} data-i18n={item.key}>
+                        {item.key}
+                    </a>
+                ))
+            }
+        </div>
 
-		<div class="mobile-menu-section">
-			<p class="mobile-menu-title">Account</p>
+        <div class="mobile-menu-section">
+            <p class="mobile-menu-title">Account</p>
 
-			<button id="mobileProfileButton" class="mobile-menu-button" type="button">
-				<img src="/assets/profile.svg" alt="" />
-				<span>Profile / Log in</span>
-			</button>
+            <button id="mobileProfileButton" class="mobile-menu-button" type="button">
+                <img src="/assets/profile.svg" alt="" />
+                <span>Profile / Log in</span>
+            </button>
 
-			<a href="/Wishlistpage" class="mobile-menu-button">
-				<span class="mobile-heart">♡</span>
-				<span>My Wishlist</span>
-			</a>
+            <a href="/Wishlistpage" class="mobile-menu-button">
+                <span class="mobile-heart">♡</span>
+                <span>My Wishlist</span>
+            </a>
 
-			<button id="mobileLogoutButton" class="mobile-menu-button" type="button">
-				<span>↪</span>
-				<span>Log out</span>
-			</button>
-		</div>
+            <button id="mobileLogoutButton" class="mobile-menu-button" type="button">
+                <span>↪</span>
+                <span>Log out</span>
+            </button>
+        </div>
 
-		<div class="mobile-menu-section">
-			<p class="mobile-menu-title">Language</p>
+        <div class="mobile-menu-section">
+            <p class="mobile-menu-title">Language</p>
 
-			<div class="mobile-language-buttons">
-				<button type="button" data-lang="en">English</button>
-				<button type="button" data-lang="da">Dansk</button>
-				<button type="button" data-lang="sv">Svenska</button>
-				<button type="button" data-lang="no">Norsk</button>
-			</div>
-		</div>
-	</nav>
+            <div class="mobile-language-buttons">
+                <button type="button" data-lang="en">English</button>
+                <button type="button" data-lang="da">Dansk</button>
+                <button type="button" data-lang="sv">Svenska</button>
+                <button type="button" data-lang="no">Norsk</button>
+            </div>
+        </div>
+    </nav>
 </header>
 
 <div id="loginOverlay" class="login-overlay">
-	<div class="login-modal">
-		<button id="closeLogin" class="close-login" type="button">
-			×
-		</button>
+    <div class="login-modal">
+        <button id="closeLogin" class="close-login" type="button">
+            ×
+        </button>
 
-		<div class="login-image">
-			<img src="/assets/login-art.png" alt="Login art" />
-		</div>
+        <div class="login-image">
+            <img src="/assets/login-art.png" alt="Login art" />
+        </div>
 
-		<div class="login-form">
-			<h2 id="authTitle">LOG IN</h2>
+        <div class="login-form">
+            <h2 id="authTitle">LOG IN</h2>
 
-			<form>
-				<label for="loginEmail">Email</label>
-				<input id="loginEmail" type="email" />
+            <form>
+                <label for="loginEmail">Email</label>
+                <input id="loginEmail" type="email" />
 
-				<div class="password-row">
-					<label for="loginPassword">Password</label>
+                <div class="password-row">
+                    <label for="loginPassword">Password</label>
 
-					<a href="#" class="forgot">
-						Forgot?
-					</a>
-				</div>
+                    <a href="#" class="forgot">
+                        Forgot?
+                    </a>
+                </div>
 
-				<input id="loginPassword" type="password" />
+                <input id="loginPassword" type="password" />
 
-				<p id="loginMessage" class="login-message"></p>
+                <p id="loginMessage" class="login-message"></p>
 
-				<button id="loginButton" class="login-btn" type="button">
-					Log in
-				</button>
+                <button id="loginButton" class="login-btn" type="button">
+                    Log in
+                </button>
 
-				<button id="signupButton" class="signup-btn" type="button">
-					Create account
-				</button>
-			</form>
+                <button id="signupButton" class="signup-btn" type="button">
+                    Create account
+                </button>
+            </form>
 
-			<div class="continue-row">
-				<span></span>
-				<p>Continue</p>
-				<span></span>
-			</div>
+            <div class="continue-row">
+                <span></span>
+                <p>Continue</p>
+                <span></span>
+            </div>
 
-			<div class="social-login">
-				<button type="button" aria-label="Google login">
-					<span class="google">G</span>
-				</button>
+            <div class="social-login">
+                <button type="button" aria-label="Google login">
+                    <span class="google">G</span>
+                </button>
 
-				<button type="button" aria-label="Outlook login">
-					<span class="outlook">▣</span>
-				</button>
-			</div>
-		</div>
-	</div>
+                <button type="button" aria-label="Outlook login">
+                    <span class="outlook">▣</span>
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
-	import '../lib/language.js';
+    import '../lib/language.js';
 </script>
 
 <script>
-	// @ts-nocheck
-
-	import { createClient } from '@supabase/supabase-js';
-
-	const supabase = createClient(
-		'https://vvdrdzonanhxygaiviid.supabase.co',
-		'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2ZHJkem9uYW5oeHlnYWl2aWlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzNjU1MjEsImV4cCI6MjA5NDk0MTUyMX0.rX97Rt41Hj5SLBQe6d1WqWddShgQ0lMZzIR1q9gUQ6M'
-	);
-
-	const profileToggle = document.getElementById('profileToggle');
-	const profileMenu = document.getElementById('profileMenu');
-	const profileEmail = document.getElementById('profileEmail');
-	const profileLogout = document.getElementById('profileLogout');
-
-	const mobileProfileButton = document.getElementById('mobileProfileButton');
-	const mobileLogoutButton = document.getElementById('mobileLogoutButton');
-
-	const loginOverlay = document.getElementById('loginOverlay');
-	const closeLogin = document.getElementById('closeLogin');
-
-	const loginEmail = document.getElementById('loginEmail');
-	const loginPassword = document.getElementById('loginPassword');
-	const loginButton = document.getElementById('loginButton');
-	const signupButton = document.getElementById('signupButton');
-	const loginMessage = document.getElementById('loginMessage');
-
-	const searchInput = document.getElementById('searchInput');
-	const searchResults = document.getElementById('searchResults');
-
-	const languageToggle = document.getElementById('languageToggle');
-	const languageMenu = document.getElementById('languageMenu');
-
-	const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-	const mobileMenu = document.getElementById('mobileMenu');
-
-	let allProducts = [];
-
-	function openLoginPopup(message = '') {
-		loginOverlay?.classList.add('active');
-		document.body.classList.add('modal-open');
-
-		if (loginMessage) {
-			loginMessage.innerText = message;
-		}
-	}
-
-	function closeLoginPopup() {
-		loginOverlay?.classList.remove('active');
-		document.body.classList.remove('modal-open');
-
-		if (loginMessage) {
-			loginMessage.innerText = '';
-		}
-	}
-
-	function closeProfileMenu() {
-		profileMenu?.classList.remove('active');
-	}
-
-	function closeLanguageMenu() {
-		languageMenu?.classList.remove('active');
-	}
-
-	function closeMobileMenu() {
-		mobileMenu?.classList.remove('active');
-		mobileMenuToggle?.classList.remove('active');
-	}
-
-	function closeSearchResults() {
-		if (searchResults) {
-			searchResults.classList.remove('active');
-			searchResults.innerHTML = '';
-		}
-	}
-
-	async function getLoggedInUser() {
-		const { data } = await supabase.auth.getUser();
-		return data.user;
-	}
-
-	async function requireLogin() {
-		const user = await getLoggedInUser();
-
-		if (!user) {
-			openLoginPopup('Please log in to use favorites.');
-			return null;
-		}
-
-		return user;
-	}
-
-	async function updateProfileMenu() {
-		const user = await getLoggedInUser();
-
-		if (user && profileEmail) {
-			profileEmail.innerText = user.email;
-		}
-	}
-
-	window.animerchAuth = {
-		supabase,
-		openLoginPopup,
-		closeLoginPopup,
-		getLoggedInUser,
-		requireLogin
-	};
-
-	profileToggle?.addEventListener('click', async (event) => {
-		event.preventDefault();
-		event.stopPropagation();
-
-		const user = await getLoggedInUser();
-
-		if (!user) {
-			closeProfileMenu();
-			closeLanguageMenu();
-			closeMobileMenu();
-			openLoginPopup();
-			return;
-		}
-
-		await updateProfileMenu();
-
-		closeLanguageMenu();
-		closeMobileMenu();
-		profileMenu?.classList.toggle('active');
-	});
-
-	profileMenu?.addEventListener('click', (event) => {
-		event.stopPropagation();
-	});
-
-	profileLogout?.addEventListener('click', async () => {
-		await supabase.auth.signOut();
-		closeProfileMenu();
-		openLoginPopup('You are logged out.');
-	});
-
-	mobileProfileButton?.addEventListener('click', async (event) => {
-		event.preventDefault();
-		event.stopPropagation();
-
-		const user = await getLoggedInUser();
-
-		closeMobileMenu();
-
-		if (!user) {
-			openLoginPopup();
-			return;
-		}
-
-		window.location.href = '/Wishlistpage';
-	});
-
-	mobileLogoutButton?.addEventListener('click', async (event) => {
-		event.preventDefault();
-		event.stopPropagation();
-
-		await supabase.auth.signOut();
-
-		closeMobileMenu();
-		openLoginPopup('You are logged out.');
-	});
-
-	closeLogin?.addEventListener('click', () => {
-		closeLoginPopup();
-	});
-
-	loginOverlay?.addEventListener('click', (event) => {
-		if (event.target === loginOverlay) {
-			closeLoginPopup();
-		}
-	});
-
-	loginButton?.addEventListener('click', async () => {
-		const email = loginEmail?.value;
-		const password = loginPassword?.value;
-
-		if (!email || !password) {
-			loginMessage.innerText = 'Please enter email and password.';
-			return;
-		}
-
-		const { error } = await supabase.auth.signInWithPassword({
-			email,
-			password
-		});
-
-		if (error) {
-			loginMessage.innerText = error.message;
-			return;
-		}
-
-		loginMessage.innerText = 'Logged in successfully!';
-
-		setTimeout(async () => {
-			closeLoginPopup();
-			await updateProfileMenu();
-		}, 700);
-	});
-
-	signupButton?.addEventListener('click', async () => {
-		const email = loginEmail?.value;
-		const password = loginPassword?.value;
-
-		if (!email || !password) {
-			loginMessage.innerText = 'Please enter email and password.';
-			return;
-		}
-
-		const { error } = await supabase.auth.signUp({
-			email,
-			password
-		});
-
-		if (error) {
-			loginMessage.innerText = error.message;
-			return;
-		}
-
-		loginMessage.innerText =
-			'Account created! Check your email if confirmation is required.';
-	});
-
-	languageToggle?.addEventListener('click', (event) => {
-		event.preventDefault();
-		event.stopPropagation();
-
-		closeProfileMenu();
-		closeMobileMenu();
-
-		languageMenu?.classList.toggle('active');
-	});
-
-	languageMenu?.addEventListener('click', (event) => {
-		event.stopPropagation();
-	});
-
-	document.querySelectorAll('[data-lang]').forEach((button) => {
-		button.addEventListener('click', (event) => {
-			event.preventDefault();
-			event.stopPropagation();
-
-			const lang = button.dataset.lang;
-
-			if (!lang) return;
-
-			localStorage.setItem('lang', lang);
-			localStorage.setItem('language', lang);
-			localStorage.setItem('selectedLanguage', lang);
-
-			document.documentElement.lang = lang;
-
-			if (window.applyLanguage) {
-				window.applyLanguage(lang);
-			}
-
-			if (window.setLanguage) {
-				window.setLanguage(lang);
-			}
-
-			if (window.changeLanguage) {
-				window.changeLanguage(lang);
-			}
-
-			if (window.updateLanguage) {
-				window.updateLanguage(lang);
-			}
-
-			window.dispatchEvent(
-				new CustomEvent('languageChanged', {
-					detail: { lang }
-				})
-			);
-
-			closeLanguageMenu();
-			closeMobileMenu();
-		});
-	});
-
-	mobileMenuToggle?.addEventListener('click', (event) => {
-		event.preventDefault();
-		event.stopPropagation();
-
-		closeProfileMenu();
-		closeLanguageMenu();
-
-		mobileMenu?.classList.toggle('active');
-		mobileMenuToggle?.classList.toggle('active');
-	});
-
-	mobileMenu?.addEventListener('click', (event) => {
-		event.stopPropagation();
-
-		const target = event.target;
-
-		if (target && target.tagName === 'A') {
-			closeMobileMenu();
-		}
-	});
-
-	function getProductImages(product) {
-		return [
-			product.image,
-			product.image2,
-			product.image3,
-			product.image4,
-			product.image5,
-			product.image_2,
-			product.image_3,
-			product.image_4,
-			product.image_5
-		]
-			.filter(Boolean)
-			.flatMap((value) => {
-				return String(value)
-					.split(/\n|,/)
-					.map((url) => url.trim())
-					.filter(Boolean);
-			});
-	}
-
-	function renderSearchResults(products) {
-		if (!searchResults) return;
-
-		if (!products.length) {
-			searchResults.innerHTML = `
-				<div class="search-empty">
-					No figures found
-				</div>
-			`;
-
-			searchResults.classList.add('active');
-			return;
-		}
-
-		searchResults.innerHTML = products
-			.map((product) => {
-				const images = getProductImages(product);
-				const image = images[0] || '/assets/ram.png';
-
-				return `
-					<a href="/Productpage?id=${product.id}" class="search-result-item">
-						<img src="${image}" alt="${product.title}" />
-
-						<div class="search-result-info">
-							<h4>${product.title || 'Untitled product'}</h4>
-							<p>${product.price || 0} kr</p>
-						</div>
-					</a>
-				`;
-			})
-			.join('');
-
-		searchResults.classList.add('active');
-	}
-
-	function searchProducts(searchText) {
-		const query = searchText.trim().toLowerCase();
-
-		if (!query) {
-			closeSearchResults();
-			return;
-		}
-
-		const filteredProducts = allProducts
-			.filter((product) => {
-				const title = String(product.title || '').toLowerCase();
-				const category = String(product.category || '').toLowerCase();
-				const badge = String(product.badge || '').toLowerCase();
-				const description = String(product.description || '').toLowerCase();
-
-				return (
-					title.includes(query) ||
-					category.includes(query) ||
-					badge.includes(query) ||
-					description.includes(query)
-				);
-			})
-			.slice(0, 6);
-
-		renderSearchResults(filteredProducts);
-	}
-
-	async function loadSearchProducts() {
-		const { data, error } = await supabase
-			.from('Products')
-			.select('*');
-
-		if (error) {
-			console.error('Search Supabase error:', error);
-			return;
-		}
-
-		allProducts = data || [];
-	}
-
-	searchInput?.addEventListener('input', () => {
-		searchProducts(searchInput.value);
-	});
-
-	searchInput?.addEventListener('keydown', (event) => {
-		if (event.key === 'Enter') {
-			const query = searchInput.value.trim().toLowerCase();
-
-			if (!query) return;
-
-			const firstMatch = allProducts.find((product) => {
-				const title = String(product.title || '').toLowerCase();
-				return title.includes(query);
-			});
-
-			if (firstMatch) {
-				window.location.href = `/Productpage?id=${firstMatch.id}`;
-			}
-		}
-	});
-
-	searchInput?.addEventListener('focus', () => {
-		if (searchInput.value.trim()) {
-			searchProducts(searchInput.value);
-		}
-	});
-
-	document.addEventListener('click', (event) => {
-		const target = event.target;
-
-		if (
-			searchInput &&
-			searchResults &&
-			!searchInput.contains(target) &&
-			!searchResults.contains(target)
-		) {
-			closeSearchResults();
-		}
-
-		if (
-			languageToggle &&
-			languageMenu &&
-			!languageToggle.contains(target) &&
-			!languageMenu.contains(target)
-		) {
-			closeLanguageMenu();
-		}
-
-		if (
-			profileToggle &&
-			profileMenu &&
-			!profileToggle.contains(target) &&
-			!profileMenu.contains(target)
-		) {
-			closeProfileMenu();
-		}
-
-		if (
-			mobileMenuToggle &&
-			mobileMenu &&
-			!mobileMenuToggle.contains(target) &&
-			!mobileMenu.contains(target)
-		) {
-			closeMobileMenu();
-		}
-	});
-
-	document.addEventListener('keydown', (event) => {
-		if (event.key === 'Escape') {
-			closeLoginPopup();
-			closeProfileMenu();
-			closeLanguageMenu();
-			closeMobileMenu();
-			closeSearchResults();
-		}
-	});
-
-	updateProfileMenu();
-	loadSearchProducts();
+    // @ts-nocheck
+
+    import { createClient } from '@supabase/supabase-js';
+
+    const supabase = createClient(
+        'https://zwjiildrmidhiqqmbbja.supabase.co',
+        'sb_publishable_wbX95qCpoGWgltKUlEgRlw_RYujOXRO'
+    );
+
+    const profileToggle = document.getElementById('profileToggle');
+    const profileMenu = document.getElementById('profileMenu');
+    const profileEmail = document.getElementById('profileEmail');
+    const profileLogout = document.getElementById('profileLogout');
+
+    const mobileProfileButton = document.getElementById('mobileProfileButton');
+    const mobileLogoutButton = document.getElementById('mobileLogoutButton');
+
+    const loginOverlay = document.getElementById('loginOverlay');
+    const closeLogin = document.getElementById('closeLogin');
+
+    const loginEmail = document.getElementById('loginEmail');
+    const loginPassword = document.getElementById('loginPassword');
+    const loginButton = document.getElementById('loginButton');
+    const signupButton = document.getElementById('signupButton');
+    const loginMessage = document.getElementById('loginMessage');
+
+    const searchInput = document.getElementById('searchInput');
+    const searchResults = document.getElementById('searchResults');
+
+    const languageToggle = document.getElementById('languageToggle');
+    const languageMenu = document.getElementById('languageMenu');
+
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    let allProducts = [];
+
+    function openLoginPopup(message = '') {
+        loginOverlay?.classList.add('active');
+        document.body.classList.add('modal-open');
+
+        if (loginMessage) {
+            loginMessage.innerText = message;
+        }
+    }
+
+    function closeLoginPopup() {
+        loginOverlay?.classList.remove('active');
+        document.body.classList.remove('modal-open');
+
+        if (loginMessage) {
+            loginMessage.innerText = '';
+        }
+    }
+
+    function closeProfileMenu() {
+        profileMenu?.classList.remove('active');
+    }
+
+    function closeLanguageMenu() {
+        languageMenu?.classList.remove('active');
+    }
+
+    function closeMobileMenu() {
+        mobileMenu?.classList.remove('active');
+        mobileMenuToggle?.classList.remove('active');
+    }
+
+    function closeSearchResults() {
+        if (searchResults) {
+            searchResults.classList.remove('active');
+            searchResults.innerHTML = '';
+        }
+    }
+
+    async function getLoggedInUser() {
+        const { data } = await supabase.auth.getUser();
+        return data.user;
+    }
+
+    async function requireLogin() {
+        const user = await getLoggedInUser();
+
+        if (!user) {
+            openLoginPopup('Please log in to use favorites.');
+            return null;
+        }
+
+        return user;
+    }
+
+    async function updateProfileMenu() {
+        const user = await getLoggedInUser();
+
+        if (user && profileEmail) {
+            profileEmail.innerText = user.email;
+        }
+    }
+
+    window.animerchAuth = {
+        supabase,
+        openLoginPopup,
+        closeLoginPopup,
+        getLoggedInUser,
+        requireLogin
+    };
+
+    profileToggle?.addEventListener('click', async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const user = await getLoggedInUser();
+
+        if (!user) {
+            closeProfileMenu();
+            closeLanguageMenu();
+            closeMobileMenu();
+            openLoginPopup();
+            return;
+        }
+
+        await updateProfileMenu();
+
+        closeLanguageMenu();
+        closeMobileMenu();
+        profileMenu?.classList.toggle('active');
+    });
+
+    profileMenu?.addEventListener('click', (event) => {
+        event.stopPropagation();
+    });
+
+    profileLogout?.addEventListener('click', async () => {
+        await supabase.auth.signOut();
+        closeProfileMenu();
+        openLoginPopup('You are logged out.');
+    });
+
+    mobileProfileButton?.addEventListener('click', async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const user = await getLoggedInUser();
+
+        closeMobileMenu();
+
+        if (!user) {
+            openLoginPopup();
+            return;
+        }
+
+        window.location.href = '/Wishlistpage';
+    });
+
+    mobileLogoutButton?.addEventListener('click', async (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        await supabase.auth.signOut();
+
+        closeMobileMenu();
+        openLoginPopup('You are logged out.');
+    });
+
+    closeLogin?.addEventListener('click', () => {
+        closeLoginPopup();
+    });
+
+    loginOverlay?.addEventListener('click', (event) => {
+        if (event.target === loginOverlay) {
+            closeLoginPopup();
+        }
+    });
+
+    loginButton?.addEventListener('click', async () => {
+        const email = loginEmail?.value;
+        const password = loginPassword?.value;
+
+        if (!email || !password) {
+            loginMessage.innerText = 'Please enter email and password.';
+            return;
+        }
+
+        const { error } = await supabase.auth.signInWithPassword({
+            email,
+            password
+        });
+
+        if (error) {
+            loginMessage.innerText = error.message;
+            return;
+        }
+
+        loginMessage.innerText = 'Logged in successfully!';
+
+        setTimeout(async () => {
+            closeLoginPopup();
+            await updateProfileMenu();
+        }, 700);
+    });
+
+    signupButton?.addEventListener('click', async () => {
+        const email = loginEmail?.value;
+        const password = loginPassword?.value;
+
+        if (!email || !password) {
+            loginMessage.innerText = 'Please enter email and password.';
+            return;
+        }
+
+        const { error } = await supabase.auth.signUp({
+            email,
+            password
+        });
+
+        if (error) {
+            loginMessage.innerText = error.message;
+            return;
+        }
+
+        loginMessage.innerText =
+            'Account created! Check your email if confirmation is required.';
+    });
+
+    languageToggle?.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        closeProfileMenu();
+        closeMobileMenu();
+
+        languageMenu?.classList.toggle('active');
+    });
+
+    languageMenu?.addEventListener('click', (event) => {
+        event.stopPropagation();
+    });
+
+    document.querySelectorAll('[data-lang]').forEach((button) => {
+        button.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+
+            const lang = button.dataset.lang;
+
+            if (!lang) return;
+
+            localStorage.setItem('lang', lang);
+            localStorage.setItem('language', lang);
+            localStorage.setItem('selectedLanguage', lang);
+
+            document.documentElement.lang = lang;
+
+            if (window.applyLanguage) {
+                window.applyLanguage(lang);
+            }
+
+            if (window.setLanguage) {
+                window.setLanguage(lang);
+            }
+
+            if (window.changeLanguage) {
+                window.changeLanguage(lang);
+            }
+
+            if (window.updateLanguage) {
+                window.updateLanguage(lang);
+            }
+
+            window.dispatchEvent(
+                new CustomEvent('languageChanged', {
+                    detail: { lang }
+                })
+            );
+
+            closeLanguageMenu();
+            closeMobileMenu();
+        });
+    });
+
+    mobileMenuToggle?.addEventListener('click', (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        closeProfileMenu();
+        closeLanguageMenu();
+
+        mobileMenu?.classList.toggle('active');
+        mobileMenuToggle?.classList.toggle('active');
+    });
+
+    mobileMenu?.addEventListener('click', (event) => {
+        event.stopPropagation();
+
+        const target = event.target;
+
+        if (target && target.tagName === 'A') {
+            closeMobileMenu();
+        }
+    });
+
+    function getProductImages(product) {
+        return [
+            product.image,
+            product.image2,
+            product.image3,
+            product.image4,
+            product.image5,
+            product.image_2,
+            product.image_3,
+            product.image_4,
+            product.image_5
+        ]
+            .filter(Boolean)
+            .flatMap((value) => {
+                return String(value)
+                    .split(/\n|,/)
+                    .map((url) => url.trim())
+                    .filter(Boolean);
+            });
+    }
+
+    function renderSearchResults(products) {
+        if (!searchResults) return;
+
+        if (!products.length) {
+            searchResults.innerHTML = `
+                <div class="search-empty">
+                    No figures found
+                </div>
+            `;
+
+            searchResults.classList.add('active');
+            return;
+        }
+
+        searchResults.innerHTML = products
+            .map((product) => {
+                const images = getProductImages(product);
+                const image = images[0] || '/assets/ram.png';
+
+                return `
+                    <a href="/Productpage?id=${product.id}" class="search-result-item">
+                        <img src="${image}" alt="${product.title}" />
+
+                        <div class="search-result-info">
+                            <h4>${product.title || 'Untitled product'}</h4>
+                            <p>${product.price || 0} kr</p>
+                        </div>
+                    </a>
+                `;
+            })
+            .join('');
+
+        searchResults.classList.add('active');
+    }
+
+    function searchProducts(searchText) {
+        const query = searchText.trim().toLowerCase();
+
+        if (!query) {
+            closeSearchResults();
+            return;
+        }
+
+        const filteredProducts = allProducts
+            .filter((product) => {
+                const title = String(product.title || '').toLowerCase();
+                const category = String(product.category || '').toLowerCase();
+                const badge = String(product.badge || '').toLowerCase();
+                const description = String(product.description || '').toLowerCase();
+
+                return (
+                    title.includes(query) ||
+                    category.includes(query) ||
+                    badge.includes(query) ||
+                    description.includes(query)
+                );
+            })
+            .slice(0, 6);
+
+        renderSearchResults(filteredProducts);
+    }
+
+    async function loadSearchProducts() {
+        const { data, error } = await supabase
+            .from('Products')
+            .select('*');
+
+        if (error) {
+            console.error('Search Supabase error:', error);
+            return;
+        }
+
+        allProducts = data || [];
+    }
+
+    searchInput?.addEventListener('input', () => {
+        searchProducts(searchInput.value);
+    });
+
+    searchInput?.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            const query = searchInput.value.trim().toLowerCase();
+
+            if (!query) return;
+
+            const firstMatch = allProducts.find((product) => {
+                const title = String(product.title || '').toLowerCase();
+                return title.includes(query);
+            });
+
+            if (firstMatch) {
+                window.location.href = `/Productpage?id=${firstMatch.id}`;
+            }
+        }
+    });
+
+    searchInput?.addEventListener('focus', () => {
+        if (searchInput.value.trim()) {
+            searchProducts(searchInput.value);
+        }
+    });
+
+    document.addEventListener('click', (event) => {
+        const target = event.target;
+
+        if (
+            searchInput &&
+            searchResults &&
+            !searchInput.contains(target) &&
+            !searchResults.contains(target)
+        ) {
+            closeSearchResults();
+        }
+
+        if (
+            languageToggle &&
+            languageMenu &&
+            !languageToggle.contains(target) &&
+            !languageMenu.contains(target)
+        ) {
+            closeLanguageMenu();
+        }
+
+        if (
+            profileToggle &&
+            profileMenu &&
+            !profileToggle.contains(target) &&
+            !profileMenu.contains(target)
+        ) {
+            closeProfileMenu();
+        }
+
+        if (
+            mobileMenuToggle &&
+            mobileMenu &&
+            !mobileMenuToggle.contains(target) &&
+            !mobileMenu.contains(target)
+        ) {
+            closeMobileMenu();
+        }
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            closeLoginPopup();
+            closeProfileMenu();
+            closeLanguageMenu();
+            closeMobileMenu();
+            closeSearchResults();
+        }
+    });
+
+    updateProfileMenu();
+    loadSearchProducts();
 </script>
 
 <style is:global>
 .header {
-	position: sticky;
-	top: 0;
-	left: 0;
-	z-index: 999999;
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 999999;
 
-	width: 100%;
-	background: var(--pink);
+    width: 100%;
+    background: var(--pink);
 
-	box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
 }
 .topbar {
-	width: 100%;
-	padding: 0.8rem 2rem;
+    width: 100%;
+    padding: 0.8rem 2rem;
 
-	display: grid;
-	grid-template-columns: auto minmax(240px, 720px) auto;
-	align-items: center;
-	gap: 1.5rem;
+    display: grid;
+    grid-template-columns: auto minmax(240px, 720px) auto;
+    align-items: center;
+    gap: 1.5rem;
 
-	background: white;
+    background: white;
 }
 
 .logo {
-	display: flex;
-	align-items: center;
-	flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
 
-	text-decoration: none;
+    text-decoration: none;
 }
 
 .logo img {
-	width: auto;
-	height: 48px;
+    width: auto;
+    height: 48px;
 
-	display: block;
-	object-fit: contain;
+    display: block;
+    object-fit: contain;
 }
 
 /* SEARCH */
 
 .search-wrapper {
-	position: relative;
+    position: relative;
 
-	width: 100%;
-	max-width: 720px;
-	margin: 0 auto;
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
 }
 
 .search {
-	width: 100%;
-	height: 40px;
+    width: 100%;
+    height: 40px;
 
-	border: 2px solid #8d5bc5;
-	border-radius: 999px;
+    border: 2px solid #8d5bc5;
+    border-radius: 999px;
 
-	padding: 0 1.5rem;
+    padding: 0 1.5rem;
 
-	outline: none;
+    outline: none;
 
-	background: white;
-	color: #4c2366;
+    background: white;
+    color: #4c2366;
 
-	font-size: 0.95rem;
+    font-size: 0.95rem;
 }
 
 .search:focus {
-	border-color: #ef4f96;
-	box-shadow: 0 0 0 3px rgba(239, 79, 150, 0.15);
+    border-color: #ef4f96;
+    box-shadow: 0 0 0 3px rgba(239, 79, 150, 0.15);
 }
 
 .search-results {
-	position: absolute;
-	top: calc(100% + 0.6rem);
-	left: 0;
-	right: 0;
-	z-index: 99999;
+    position: absolute;
+    top: calc(100% + 0.6rem);
+    left: 0;
+    right: 0;
+    z-index: 99999;
 
-	max-height: 330px;
-	overflow-y: auto;
+    max-height: 330px;
+    overflow-y: auto;
 
-	display: none;
-	flex-direction: column;
-	gap: 0.35rem;
+    display: none;
+    flex-direction: column;
+    gap: 0.35rem;
 
-	padding: 0.5rem;
+    padding: 0.5rem;
 
-	background: white;
-	border-radius: 18px;
-	box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18);
+    background: white;
+    border-radius: 18px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18);
 }
 
 .search-results.active {
-	display: flex;
+    display: flex;
 }
 
 .search-result-item {
-	width: 100%;
+    width: 100%;
 
-	display: flex;
-	align-items: center;
-	gap: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
 
-	padding: 0.45rem;
-	border-radius: 12px;
+    padding: 0.45rem;
+    border-radius: 12px;
 
-	color: #4c2366;
-	text-decoration: none;
+    color: #4c2366;
+    text-decoration: none;
 
-	transition: 0.2s ease;
+    transition: 0.2s ease;
 }
 
 .search-result-item:hover {
-	background: #f5d7e8;
+    background: #f5d7e8;
 }
 
 .search-result-item img {
-	width: 42px !important;
-	height: 42px !important;
-	min-width: 42px !important;
-	max-width: 42px !important;
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+    max-width: 42px !important;
 
-	object-fit: contain !important;
+    object-fit: contain !important;
 
-	background: #efc9cb;
-	border-radius: 10px;
-	padding: 0.25rem;
+    background: #efc9cb;
+    border-radius: 10px;
+    padding: 0.25rem;
 
-	flex-shrink: 0;
+    flex-shrink: 0;
 }
 
 .search-result-info {
-	min-width: 0;
-	overflow: hidden;
+    min-width: 0;
+    overflow: hidden;
 
-	display: flex;
-	flex-direction: column;
-	gap: 0.15rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
 }
 
 .search-result-info h4 {
-	margin: 0;
+    margin: 0;
 
-	color: #4c2366;
+    color: #4c2366;
 
-	font-size: 0.82rem;
-	line-height: 1.25;
+    font-size: 0.82rem;
+    line-height: 1.25;
 
-	display: -webkit-box;
-	-webkit-line-clamp: 2;
-	-webkit-box-orient: vertical;
-	overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .search-result-info p {
-	margin: 0;
+    margin: 0;
 
-	color: #ef4f96;
+    color: #ef4f96;
 
-	font-size: 0.82rem;
-	font-weight: 700;
+    font-size: 0.82rem;
+    font-weight: 700;
 }
 
 .search-empty {
-	padding: 0.8rem;
+    padding: 0.8rem;
 
-	color: #4c2366;
+    color: #4c2366;
 
-	text-align: center;
-	font-size: 0.9rem;
-	font-weight: 600;
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 600;
 }
 
 /* ICONS */
 
 .icons {
-	display: flex;
-	align-items: center;
-	justify-content: flex-end;
-	gap: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.8rem;
 
-	flex-shrink: 0;
+    flex-shrink: 0;
 }
 
 .icon-button {
-	width: 40px;
-	height: 40px;
+    width: 40px;
+    height: 40px;
 
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 
-	border: none;
-	border-radius: 50%;
+    border: none;
+    border-radius: 50%;
 
-	background: var(--pink);
+    background: var(--pink);
 
-	text-decoration: none;
-	cursor: pointer;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 .icon-button img {
-	width: 20px;
-	height: 20px;
-	object-fit: contain;
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
 }
 
 /* BURGER BUTTON */
 
 .burger-button {
-	display: none !important;
-	flex-direction: column;
-	gap: 4px;
+    display: none !important;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .burger-button span {
-	width: 18px;
-	height: 2px;
+    width: 18px;
+    height: 2px;
 
-	display: block;
+    display: block;
 
-	background: white;
-	border-radius: 999px;
+    background: white;
+    border-radius: 999px;
 
-	transition: 0.2s ease;
+    transition: 0.2s ease;
 }
 
 .burger-button.active span:nth-child(1) {
-	transform: translateY(6px) rotate(45deg);
+    transform: translateY(6px) rotate(45deg);
 }
 
 .burger-button.active span:nth-child(2) {
-	opacity: 0;
+    opacity: 0;
 }
 
 .burger-button.active span:nth-child(3) {
-	transform: translateY(-6px) rotate(-45deg);
+    transform: translateY(-6px) rotate(-45deg);
 }
 
 .profile-wrapper,
 .language-wrapper {
-	position: relative;
+    position: relative;
 }
 
 /* PROFILE DROPDOWN */
 
 .profile-menu {
-	position: absolute;
-	top: 50px;
-	right: 0;
-	z-index: 999999;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    z-index: 999999;
 
-	min-width: 210px;
+    min-width: 210px;
 
-	display: none;
-	flex-direction: column;
+    display: none;
+    flex-direction: column;
 
-	padding: 0.6rem;
+    padding: 0.6rem;
 
-	background: white;
-	border-radius: 16px;
-	box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 .profile-menu.active {
-	display: flex;
+    display: flex;
 }
 
 .profile-email {
-	margin: 0 0 0.3rem;
-	padding: 0.8rem 1rem;
+    margin: 0 0 0.3rem;
+    padding: 0.8rem 1rem;
 
-	color: #4c2366;
+    color: #4c2366;
 
-	font-size: 0.8rem;
-	font-weight: 700;
-	word-break: break-word;
+    font-size: 0.8rem;
+    font-weight: 700;
+    word-break: break-word;
 
-	border-bottom: 1px solid #f1d4e5;
+    border-bottom: 1px solid #f1d4e5;
 }
 
 .profile-menu a,
 .profile-menu button {
-	padding: 0.8rem 1rem;
+    padding: 0.8rem 1rem;
 
-	border: none;
-	border-radius: 10px;
+    border: none;
+    border-radius: 10px;
 
-	background: transparent;
-	color: #4c2366;
+    background: transparent;
+    color: #4c2366;
 
-	text-align: left;
-	text-decoration: none;
+    text-align: left;
+    text-decoration: none;
 
-	font-size: 0.95rem;
-	font-weight: 600;
+    font-size: 0.95rem;
+    font-weight: 600;
 
-	cursor: pointer;
+    cursor: pointer;
 }
 
 .profile-menu a:hover,
 .profile-menu button:hover {
-	background: #f5d7e8;
+    background: #f5d7e8;
 }
 
 /* LANGUAGE DROPDOWN */
 
 .language-menu {
-	position: absolute;
-	top: 50px;
-	right: 0;
-	z-index: 999999;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    z-index: 999999;
 
-	min-width: 140px;
+    min-width: 140px;
 
-	display: none;
-	flex-direction: column;
+    display: none;
+    flex-direction: column;
 
-	padding: 0.5rem;
+    padding: 0.5rem;
 
-	background: white;
-	border-radius: 16px;
-	box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 .language-menu.active {
-	display: flex;
+    display: flex;
 }
 
 .language-menu button {
-	width: 100%;
+    width: 100%;
 
-	padding: 0.8rem 1rem;
+    padding: 0.8rem 1rem;
 
-	border: none;
-	border-radius: 10px;
+    border: none;
+    border-radius: 10px;
 
-	background: transparent;
-	color: #4c2366;
+    background: transparent;
+    color: #4c2366;
 
-	text-align: left;
-	font-size: 0.9rem;
-	font-weight: 600;
+    text-align: left;
+    font-size: 0.9rem;
+    font-weight: 600;
 
-	cursor: pointer;
+    cursor: pointer;
 }
 
 .language-menu button:hover {
-	background: #f5d7e8;
+    background: #f5d7e8;
 }
 
 /* DESKTOP NAVBAR */
 
 .navbar {
-	width: 100%;
+    width: 100%;
 
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3rem;
 
-	padding: 0.8rem 2rem;
+    padding: 0.8rem 2rem;
 
-	background: var(--pink);
+    background: var(--pink);
 }
 
 .navbar a {
-	color: white;
+    color: white;
 
-	text-decoration: none;
-	font-size: 1rem;
-	font-weight: 700;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 700;
 
-	white-space: nowrap;
+    white-space: nowrap;
 }
 
 .navbar a:hover {
-	opacity: 0.8;
+    opacity: 0.8;
 }
 
 /* MOBILE MENU */
 
 .mobile-menu {
-	display: none;
+    display: none;
 }
 
 .mobile-menu.active {
-	display: flex;
+    display: flex;
 }
 
 /* LOGIN POPUP */
 
 .modal-open {
-	overflow: hidden;
+    overflow: hidden;
 }
 
 .login-overlay {
-	position: fixed;
-	inset: 0;
-	z-index: 999999;
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
 
-	display: none;
-	align-items: center;
-	justify-content: center;
+    display: none;
+    align-items: center;
+    justify-content: center;
 
-	padding: 2rem;
+    padding: 2rem;
 
-	background: rgba(0, 0, 0, 0.45);
+    background: rgba(0, 0, 0, 0.45);
 }
 
 .login-overlay.active {
-	display: flex;
+    display: flex;
 }
 
 .login-modal {
-	position: relative;
+    position: relative;
 
-	width: min(1000px, 100%);
-	min-height: 600px;
+    width: min(1000px, 100%);
+    min-height: 600px;
 
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 3rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
 
-	padding: 1.6rem;
+    padding: 1.6rem;
 
-	background: white;
-	border-radius: 4px;
-	box-shadow: 0 20px 70px rgba(0, 0, 0, 0.25);
+    background: white;
+    border-radius: 4px;
+    box-shadow: 0 20px 70px rgba(0, 0, 0, 0.25);
 }
 
 .close-login {
-	position: absolute;
-	top: 1rem;
-	right: 1rem;
-	z-index: 2;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 2;
 
-	width: 35px;
-	height: 35px;
+    width: 35px;
+    height: 35px;
 
-	border: none;
-	border-radius: 50%;
+    border: none;
+    border-radius: 50%;
 
-	background: #ef4f96;
-	color: white;
+    background: #ef4f96;
+    color: white;
 
-	font-size: 1.5rem;
-	line-height: 1;
+    font-size: 1.5rem;
+    line-height: 1;
 
-	cursor: pointer;
+    cursor: pointer;
 }
 
 .login-image {
-	width: 100%;
-	height: 100%;
+    width: 100%;
+    height: 100%;
 
-	display: flex;
-	align-items: center;
-	justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .login-image img {
-	width: 100%;
-	height: 100%;
-	max-height: 560px;
+    width: 100%;
+    height: 100%;
+    max-height: 560px;
 
-	object-fit: cover;
+    object-fit: cover;
 
-	border: 2px solid #8d5bc5;
-	border-radius: 6px;
+    border: 2px solid #8d5bc5;
+    border-radius: 6px;
 }
 
 .login-form {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 
-	padding: 2rem 3rem;
+    padding: 2rem 3rem;
 }
 
 .login-form h2 {
-	margin-bottom: 4rem;
+    margin-bottom: 4rem;
 
-	color: #4c2366;
+    color: #4c2366;
 
-	text-align: center;
-	font-size: 1.2rem;
-	letter-spacing: 0.04em;
+    text-align: center;
+    font-size: 1.2rem;
+    letter-spacing: 0.04em;
 }
 
 .login-form form {
-	display: flex;
-	flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
 .login-form label {
-	margin-bottom: 0.35rem;
+    margin-bottom: 0.35rem;
 
-	color: #b397be;
+    color: #b397be;
 
-	font-size: 0.85rem;
+    font-size: 0.85rem;
 }
 
 .login-form input {
-	width: 100%;
-	height: 36px;
+    width: 100%;
+    height: 36px;
 
-	margin-bottom: 1.7rem;
-	padding: 0 0.8rem;
+    margin-bottom: 1.7rem;
+    padding: 0 0.8rem;
 
-	border: 1px solid #b875d0;
-	border-radius: 7px;
+    border: 1px solid #b875d0;
+    border-radius: 7px;
 
-	outline: none;
+    outline: none;
 
-	background: white;
-	color: #4c2366;
+    background: white;
+    color: #4c2366;
 }
 
 .login-form input:focus {
-	border-color: #ef4f96;
-	box-shadow: 0 0 0 3px rgba(239, 79, 150, 0.15);
+    border-color: #ef4f96;
+    box-shadow: 0 0 0 3px rgba(239, 79, 150, 0.15);
 }
 
 .password-row {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .forgot {
-	margin-bottom: 0.35rem;
+    margin-bottom: 0.35rem;
 
-	color: #b397be;
+    color: #b397be;
 
-	font-size: 0.8rem;
-	text-decoration: none;
+    font-size: 0.8rem;
+    text-decoration: none;
 }
 
 .login-message {
-	min-height: 1.2rem;
-	margin-bottom: 1rem;
+    min-height: 1.2rem;
+    margin-bottom: 1rem;
 
-	color: #ef4f96;
+    color: #ef4f96;
 
-	text-align: center;
-	font-size: 0.85rem;
+    text-align: center;
+    font-size: 0.85rem;
 }
 
 .login-btn,
 .signup-btn {
-	width: 60%;
+    width: 60%;
 
-	margin: 0.6rem auto 0;
-	padding: 0.8rem 2rem;
+    margin: 0.6rem auto 0;
+    padding: 0.8rem 2rem;
 
-	border: none;
-	border-radius: 999px;
+    border: none;
+    border-radius: 999px;
 
-	background: #ef4f96;
-	color: white;
+    background: #ef4f96;
+    color: white;
 
-	font-weight: 600;
-	cursor: pointer;
+    font-weight: 600;
+    cursor: pointer;
 }
 
 .signup-btn {
-	background: #8d5bc5;
+    background: #8d5bc5;
 }
 
 .login-btn:hover,
 .signup-btn:hover {
-	transform: translateY(-1px);
-	opacity: 0.9;
+    transform: translateY(-1px);
+    opacity: 0.9;
 }
 
 .continue-row {
-	display: grid;
-	grid-template-columns: 1fr auto 1fr;
-	align-items: center;
-	gap: 0.9rem;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 0.9rem;
 
-	margin: 3rem 0 1.8rem;
+    margin: 3rem 0 1.8rem;
 }
 
 .continue-row span {
-	height: 1px;
-	background: #b875d0;
+    height: 1px;
+    background: #b875d0;
 }
 
 .continue-row p {
-	margin: 0;
+    margin: 0;
 
-	color: #b397be;
+    color: #b397be;
 
-	font-size: 0.8rem;
+    font-size: 0.8rem;
 }
 
 .social-login {
-	display: flex;
-	justify-content: center;
-	gap: 2.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
 }
 
 .social-login button {
-	width: 42px;
-	height: 42px;
+    width: 42px;
+    height: 42px;
 
-	display: flex;
-	align-items: center;
-	justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-	border: 1px solid #cfa8e6;
-	border-radius: 50%;
+    border: 1px solid #cfa8e6;
+    border-radius: 50%;
 
-	background: white;
+    background: white;
 
-	cursor: pointer;
+    cursor: pointer;
 }
 
 .social-login button:hover {
-	transform: translateY(-2px);
-	box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
 }
 
 .google {
-	color: #4285f4;
+    color: #4285f4;
 
-	font-family: Arial, sans-serif;
-	font-size: 1.4rem;
-	font-weight: 700;
+    font-family: Arial, sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
 }
 
 .outlook {
-	color: #0078d4;
+    color: #0078d4;
 
-	font-size: 1.3rem;
-	font-weight: 700;
+    font-size: 1.3rem;
+    font-weight: 700;
 }
 
 /* TABLET */
 
 @media (max-width: 950px) {
-	.topbar {
-		grid-template-columns: auto 1fr auto;
-		gap: 1rem;
+    .topbar {
+        grid-template-columns: auto 1fr auto;
+        gap: 1rem;
 
-		padding: 0.8rem 1rem;
-	}
+        padding: 0.8rem 1rem;
+    }
 
-	.navbar {
-		gap: 1.5rem;
-		padding: 0.8rem 1rem;
-	}
+    .navbar {
+        gap: 1.5rem;
+        padding: 0.8rem 1rem;
+    }
 }
 
 /* MOBILE */
 
 @media (max-width: 700px) {
-	.topbar {
-		grid-template-columns: 1fr auto;
-		gap: 0.8rem;
-
-		padding: 0.8rem 1rem;
-	}
-
-	.logo {
-		grid-column: 1;
-		grid-row: 1;
-	}
-
-	.logo img {
-		height: 42px;
-	}
-
-	.icons {
-		grid-column: 2;
-		grid-row: 1;
-
-		gap: 0.55rem;
-	}
-
-	.icon-button {
-		width: 36px;
-		height: 36px;
-	}
-
-	.icon-button img {
-		width: 18px;
-		height: 18px;
-	}
-
-	.desktop-only {
-		display: none !important;
-	}
-
-	.burger-button {
-		display: flex !important;
-	}
-
-	.search-wrapper {
-		grid-column: 1 / -1;
-		grid-row: 2;
-
-		max-width: 100%;
-	}
-
-	.search {
-		height: 38px;
-		padding: 0 1.2rem;
-		font-size: 0.9rem;
-	}
-
-	.search-results {
-		top: calc(100% + 0.45rem);
-		max-height: 300px;
-		border-radius: 14px;
-	}
-
-	.navbar {
-		display: none;
-	}
-
-	.mobile-menu {
-		position: absolute;
-		top: 100%;
-		left: 0;
-		right: 0;
-		z-index: 999998;
-
-		display: none;
-		flex-direction: column;
-		gap: 1rem;
-
-		padding: 1rem;
-
-		background: var(--pink);
-		box-shadow: 0 12px 25px rgba(0, 0, 0, 0.16);
-	}
-
-	.mobile-menu.active {
-		display: flex;
-	}
-
-	.mobile-menu-section {
-		display: flex;
-		flex-direction: column;
-		gap: 0.4rem;
-	}
-
-	.mobile-menu-title {
-		margin: 0 0 0.2rem;
-
-		color: white;
+    .topbar {
+        grid-template-columns: 1fr auto;
+        gap: 0.8rem;
+
+        padding: 0.8rem 1rem;
+    }
+
+    .logo {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .logo img {
+        height: 42px;
+    }
+
+    .icons {
+        grid-column: 2;
+        grid-row: 1;
+
+        gap: 0.55rem;
+    }
+
+    .icon-button {
+        width: 36px;
+        height: 36px;
+    }
+
+    .icon-button img {
+        width: 18px;
+        height: 18px;
+    }
+
+    .desktop-only {
+        display: none !important;
+    }
+
+    .burger-button {
+        display: flex !important;
+    }
+
+    .search-wrapper {
+        grid-column: 1 / -1;
+        grid-row: 2;
+
+        max-width: 100%;
+    }
+
+    .search {
+        height: 38px;
+        padding: 0 1.2rem;
+        font-size: 0.9rem;
+    }
+
+    .search-results {
+        top: calc(100% + 0.45rem);
+        max-height: 300px;
+        border-radius: 14px;
+    }
+
+    .navbar {
+        display: none;
+    }
+
+    .mobile-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 999998;
+
+        display: none;
+        flex-direction: column;
+        gap: 1rem;
+
+        padding: 1rem;
+
+        background: var(--pink);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.16);
+    }
+
+    .mobile-menu.active {
+        display: flex;
+    }
+
+    .mobile-menu-section {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+    }
+
+    .mobile-menu-title {
+        margin: 0 0 0.2rem;
+
+        color: white;
+
+        font-size: 0.8rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        opacity: 0.8;
+    }
 
-		font-size: 0.8rem;
-		font-weight: 800;
-		text-transform: uppercase;
-		letter-spacing: 0.06em;
-		opacity: 0.8;
-	}
+    .mobile-menu a,
+    .mobile-menu-button {
+        width: 100%;
 
-	.mobile-menu a,
-	.mobile-menu-button {
-		width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
 
-		display: flex;
-		align-items: center;
-		gap: 0.7rem;
+        padding: 0.9rem 1rem;
 
-		padding: 0.9rem 1rem;
+        border: none;
+        border-radius: 14px;
 
-		border: none;
-		border-radius: 14px;
+        background: rgba(255, 255, 255, 0.14);
+        color: white;
 
-		background: rgba(255, 255, 255, 0.14);
-		color: white;
+        text-align: left;
+        text-decoration: none;
 
-		text-align: left;
-		text-decoration: none;
+        font-size: 1rem;
+        font-weight: 700;
 
-		font-size: 1rem;
-		font-weight: 700;
+        cursor: pointer;
+    }
 
-		cursor: pointer;
-	}
+    .mobile-menu a:hover,
+    .mobile-menu-button:hover {
+        background: rgba(255, 255, 255, 0.22);
+    }
 
-	.mobile-menu a:hover,
-	.mobile-menu-button:hover {
-		background: rgba(255, 255, 255, 0.22);
-	}
+    .mobile-menu-button img {
+        width: 18px;
+        height: 18px;
+        filter: brightness(0) invert(1);
+    }
 
-	.mobile-menu-button img {
-		width: 18px;
-		height: 18px;
-		filter: brightness(0) invert(1);
-	}
+    .mobile-heart {
+        font-size: 1.2rem;
+        line-height: 1;
+    }
 
-	.mobile-heart {
-		font-size: 1.2rem;
-		line-height: 1;
-	}
+    .mobile-language-buttons {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+    }
 
-	.mobile-language-buttons {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		gap: 0.5rem;
-	}
-
-	.mobile-language-buttons button {
-		width: 100%;
+    .mobile-language-buttons button {
+        width: 100%;
 
-		padding: 0.85rem 1rem;
+        padding: 0.85rem 1rem;
 
-		border: none;
-		border-radius: 14px;
-
-		background: white;
-		color: var(--purple);
+        border: none;
+        border-radius: 14px;
 
-		font-size: 0.95rem;
-		font-weight: 800;
+        background: white;
+        color: var(--purple);
 
-		cursor: pointer;
-	}
-
-	.mobile-language-buttons button:hover {
-		background: #f5d7e8;
-	}
-
-	.login-overlay {
-		padding: 1rem;
-		align-items: flex-start;
-		overflow-y: auto;
-	}
+        font-size: 0.95rem;
+        font-weight: 800;
 
-	.login-modal {
-		width: 100%;
-		min-height: auto;
-		max-height: none;
-
-		grid-template-columns: 1fr;
-		gap: 1rem;
-
-		margin: 1rem 0;
-		padding: 1rem;
-
-		border-radius: 16px;
-	}
-
-	.login-image {
-		max-height: 220px;
-	}
-
-	.login-image img {
-		max-height: 220px;
-	}
-
-	.login-form {
-		padding: 1rem;
-	}
-
-	.login-form h2 {
-		margin-bottom: 2rem;
-	}
-
-	.login-btn,
-	.signup-btn {
-		width: 100%;
-	}
-}
-
-/* SMALL MOBILE */
-
-@media (max-width: 480px) {
-	.topbar {
-		padding: 0.7rem 0.8rem;
-	}
-
-	.logo img {
-		height: 38px;
-	}
-
-	.icons {
-		gap: 0.45rem;
-	}
-
-	.icon-button {
-		width: 34px;
-		height: 34px;
-	}
-
-	.icon-button img {
-		width: 17px;
-		height: 17px;
-	}
-
-	.search-result-item {
-		padding: 0.4rem;
-		gap: 0.55rem;
-	}
-
-	.search-result-item img {
-		width: 36px !important;
-		height: 36px !important;
-		min-width: 36px !important;
-		max-width: 36px !important;
-	}
-
-	.search-result-info h4 {
-		font-size: 0.78rem;
-	}
-
-	.search-result-info p {
-		font-size: 0.78rem;
-	}
-
-	.mobile-menu {
-		padding: 0.8rem;
-	}
-
-	.mobile-menu a,
-	.mobile-menu-button {
-		padding: 0.85rem 0.9rem;
-		font-size: 0.95rem;
-	}
-
-	.mobile-language-buttons {
-		grid-template-columns: 1fr;
-	}
-
-	.login-overlay {
-		padding: 0.7rem;
-	}
-
-	.login-modal {
-		margin: 0.6rem 0;
-		padding: 0.8rem;
-	}
-
-	.close-login {
-		top: 0.7rem;
-		right: 0.7rem;
-
-		width: 32px;
-		height: 32px;
-
-		font-size: 1.3rem;
-	}
-
-	.login-image {
-		max-height: 180px;
-	}
-
-	.login-image img {
-		max-height: 180px;
-	}
-
-	.login-form {
-		padding: 0.8rem;
-	}
-
-	.continue-row {
-		margin: 2rem 0 1.4rem;
-	}
-
-	.social-login {
-		gap: 1.5rem;
-	}
+        cursor: pointer;
+    }
+
+    .mobile-language-buttons button:hover {
+        background: #f5d7e8;
+    }
+
+    .login-overlay {
+        padding: 1rem;
+        align-items: flex-start;
+        overflow-y: auto;
+    }
 }
 </style>

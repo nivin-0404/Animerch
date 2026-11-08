@@ -5,37 +5,45 @@ import '../style/global.css';
 import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
-	'https://vvdrdzonanhxygaiviid.supabase.co',
-	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2ZHJkem9uYW5oeHlnYWl2aWlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzNjU1MjEsImV4cCI6MjA5NDk0MTUyMX0.rX97Rt41Hj5SLBQe6d1WqWddShgQ0lMZzIR1q9gUQ6M'
+    'https://zwjiildrmidhiqqmbbja.supabase.co',
+    'sb_publishable_wbX95qCpoGWgltKUlEgRlw_RYujOXRO'
 );
 
-const { data: products, error } = await supabase
-	.from('Products')
-	.select('*');
+let products = [];
 
-if (error) {
-	console.error('Supabase error:', error);
+try {
+    const { data, error } = await supabase
+        .from('Products')
+        .select('*');
+
+    if (error) {
+        console.error('Supabase error:', error);
+    } else {
+        products = data || [];
+    }
+} catch (err) {
+    console.error('Failed to fetch products:', err);
 }
 
 function getProductImage(product: any) {
-	return [
-		product.image,
-		product.image2,
-		product.image3,
-		product.image4,
-		product.image5,
-		product.image_2,
-		product.image_3,
-		product.image_4,
-		product.image_5
-	]
-		.filter(Boolean)
-		.flatMap((value) =>
-			String(value)
-				.split(/\n|,|\s+/)
-				.map((url) => url.trim())
-				.filter((url) => url.startsWith('http'))
-		)[0] || '/assets/ram.png';
+    return [
+        product?.image,
+        product?.image2,
+        product?.image3,
+        product?.image4,
+        product?.image5,
+        product?.image_2,
+        product?.image_3,
+        product?.image_4,
+        product?.image_5
+    ]
+        .filter(Boolean)
+        .flatMap((value) =>
+            String(value)
+                .split(/\n|,|\s+/)
+                .map((url) => url.trim())
+                .filter((url) => url.startsWith('http'))
+        )[0] || '/assets/ram.png';
 }
 ---
 
